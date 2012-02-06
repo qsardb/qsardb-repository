@@ -253,11 +253,21 @@
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.ItemViewer.java -->
 	<message key="xmlui.ArtifactBrowser.ItemViewer.trail">View Item</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+
 	<message key="xmlui.ArtifactBrowser.ItemViewer.head_parent_collections">This item appears in the following Collection(s)</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_simple">Show simple item record</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_full">Show full item record</message>
 
-        <message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property">{0} - &quot;{1}&quot;</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_values">{0} Compounds</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property_models">{0} Models</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_name">{0}</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_values">{0}</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_rsq">{0}</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_stdev">{0}</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
 	<message key="xmlui.ArtifactBrowser.Navigation.head_browse">Browse</message>

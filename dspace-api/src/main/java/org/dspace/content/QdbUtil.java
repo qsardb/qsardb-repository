@@ -1,9 +1,11 @@
 package org.dspace.content;
 
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
 import org.qsardb.model.*;
+import org.qsardb.storage.zipfile.*;
 
 import org.dspace.core.*;
 
@@ -16,10 +18,85 @@ public class QdbUtil {
 	public BitstreamFormat getBitstreamFormat(Context context) throws SQLException {
 		BitstreamFormat format = BitstreamFormat.findByShortDescription(context, "QsarDB");
 		if(format == null){
-			throw new QdbConfigurationException("QsarDB bitstream format not found");
+			throw new QdbConfigurationException("No QsarDB bitstream format");
 		}
 
 		return format;
+	}
+
+	static
+	public Bitstream getBitstream(Context context, Item item) throws SQLException {
+		List<Bitstream> bitstreams = getAllBitstreams(context, item);
+		if(bitstreams.size() < 1){
+			throw new QdbConfigurationException("No QsarDB bitstreams");
+		} else
+
+		if(bitstreams.size() > 1){
+			throw new QdbConfigurationException("Too many QsarDB bitstreams");
+		}
+
+		return bitstreams.get(0);
+	}
+
+	static
+	public List<Bitstream> getAllBitstreams(Context context, Item item) throws SQLException {
+		BitstreamFormat format = getBitstreamFormat(context);
+
+		List<Bitstream> result = new ArrayList<Bitstream>();
+
+		Bundle[] bundles = item.getBundles(Constants.DEFAULT_BUNDLE_NAME);
+		for(Bundle bundle : bundles){
+			Bitstream[] bitstreams = bundle.getBitstreams();
+
+			for(Bitstream bitstream : bitstreams){
+
+				if((bitstream.getFormat()).getID() == format.getID()){
+					result.add(bitstream);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	static
+	public <X> X invoke(Context context, Item item, QdbCallable<X> callable) throws Exception {
+		Bitstream bitstream = getBitstream(context, item);
+
+		return invoke(bitstream, callable);
+	}
+
+	static
+	public <X> X invoke(Bitstream bitstream, QdbCallable<X> callable) throws Exception {
+		File file = File.createTempFile("bitstream", ".qdb");
+
+		try {
+			InputStream is = bitstream.retrieve();
+
+			try {
+				OutputStream os = new FileOutputStream(file);
+
+				try {
+					Utils.copy(is, os);
+
+					os.flush();
+				} finally {
+					os.close();
+				}
+			} finally {
+				is.close();
+			}
+
+			Qdb qdb = new Qdb(new ZipFileInput(file));
+
+			try {
+				return callable.call(qdb);
+			} finally {
+				qdb.close();
+			}
+		} finally {
+			file.delete();
+		}
 	}
 
 	static
