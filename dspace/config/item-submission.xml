@@ -175,6 +175,12 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
+			<heading>submit.progressbar.validate</heading>
+			<processing-class>org.dspace.submit.step.QdbValidateStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.QdbValidateStep</xmlui-binding>
+			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
 			<heading>submit.progressbar.license</heading>
 			<processing-class>org.dspace.submit.step.LicenseStep</processing-class>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.LicenseStep</xmlui-binding>

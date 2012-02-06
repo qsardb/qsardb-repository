@@ -615,6 +615,7 @@
 	<message key="xmlui.Submission.submit.progressbar.initial-questions">Initial Questions</message>
 	<message key="xmlui.Submission.submit.progressbar.describe">Describe</message>
 	<message key="xmlui.Submission.submit.progressbar.upload">Upload</message>
+	<message key="xmlui.Submission.submit.progressbar.validate">Validate</message>
 	<message key="xmlui.Submission.submit.progressbar.verify">Review</message>
 	<message key="xmlui.Submission.submit.progressbar.creative-commons">Creative Commons</message>
 	<message key="xmlui.Submission.submit.progressbar.CClicense">CC License</message>
@@ -708,6 +709,18 @@
 	<message key="xmlui.Submission.submit.EditFileStep.info2">If the format is not in the above list, <strong>select "format not in list" above</strong> and describe the file's format in the box below.</message>
 	<message key="xmlui.Submission.submit.EditFileStep.format_user">Other Format</message>
 	<message key="xmlui.Submission.submit.EditFileStep.format_user_help">The application's name you used to create the file, and the version number (for example, "<i>ACMESoft SuperApp version 1.5</i>").</message>
+
+	<!-- org.dspace.app.xmlui.Submission.submit.QdbValidateStep -->
+	<message key="xmlui.Submission.submit.QdbValidateStep.head">QsarDB validation</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.level">QDB level</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.level_help">Select the QDB conformance level</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic">Basic (local scope)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (global scope)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (executable)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.validate">Validate</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.qdb_error">QDB error</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.validation_error">QDB validation failed</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.validation_success">QDB validation passed successfully</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.ReviewStep -->
 	<message key="xmlui.Submission.submit.ReviewStep.head">Review Submission</message>
