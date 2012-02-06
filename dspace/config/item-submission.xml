@@ -181,6 +181,9 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
+			<processing-class>org.dspace.submit.step.QdbCrosswalkStep</processing-class>
+		</step>
+		<step>
 			<heading>submit.progressbar.license</heading>
 			<processing-class>org.dspace.submit.step.LicenseStep</processing-class>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.LicenseStep</xmlui-binding>
