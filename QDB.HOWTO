@@ -23,14 +23,16 @@
 
 3. HOW TO ADD A NEW QsarDB METADATA SCHEMA FIELD
 
-  3.1 Add a new <dc-type> type element to QsarDB metadata schema file [dspace-src]/dspace/config/registries/qsardb-types.xml
+  3.1 Add a new <dc-type> element to QsarDB metadata schema file [dspace-src]/dspace/config/registries/qsardb-types.xml
 
   3.2 Re-import the QsarDB metadata schema XML file into DSpace database:
     [dspace]/bin/dspace dsrun org.dspace.administer.MetadataImporter -f [dspace]/dspace/config/registries/qsardb-types.xml
 
   3.3 Open DSpace metadata registry admin UI and verify that the new field has been created under the QsarDB schema.
 
-  3.4 Update [dspace-src]/dspace-api/src/main/java/org/dspace/content/QdbUtil.java
+  3.4 Update [dspace-src]/dspace-api/src/main/java/org/dspace/content/QdbUtil.java (method QdbUtil#collectQsarDBMetadata(Item, Qdb))
+
+  3.5 Add a new <field> element to input form file [dspace-src]/dspace/config/input-forms.xml
 
 
 4. HOW TO ADD A NEW BROWSE INDEX

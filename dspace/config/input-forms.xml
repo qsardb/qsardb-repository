@@ -14,7 +14,7 @@
  <!-- the mapping for handle "default".                                    -->
 
  <form-map>
-   <name-map collection-handle="default" form-name="traditional" />
+   <name-map collection-handle="default" form-name="QsarDB" />
  </form-map>
 
 
@@ -35,6 +35,44 @@
  <!-- serves as a 'this field is required' flag.                           -->
 
  <form-definitions>
+
+	<form name="QsarDB">
+		<page number="1">
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>title</dc-element>
+				<dc-qualifier></dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Title</label>
+				<input-type>onebox</input-type>
+				<hint>Enter the main title of the item.</hint>
+				<required>You must enter a main title for this item.</required>
+			</field>
+		</page>
+
+		<page number="2">
+			<field>
+				<dc-schema>qdb</dc-schema>
+				<dc-element>property</dc-element>
+				<dc-qualifier>endpoint</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>QMRF endpoint</label>
+				<input-type>onebox</input-type>
+				<hint>QMRF endpoint</hint>
+				<required>You must enter QMRF endpoint</required>
+			</field>
+			<field>
+				<dc-schema>qdb</dc-schema>
+				<dc-element>property</dc-element>
+				<dc-qualifier>species</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>Species</label>
+				<input-type>onebox</input-type>
+				<hint>Species</hint>
+				<required></required>
+			</field>
+		</page>
+	</form>
 
    <form name="traditional">
      <page number="1">

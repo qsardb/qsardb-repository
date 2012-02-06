@@ -184,6 +184,12 @@
 			<processing-class>org.dspace.submit.step.QdbCrosswalkStep</processing-class>
 		</step>
 		<step>
+			<heading>submit.progressbar.describe</heading>
+			<processing-class>org.dspace.submit.step.DescribeStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.DescribeStep</xmlui-binding>
+			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
 			<heading>submit.progressbar.license</heading>
 			<processing-class>org.dspace.submit.step.LicenseStep</processing-class>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.LicenseStep</xmlui-binding>
