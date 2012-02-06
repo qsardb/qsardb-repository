@@ -1,0 +1,22 @@
+
+0. INTRODUCTION
+
+  Conventions:
+    [dspace-src] Refers to the DSpace source checkout directory
+    [dspace] Refers to the DSpace installation directory
+
+1. HOW TO INSTALL QsarDB METADATA SCHEMA
+
+  1.1 Import the QsarDB metadata schema XML file into DSpace database:
+    [dspace]/bin/dspace dsrun org.dspace.administer.MetadataImporter -f [dspace]/dspace/config/registries/qsardb-types.xml
+
+  1.2 Open DSpace metadata registry admin UI and verify that the QsarDB schema has been created.
+
+2. HOW TO ADD A NEW QsarDB METADATA SCHEMA FIELD
+
+  2.1 Add a new <dc-type> type element to QsarDB metadata schema file in [dspace-src]/dspace/config/registries/qsardb-types.xml
+
+  2.2 Re-import the QsarDB metadata schema XML file into DSpace database:
+    [dspace]/bin/dspace dsrun org.dspace.administer.MetadataImporter -f [dspace]/dspace/config/registries/qsardb-types.xml
+
+  2.3 Open DSpace metadata registry admin UI and verify that the new field has been created under the QsarDB schema.

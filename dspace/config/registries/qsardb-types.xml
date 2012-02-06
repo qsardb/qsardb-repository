@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<dspace-dc-types>
+
+	<dc-schema>
+		<name>qdb</name>
+		<namespace>http://www.qsardb.org/QDB</namespace>
+	</dc-schema>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>property</element>
+		<qualifier>endpoint</qualifier>
+		<scope_note>QMRF endpoint</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>property</element>
+		<qualifier>species</qualifier>
+		<scope_note>Species</scope_note>
+	</dc-type>
+</dspace-dc-types>
