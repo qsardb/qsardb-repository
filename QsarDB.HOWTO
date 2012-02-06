@@ -20,3 +20,5 @@
     [dspace]/bin/dspace dsrun org.dspace.administer.MetadataImporter -f [dspace]/dspace/config/registries/qsardb-types.xml
 
   2.3 Open DSpace metadata registry admin UI and verify that the new field has been created under the QsarDB schema.
+
+  2.4 Update [dspace-src]/dspace-api/src/main/java/org/dspace/content/QdbUtil.java

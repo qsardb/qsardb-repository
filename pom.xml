@@ -465,6 +465,12 @@
           </dependency>
          <!-- DSpace third Party Dependencies -->
 
+          <dependency>
+              <groupId>org.qsardb</groupId>
+              <artifactId>bundle</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+
                  <!-- Explicitly Specify Latest Version of Spring -->
         <dependency>
             <artifactId>spring-core</artifactId>
