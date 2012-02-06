@@ -56,6 +56,10 @@
             <artifactId>dspace-stats</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>bundle</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.3</version>

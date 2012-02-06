@@ -256,8 +256,19 @@ public abstract class AbstractDSpaceTransformer extends AbstractWingTransformer
 
         return urlBuffer.length() > 0 ? urlBuffer.toString() : baseURL;
     }
-    
-    
+
+    public Map getObjectModel(){
+        return this.objectModel;
+    }
+
+    public Context getContext(){
+        return this.context;
+    }
+
+    public String getContextPath(){
+        return this.contextPath;
+    }
+
     /**
      * Recyle
      */
