@@ -104,6 +104,11 @@
               </xsl:when>
               <xsl:otherwise>
             <body>
+                <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='gwt'][@qualifier='historyFrame']">
+                  <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex="-1" style="position:absolute;width:0;height:0;border:0">
+                    <xsl:comment>GWT history</xsl:comment>
+                  </iframe>
+                </xsl:if>
                 
                 <div id="ds-main">
                     <!--

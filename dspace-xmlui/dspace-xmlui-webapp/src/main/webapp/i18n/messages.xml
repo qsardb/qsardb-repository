@@ -264,10 +264,19 @@
 
 	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property_models">{0} Models</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_explorer">Explorer</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_predictor">Predictor</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_name">{0}</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_values">{0}</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_rsq">{0}</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_stdev">{0}</message>
+
+	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.handle_trail">{0} - QDB Explorer</message>
+
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.trail">QDB Predictor</message>
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.handle_trail">{0} - QDB Predictor</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
 	<message key="xmlui.ArtifactBrowser.Navigation.head_browse">Browse</message>

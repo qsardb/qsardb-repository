@@ -188,6 +188,16 @@
         Servlet Configuration ==========================================
     -->
 
+	<servlet>
+		<servlet-name>ExplorerServiceServlet</servlet-name>
+		<servlet-class>org.dspace.gwt.service.ExplorerServiceServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>PredictorServiceServlet</servlet-name>
+		<servlet-class>org.dspace.gwt.service.PredictorServiceServlet</servlet-class>
+	</servlet>
+
     <servlet>
         <description>Cocoon</description>
         <display-name>Cocoon</display-name>
@@ -201,6 +211,17 @@
     </servlet>
 
     <!-- URL space mappings ============================================= -->
+
+	<!-- GWT Service servlets -->
+	<servlet-mapping>
+		<servlet-name>ExplorerServiceServlet</servlet-name>
+		<url-pattern>/rpc/explorer</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>PredictorServiceServlet</servlet-name>
+		<url-pattern>/rpc/predictor</url-pattern>
+	</servlet-mapping>
 
     <!--
         Cocoon handles all the URL space assigned to the webapp using its sitemap.

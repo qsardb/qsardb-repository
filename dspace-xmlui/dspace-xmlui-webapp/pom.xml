@@ -26,6 +26,35 @@
 
     <build>
         <plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<tasks>
+						<copy
+							todir="${basedir}/target/dspace-xmlui-webapp-${pom.version}/static/org.dspace.gwt.Explorer"
+						>
+							<fileset
+								dir="${basedir}/../dspace-xmlui-gwt-client/target/dspace-xmlui-gwt-client-${pom.version}/org.dspace.gwt.Explorer"
+							/>
+						</copy>
+						<copy
+							todir="${basedir}/target/dspace-xmlui-webapp-${pom.version}/static/org.dspace.gwt.Predictor"
+						>
+							<fileset
+								dir="${basedir}/../dspace-xmlui-gwt-client/target/dspace-xmlui-gwt-client-${pom.version}/org.dspace.gwt.Predictor"
+							/>
+						</copy>
+					</tasks>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -130,6 +159,15 @@
             <groupId>org.dspace</groupId>
             <artifactId>dspace-xmlui-api</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-xmlui-gwt-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-xmlui-gwt-service</artifactId>
+		</dependency>
 
     </dependencies>
     <properties>

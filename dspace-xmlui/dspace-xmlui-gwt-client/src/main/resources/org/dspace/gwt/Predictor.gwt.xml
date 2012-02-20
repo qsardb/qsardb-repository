@@ -1,0 +1,9 @@
+<module>
+	<inherits
+		name="org.dspace.gwt.Client"
+	/>
+
+	<entry-point
+		class="org.dspace.gwt.client.QdbPredictor"
+	/>
+</module>

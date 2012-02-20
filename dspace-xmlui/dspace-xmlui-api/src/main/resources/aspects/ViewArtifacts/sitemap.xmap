@@ -24,6 +24,8 @@ and searching the repository.
             <map:transformer name="Navigation" src="org.dspace.app.xmlui.aspect.viewArtifacts.Navigation"/>
             <map:transformer name="CommunityViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.CommunityViewer"/>
             <map:transformer name="CollectionViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.CollectionViewer"/>
+            <map:transformer name="QdbExplorer" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbExplorer"/>
+            <map:transformer name="QdbPredictor" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbPredictor"/>
             <map:transformer name="ItemViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.ItemViewer"/>
             <map:transformer name="FeedbackForm" src="org.dspace.app.xmlui.aspect.artifactbrowser.FeedbackForm"/>
             <map:transformer name="FeedbackSent" src="org.dspace.app.xmlui.aspect.artifactbrowser.FeedbackSent"/>
@@ -104,14 +106,28 @@ and searching the repository.
                                 <map:serialize type="xml"/>
                         </map:match>
 
-
             <!-- Handle specific features -->
-                        <map:match pattern="handle/*/**">
+                        <map:match type="regexp" pattern="(handle)|(explorer)|(predictor)/(.*)/(.*)">
 
                                 <!-- Inform the user that the item they are viewing is a restricted resource -->
                                 <map:match pattern="handle/*/*/restricted-resource">
                                         <map:transform type="RestrictedItem"/>
                                         <map:serialize type="xml"/>
+                                </map:match>
+
+                                <map:match type="regexp" pattern="(explorer)|(predictor)/(.*)/(.*)">
+                                        <map:match type="HandleAuthorizedMatcher" pattern="READ">
+                                                <map:match type="HandleTypeMatcher" pattern="item">
+                                                        <map:match pattern="explorer/*/*">
+                                                          <map:transform type="QdbExplorer"/>
+                                                          <map:serialize type="xml"/>
+                                                        </map:match>
+                                                        <map:match pattern="predictor/*/*">
+                                                          <map:transform type="QdbPredictor"/>
+                                                          <map:serialize type="xml"/>
+                                                        </map:match>
+                                                </map:match>
+                                        </map:match>
                                 </map:match>
 
                                 <!-- Community, Collection, and Item Viewers -->

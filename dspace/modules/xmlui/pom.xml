@@ -193,6 +193,11 @@
            <artifactId>dspace-sword-api</artifactId>
        </dependency>
 
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-xmlui-gwt-service</artifactId>
+		</dependency>
+
    </dependencies>
 
 </project>

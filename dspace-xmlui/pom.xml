@@ -28,9 +28,32 @@
    </scm>
    
    <modules>
-      <module>dspace-xmlui-wing</module>
       <module>dspace-xmlui-api</module>
+      <module>dspace-xmlui-gwt-client</module>
+      <module>dspace-xmlui-gwt-rpc</module>
+      <module>dspace-xmlui-gwt-service</module>
       <module>dspace-xmlui-webapp</module>
+      <module>dspace-xmlui-wing</module>
    </modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-dev</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-servlet</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-user</artifactId>
+				<version>2.4.0</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

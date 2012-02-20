@@ -29,7 +29,7 @@ class ItemContentPanel {
 
 			@Override
 			public Object call(Qdb qdb) throws IOException, WingException {
-				generate(viewer, qdb, division);
+				generate(viewer, item, qdb, division);
 
 				return null;
 			}
@@ -47,7 +47,7 @@ class ItemContentPanel {
 	}
 
 	static
-	public void generate(ItemViewer viewer, Qdb qdb, Division division) throws IOException, WingException {
+	public void generate(ItemViewer viewer, Item item, Qdb qdb, Division division) throws IOException, WingException {
 		PropertyRegistry properties = qdb.getPropertyRegistry();
 		ModelRegistry models = qdb.getModelRegistry();
 		PredictionRegistry predictions = qdb.getPredictionRegistry();
@@ -100,6 +100,10 @@ class ItemContentPanel {
 
 				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
 				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
+				modelSummary.addContent(" ");
+				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_explorer);
+				modelSummary.addContent(" ");
+				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_predictor);
 
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 				for(Prediction modelPrediction : modelPredictions){
@@ -300,6 +304,10 @@ class ItemContentPanel {
 	private static final Message T_property_models_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_models");
 
 	private static final Message T_model_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_summary");
+
+	private static final Message T_model_explorer = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_explorer");
+
+	private static final Message T_model_predictor = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_predictor");
 
 	private static final Message T_prediction_name = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_name");
 
