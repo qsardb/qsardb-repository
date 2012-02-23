@@ -1,59 +1,35 @@
 package org.dspace.gwt.client;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.gwt.rpc.*;
 
-public class QdbPredictor implements EntryPoint {
+public class QdbPredictor extends Application {
+
+	@Override
+	public String getId(){
+		return "aspect_artifactbrowser_QdbPredictor_div_main";
+	}
 
 	@Override
 	public void onModuleLoad(){
-		RootPanel panel = RootPanel.get("aspect_artifactbrowser_QdbPredictor_div_main");
+		setWidget(new Label("Loading.."));
 
-		if(panel.getWidgetCount() > 0){
-			panel.clear();
-		}
+		PredictorServiceAsync service = (PredictorServiceAsync.MANAGER).getInstance();
 
-		panel.add(createContent());
-	}
-
-	private Panel createContent(){
-		Panel panel = new FlowPanel();
-
-		final
-		Label label = new Label("Please wait..");
-		panel.add(label);
-
-		AsyncCallback<String> callback = new AsyncCallback<String>(){
+		AsyncCallback<String> callback = new ServiceCallback<String>(){
 
 			@Override
 			public void onSuccess(String string){
-				label.setText(string);
-			}
-
-			@Override
-			public void onFailure(Throwable throwable){
-				label.setText(throwable.toString());
+				setWidget(createWidget(string));
 			}
 		};
 
-		(PredictorServiceAsync.BROKER.getInstance()).run(callback);
-
-		return panel;
+		service.run(callback);
 	}
 
-	static {
-		GWT.UncaughtExceptionHandler exceptionHandler = new GWT.UncaughtExceptionHandler(){
-
-			@Override
-			public void onUncaughtException(Throwable throwable){
-				Window.alert(throwable.toString());
-			}
-		};
-
-		GWT.setUncaughtExceptionHandler(exceptionHandler);
+	private Widget createWidget(String string){
+		return new Label(string);
 	}
 }

@@ -8,7 +8,10 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.server.rpc.*;
 
 import org.dspace.app.xmlui.utils.*;
+import org.dspace.authorize.*;
+import org.dspace.content.*;
 import org.dspace.core.*;
+import org.dspace.handle.*;
 
 abstract
 public class ItemServiceServlet extends RemoteServiceServlet {
@@ -47,6 +50,23 @@ public class ItemServiceServlet extends RemoteServiceServlet {
 		} catch(SQLException se){
 			return RPC.encodeResponseForFailure(null, new RuntimeException(se.getMessage())); // XXX
 		}
+	}
+
+	static
+	protected Item obtainItem(Context context, String handle) throws SQLException {
+		DSpaceObject object = HandleManager.resolveToObject(context, handle);
+
+		if(object instanceof Item){
+			boolean authorized = AuthorizeManager.authorizeActionBoolean(context, object, Constants.READ);
+
+			if(authorized){
+				Item item = (Item)object;
+
+				return item;
+			}
+		}
+
+		return null;
 	}
 
 	final

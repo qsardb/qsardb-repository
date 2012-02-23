@@ -1,16 +1,16 @@
-package org.dspace.gwt.rpc;
+package org.dspace.gwt.client;
 
 import com.google.gwt.user.client.rpc.*;
 
 abstract
-public class ServiceBroker<A> {
+public class ServiceManager<A> {
 
 	private String path = null;
 
 	private A instance = null;
 
 
-	ServiceBroker(String path){
+	protected ServiceManager(String path){
 		setPath(path);
 	}
 
