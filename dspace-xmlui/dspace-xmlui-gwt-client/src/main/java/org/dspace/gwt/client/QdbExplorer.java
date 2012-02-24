@@ -78,7 +78,7 @@ public class QdbExplorer extends Application {
 		dataGrid.addColumnSortHandler(sortHandler);
 
 		final
-		SimplePager dataGridPager = new SimplePager();
+		CompoundSimplePager dataGridPager = new CompoundSimplePager();
 		dataGridPager.setDisplay(dataGrid);
 
 		panel.add(dataGridPager, DockPanel.SOUTH);
