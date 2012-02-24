@@ -40,6 +40,21 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		for(DescriptorColumn descriptor : descriptors){
 			addColumn(new ParameterTextColumn(descriptor), descriptor.getName());
 		}
+
+		addEmptyColumn();
+	}
+
+	private void addEmptyColumn(){
+		TextColumn<Compound> column = new TextColumn<Compound>(){
+
+			@Override
+			public String getValue(Compound compound){
+				return null;
+			}
+		};
+		addColumn(column, (String)null);
+
+		setColumnWidth(column, 20, Unit.PT);
 	}
 
 	@Override
