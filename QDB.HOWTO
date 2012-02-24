@@ -41,3 +41,15 @@
 
   4.2 Initialize the browse index:
     [dspace]/bin/dspace index-init
+
+5. HOW TO ADD A NEW GWT CLIENT APPLICATION (XML-UI)
+
+  5.1 Create a subclass of AbstractDSpaceTransformer that will be responsible for transforming the DRI document. For most common (ie. Item-oriented) scenarios consider subclassing ApplicationTransformer.
+
+  5.1.1. Configure the Maven build process to move all GWT client application resources to directory [dspace-src]/dspace-xmlui/dspace-xmlui-webapp/target/dspace-xmlui-webapp-${dspace.version}/static/. All resources whose paths are prefixed with "/static/" are excluded from the Cocoon processing pipeline and sent as they are when the XML-UI webapp is deployed.
+
+  5.2 Register the transformer class with the Cocoon sitemap.xmap file. The registration involves declaring the transformer and mapping it to some request URI. For most common scenarios consider registering with the ViewArtifacts XML-UI Aspect sitemap.xml file [dspace-src]/dspace-xmlui/dspace-xmlui-api/src/main/resources/aspects/ViewArtifacts/sitemap.xmap
+
+6. HOW TO ADD A NEW GWT SERVICE (OR ANY OTHER) SERVLET (XML-UI)
+
+  6.1 Declare the servlet and its servlet-mapping elements in [dspace-src]/dspace-xmlui/dspace-xmlui-webapp/src/main/webapp/WEB-INF/web.xml. Be sure to place the new servlet-mapping declaration ABOVE the Cocoon servlet-mapping element.
