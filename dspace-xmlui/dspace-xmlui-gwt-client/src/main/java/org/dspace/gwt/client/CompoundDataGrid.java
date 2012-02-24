@@ -20,7 +20,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		addColumn(new IdentifierTextColumn(), "Id");
 
 		NameColumn name = filter(NameColumn.class, columns);
-		addColumn(new AttributeTextColumn(name), "Name");
+		addColumn(new NameTextColumn(name), "Name");
 
 		CasColumn cas = filter(CasColumn.class, columns);
 		if(cas != null){
@@ -65,7 +65,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			int length = ((CompoundTextColumn)column).getLength();
 
 			if(length > 0){
-				setColumnWidth(column, length * 6, Unit.PT);
+				setColumnWidth(column, length * 8, Unit.PT);
 			}
 		}
 	}
@@ -127,9 +127,27 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 			if(left == null || right == null){
 				return (left != null ? 1 : 0) - (right != null ? 1 : 0);
+			} // End if
+
+			if(left instanceof String && right instanceof String){
+				return ((String)left).compareToIgnoreCase((String)right);
 			}
 
 			return ((Comparable)left).compareTo((Comparable)right);
+		}
+
+		static
+		protected int getLength(Collection<?> values){
+			int length = 0;
+
+			for(Object value : values){
+
+				if(value != null){
+					length = Math.max((value.toString()).length(), length);
+				}
+			}
+
+			return length;
 		}
 	}
 
@@ -200,17 +218,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		@Override
 		public int getLength(){
-			int length = 0;
+			Map<String, String> values = getAttribute().getValues();
 
-			Collection<String> values = (getAttribute().getValues()).values();
-			for(String value : values){
-
-				if(value != null){
-					length = Math.max(value.length(), length);
-				}
-			}
-
-			return length;
+			return CompoundTextColumn.getLength(values.values());
 		}
 
 		public AttributeColumn getAttribute(){
@@ -219,6 +229,19 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		private void setAttribute(AttributeColumn attribute){
 			this.attribute = attribute;
+		}
+	}
+
+	static
+	public class NameTextColumn extends AttributeTextColumn {
+
+		public NameTextColumn(NameColumn attribute){
+			super(attribute);
+		}
+
+		@Override
+		public int getLength(){
+			return (super.getLength() * 3) / 4;
 		}
 	}
 
@@ -289,7 +312,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		@Override
 		public int getLength(){
-			return 6;
+			Map<String, Object> values = getParameter().getValues();
+
+			return ParameterTextColumn.getLength(values.values());
 		}
 
 		@Override
@@ -362,7 +387,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		@Override
 		public int getLength(){
-			return 6;
+			Map<String, Object> values = getProperty().getValues();
+
+			return ParameterTextColumn.getLength(values.values());
 		}
 
 		@Override
