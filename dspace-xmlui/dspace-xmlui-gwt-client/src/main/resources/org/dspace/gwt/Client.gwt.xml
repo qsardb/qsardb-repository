@@ -19,4 +19,8 @@
 	<inherits
 		name="com.google.gwt.user.theme.standard.Standard"
 	/>
+
+	<inherits
+		name="com.reveregroup.gwt.imagepreloader.ImagePreloader"
+	/>
 </module>

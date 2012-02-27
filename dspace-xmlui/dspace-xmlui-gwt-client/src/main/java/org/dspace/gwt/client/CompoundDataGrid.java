@@ -3,6 +3,7 @@ package org.dspace.gwt.client;
 import java.math.*;
 import java.util.*;
 
+import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.user.cellview.client.*;
@@ -28,17 +29,17 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		PropertyColumn property = filter(PropertyColumn.class, columns);
-		addColumn(new ParameterTextColumn(property), property.getName());
+		addColumn(new PropertyTextColumn(property), property.getName());
 
 		List<PredictionColumn> predictions = filterList(PredictionColumn.class, columns);
 		for(PredictionColumn prediction : predictions){
-			addColumn(new ParameterTextColumn(prediction), prediction.getName());
+			addColumn(new PredictionTextColumn(prediction), prediction.getName());
 			addColumn(new ErrorTextColumn(property, prediction), "Error");
 		}
 
 		List<DescriptorColumn> descriptors = filterList(DescriptorColumn.class, columns);
 		for(DescriptorColumn descriptor : descriptors){
-			addColumn(new ParameterTextColumn(descriptor), descriptor.getName());
+			addColumn(new DescriptorTextColumn(descriptor), descriptor.getName());
 		}
 
 		addEmptyColumn();
@@ -111,9 +112,11 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	static
 	abstract
-	public class CompoundTextColumn extends TextColumn<Compound> {
+	public class CompoundTextColumn extends Column<Compound, String> {
 
-		public CompoundTextColumn(){
+		protected CompoundTextColumn(Cell<String> cell){
+			super(cell);
+
 			setSortable(true);
 		}
 
@@ -154,6 +157,11 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	static
 	public class IdentifierTextColumn extends CompoundTextColumn {
 
+
+		public IdentifierTextColumn(){
+			super(new TextCell());
+		}
+
 		@Override
 		public String getValue(Compound compound){
 			return compound.getId();
@@ -191,12 +199,15 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
+	abstract
 	public class AttributeTextColumn extends CompoundTextColumn {
 
 		private AttributeColumn attribute = null;
 
 
-		public AttributeTextColumn(AttributeColumn attribute){
+		public AttributeTextColumn(Cell<String> cell, AttributeColumn attribute){
+			super(cell);
+
 			setAttribute(attribute);
 		}
 
@@ -236,12 +247,12 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class NameTextColumn extends AttributeTextColumn {
 
 		public NameTextColumn(NameColumn attribute){
-			super(attribute);
+			super(new ResolverTextCell(), attribute);
 		}
 
 		@Override
 		public int getLength(){
-			return (super.getLength() * 3) / 4;
+			return (super.getLength() * 2) / 3;
 		}
 	}
 
@@ -249,7 +260,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class CasTextColumn extends AttributeTextColumn {
 
 		public CasTextColumn(CasColumn attribute){
-			super(attribute);
+			super(new TextCell(), attribute);
 		}
 
 		@Override
@@ -290,12 +301,15 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
+	abstract
 	public class ParameterTextColumn extends CompoundTextColumn {
 
 		private ParameterColumn parameter = null;
 
 
-		public ParameterTextColumn(ParameterColumn parameter){
+		public ParameterTextColumn(Cell<String> cell, ParameterColumn parameter){
+			super(cell);
+
 			setParameter(parameter);
 		}
 
@@ -352,6 +366,22 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
+	public class PropertyTextColumn extends ParameterTextColumn {
+
+		public PropertyTextColumn(PropertyColumn property){
+			super(new TextCell(), property);
+		}
+	}
+
+	static
+	public class PredictionTextColumn extends ParameterTextColumn {
+
+		public PredictionTextColumn(PredictionColumn prediction){
+			super(new TextCell(), prediction);
+		}
+	}
+
+	static
 	public class ErrorTextColumn extends CompoundTextColumn {
 
 		private PropertyColumn property = null;
@@ -360,6 +390,8 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public ErrorTextColumn(PropertyColumn property, PredictionColumn prediction){
+			super(new TextCell());
+
 			setProperty(property);
 			setPrediction(prediction);
 		}
@@ -417,6 +449,14 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		private void setPrediction(PredictionColumn prediction){
 			this.prediction = prediction;
+		}
+	}
+
+	static
+	public class DescriptorTextColumn extends ParameterTextColumn {
+
+		public DescriptorTextColumn(DescriptorColumn descriptor){
+			super(new TextCell(), descriptor);
 		}
 	}
 }
