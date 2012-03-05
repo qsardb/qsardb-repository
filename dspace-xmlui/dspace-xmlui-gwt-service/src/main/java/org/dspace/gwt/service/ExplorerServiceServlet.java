@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.qsardb.cargo.map.*;
 import org.qsardb.cargo.pmml.*;
+import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 
@@ -91,16 +92,38 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 			columns.add(loadPropertyColumn(property, keys));
 		}
 
-		ValueCollector nameValues = new ValueCollector();
-		ValueCollector casValues = new ValueCollector();
-		ValueCollector inChIValues = new ValueCollector();
+		AttributeCollector nameValues = new AttributeCollector(){
+
+			@Override
+			public String getValue(Compound compound){
+				return compound.getName();
+			}
+		};
+		AttributeCollector casValues = new AttributeCollector(){
+
+			@Override
+			public String getValue(Compound compound){
+				return compound.getCas();
+			}
+		};
+		AttributeCollector inChIValues = new AttributeCollector(){
+
+			@Override
+			public String getValue(Compound compound){
+				return compound.getInChI();
+			}
+		};
+
+		CargoCollector smilesValues = new CargoCollector(ChemicalMimeData.DAYLIGHT_SMILES.getId());
 
 		for(String key : keys){
 			Compound compound = qdb.getCompound(key);
 
-			nameValues.put(key, compound.getName());
-			casValues.put(key, compound.getCas());
-			inChIValues.put(key, compound.getInChI());
+			nameValues.put(compound);
+			casValues.put(compound);
+			inChIValues.put(compound);
+
+			smilesValues.put(compound);
 		}
 
 		if(nameValues.size() > 0){
@@ -120,6 +143,13 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 		if(inChIValues.size() > 0){
 			InChIColumn column = new InChIColumn();
 			column.setValues(inChIValues.getValues());
+
+			columns.add(column);
+		} // End if
+
+		if(smilesValues.size() > 0){
+			SmilesColumn column = new SmilesColumn();
+			column.setValues(smilesValues.getValues());
 
 			columns.add(column);
 		}
@@ -188,10 +218,14 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 	}
 
 	static
+	abstract
 	private class ValueCollector {
 
 		private Map<String, String> values = new LinkedHashMap<String, String>();
 
+
+		abstract
+		public String getValue(Compound compound) throws Exception;
 
 		public int size(){
 			return this.values.size();
@@ -199,6 +233,10 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 
 		public String get(String key){
 			return this.values.get(key);
+		}
+
+		public void put(Compound compound) throws Exception {
+			put(compound.getId(), getValue(compound));
 		}
 
 		public void put(String key, String value){
@@ -212,6 +250,43 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 
 		public Map<String, String> getValues(){
 			return this.values;
+		}
+	}
+
+	static
+	abstract
+	private class AttributeCollector extends ValueCollector {
+	}
+
+	static
+	private class CargoCollector extends ValueCollector {
+
+		private String id = null;
+
+
+		private CargoCollector(String id){
+			setId(id);
+		}
+
+		@Override
+		public String getValue(Compound compound) throws IOException {
+			String id = getId();
+
+			if(compound.hasCargo(id)){
+				Cargo<?> cargo = compound.getCargo(id);
+
+				return cargo.loadString();
+			}
+
+			return null;
+		}
+
+		public String getId(){
+			return this.id;
+		}
+
+		private void setId(String id){
+			this.id = id;
 		}
 	}
 }

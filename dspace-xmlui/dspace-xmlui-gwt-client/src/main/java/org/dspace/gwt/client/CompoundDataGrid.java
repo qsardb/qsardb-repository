@@ -12,7 +12,7 @@ import org.dspace.gwt.rpc.*;
 
 public class CompoundDataGrid extends DataGrid<Compound> {
 
-	public CompoundDataGrid(List<QdbColumn<?>> columns){
+	public CompoundDataGrid(QdbTable table){
 		super(50);
 
 		TableSectionElement element = getTableBodyElement();
@@ -20,24 +20,24 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		addColumn(new IdentifierTextColumn(), "Id");
 
-		NameColumn name = filter(NameColumn.class, columns);
+		NameColumn name = table.getColumn(NameColumn.class);
 		addColumn(new NameTextColumn(name), "Name");
 
-		CasColumn cas = filter(CasColumn.class, columns);
+		CasColumn cas = table.getColumn(CasColumn.class);
 		if(cas != null){
 			addColumn(new CasTextColumn(cas), "CAS");
 		}
 
-		PropertyColumn property = filter(PropertyColumn.class, columns);
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		addColumn(new PropertyTextColumn(property), property.getName());
 
-		List<PredictionColumn> predictions = filterList(PredictionColumn.class, columns);
+		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 		for(PredictionColumn prediction : predictions){
 			addColumn(new PredictionTextColumn(prediction), prediction.getName());
 			addColumn(new ErrorTextColumn(property, prediction), "Error");
 		}
 
-		List<DescriptorColumn> descriptors = filterList(DescriptorColumn.class, columns);
+		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
 			addColumn(new DescriptorTextColumn(descriptor), descriptor.getName());
 		}
@@ -80,34 +80,6 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		return null;
-	}
-
-	static
-	private <C extends QdbColumn<?>> C filter(Class<C> clazz, List<QdbColumn<?>> columns){
-		List<C> result = filterList(clazz, columns);
-
-		if(result.size() == 1){
-			return result.get(0);
-		}
-
-		return null;
-	}
-
-	@SuppressWarnings (
-		value = {"unchecked"}
-	)
-	static
-	private <C extends QdbColumn<?>> List<C> filterList(Class<C> clazz, List<QdbColumn<?>> columns){
-		List<C> result = new ArrayList<C>();
-
-		for(QdbColumn<?> column : columns){
-
-			if((column.getClass()).equals(clazz)){
-				result.add((C)column);
-			}
-		}
-
-		return result;
 	}
 
 	static

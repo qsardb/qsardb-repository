@@ -47,7 +47,7 @@ public class QdbExplorer extends Application {
 		CompoundDataProvider dataProvider = new CompoundDataProvider(CompoundDataProvider.format(table.getKeys()));
 
 		final
-		CompoundDataGrid dataGrid = new CompoundDataGrid(table.getColumns());
+		CompoundDataGrid dataGrid = new CompoundDataGrid(table);
 		dataProvider.addDataDisplay(dataGrid);
 
 		ResizeLayoutPanel dataGridPanel = new ResizeLayoutPanel();
