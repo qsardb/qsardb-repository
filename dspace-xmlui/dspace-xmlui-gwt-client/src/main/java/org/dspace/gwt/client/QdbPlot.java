@@ -1,6 +1,5 @@
 package org.dspace.gwt.client;
 
-import java.math.*;
 import java.util.*;
 
 import ca.nanometrics.gflot.client.*;
@@ -35,11 +34,11 @@ public class QdbPlot extends SimplePlot {
 		redraw();
 	}
 
-	public void setXAxisBounds(ParameterUtil.Bounds bounds){
+	public void setXAxisBounds(Bounds bounds){
 		ensureXAxesOptions().addAxisOptions(convertBounds(bounds));
 	}
 
-	public void setYAxisBounds(ParameterUtil.Bounds bounds){
+	public void setYAxisBounds(Bounds bounds){
 		ensureYAxesOptions().addAxisOptions(convertBounds(bounds));
 	}
 
@@ -132,16 +131,44 @@ public class QdbPlot extends SimplePlot {
 	}
 
 	static
-	public AxisOptions convertBounds(ParameterUtil.Bounds bounds){
+	public AxisOptions convertBounds(Bounds bounds){
 		AxisOptions options = new AxisOptions();
-
-		BigDecimal min = bounds.getMin();
-		options.setMinimum(min.doubleValue());
-
-		BigDecimal max = bounds.getMax();
-		options.setMaximum(max.doubleValue());
+		options.setMinimum((bounds.getMin()).doubleValue());
+		options.setMaximum((bounds.getMax()).doubleValue());
 
 		return options;
+	}
+
+	static
+	public Bounds bounds(Map<?, ?> map){
+		return bounds(null, map);
+	}
+
+	static
+	public Bounds bounds(Bounds bounds, Map<?, ?> map){
+		Bounds result = new Bounds(bounds);
+
+		Collection<?> values = map.values();
+		for(Object value : values){
+
+			if(value instanceof Number){
+				result.update((Number)value);
+			}
+		}
+
+		return result;
+	}
+
+	static
+	public Bounds symmetricalBounds(Bounds bounds){
+		Bounds result = new Bounds();
+
+		double max = Math.max(Math.abs((bounds.getMin()).doubleValue()), Math.abs((bounds.getMax()).doubleValue()));
+
+		result.setMin(Double.valueOf(-1 * max));
+		result.setMax(Double.valueOf(max));
+
+		return result;
 	}
 
 	static
@@ -155,5 +182,61 @@ public class QdbPlot extends SimplePlot {
 
 	static
 	protected class QdbPlotOptions extends PlotOptions {
+	}
+
+	static
+	public class Bounds {
+
+		private Number min = null;
+
+		private Number max = null;
+
+
+		public Bounds(){
+		}
+
+		public Bounds(Bounds bounds){
+
+			if(bounds != null){
+				setMin(bounds.getMin());
+				setMax(bounds.getMax());
+			}
+		}
+
+		public void update(Number value){
+
+			if(value == null){
+				return;
+			} // End if
+
+			if(this.min == null || compare(this.min, value) > 0){
+				this.min = value;
+			} // End if
+
+			if(this.max == null || compare(this.max, value) < 0){
+				this.max = value;
+			}
+		}
+
+		public Number getMin(){
+			return this.min;
+		}
+
+		public void setMin(Number min){
+			this.min = min;
+		}
+
+		public Number getMax(){
+			return this.max;
+		}
+
+		public void setMax(Number max){
+			this.max = max;
+		}
+
+		static
+		private double compare(Number left, Number right){
+			return (left.doubleValue() - right.doubleValue());
+		}
 	}
 }

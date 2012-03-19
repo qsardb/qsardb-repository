@@ -62,7 +62,7 @@ public class Resolver {
 
 	public static final String NAME = "Name";
 
-	public static final String CAS = "Cas";
+	public static final String CAS = "CAS";
 
 	public static final String INCHI = "InChI";
 

@@ -13,7 +13,7 @@ public class HistogramPlot extends QdbPlot {
 	private List<List<HistogramDataPoint>> seriesPoints = new ArrayList<List<HistogramDataPoint>>();
 
 
-	public HistogramPlot(ParameterUtil.Bounds xBounds, int size){
+	public HistogramPlot(Bounds xBounds, int size){
 		this.bars = new BarList((xBounds.getMin()).doubleValue(), (xBounds.getMax()).doubleValue(), size);
 
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();

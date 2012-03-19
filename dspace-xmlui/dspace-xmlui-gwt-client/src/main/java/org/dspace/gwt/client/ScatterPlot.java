@@ -13,7 +13,7 @@ public class ScatterPlot extends QdbPlot {
 	private List<List<ScatterDataPoint>> seriesPoints = new ArrayList<List<ScatterDataPoint>>();
 
 
-	public ScatterPlot(final Resolver resolver, ParameterUtil.Bounds xBounds, ParameterUtil.Bounds yBounds){
+	public ScatterPlot(final Resolver resolver, Bounds xBounds, Bounds yBounds){
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 		globalSeriesOptions.setShadowSize(0);
 

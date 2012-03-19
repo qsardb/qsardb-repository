@@ -15,13 +15,13 @@ public class PropertyPlotGrid extends PlotGrid {
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		Map<String, Object> propertyValues = property.getValues();
-		ParameterUtil.Bounds propertyBounds = ParameterUtil.bounds(propertyValues);
+		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
 
 		resize(2, 1);
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		ParameterUtil.Bounds errorBounds = new ParameterUtil.Bounds();
+		QdbPlot.Bounds errorBounds = new QdbPlot.Bounds();
 
 		Map<String, BigDecimal> trainingErrors = null;
 
@@ -33,11 +33,11 @@ public class PropertyPlotGrid extends PlotGrid {
 				trainingErrors = predictionErrors;
 			}
 
-			propertyBounds = ParameterUtil.bounds(propertyBounds, predictionValues);
-			errorBounds = ParameterUtil.bounds(errorBounds, predictionErrors);
+			propertyBounds = QdbPlot.bounds(propertyBounds, predictionValues);
+			errorBounds = QdbPlot.bounds(errorBounds, predictionErrors);
 		}
 
-		errorBounds = ParameterUtil.symmetricalBounds(errorBounds);
+		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver, propertyBounds, propertyBounds);
 		ScatterPlot errorScatterPlot = new ScatterPlot(resolver, propertyBounds, errorBounds);

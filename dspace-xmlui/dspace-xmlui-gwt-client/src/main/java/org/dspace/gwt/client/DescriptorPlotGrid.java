@@ -13,7 +13,7 @@ public class DescriptorPlotGrid extends PlotGrid {
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		Map<String, Object> propertyValues = property.getValues();
-		ParameterUtil.Bounds propertyBounds = ParameterUtil.bounds(propertyValues);
+		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 
@@ -37,7 +37,7 @@ public class DescriptorPlotGrid extends PlotGrid {
 			DescriptorColumn descriptor = descriptors.get(i);
 
 			Map<String, Object> descriptorValues = descriptor.getValues();
-			ParameterUtil.Bounds descriptorBounds = ParameterUtil.bounds(descriptorValues);
+			QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
 			ScatterPlot scatterPlot = new ScatterPlot(resolver, descriptorBounds, propertyBounds);
 			HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds, size);
@@ -57,7 +57,9 @@ public class DescriptorPlotGrid extends PlotGrid {
 			height = Math.max(histogramPlot.getMaxHeight(), height);
 		}
 
-		ParameterUtil.Bounds yBounds = ParameterUtil.bounds(Arrays.asList(BigDecimal.ZERO, new BigDecimal(height)));
+		QdbPlot.Bounds yBounds = new QdbPlot.Bounds();
+		yBounds.setMin(Integer.valueOf(0));
+		yBounds.setMax(Integer.valueOf(height));
 
 		for(int i = 0; i < descriptors.size(); i++){
 			HistogramPlot histogramPlot = (HistogramPlot)getPlot(1, i);
