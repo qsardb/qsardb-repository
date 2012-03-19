@@ -1,13 +1,19 @@
 package org.dspace.gwt.client;
 
-import com.google.gwt.dom.client.*;
+import java.util.*;
+
 import com.google.gwt.http.client.*;
-import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 import com.reveregroup.gwt.imagepreloader.*;
 
 public class ResolverTooltip extends PopupPanel {
+
+	private Resolver resolver = null;
+
+	private FlexTable table = null;
 
 	final
 	private Timer timer = new Timer(){
@@ -18,25 +24,40 @@ public class ResolverTooltip extends PopupPanel {
 		}
 	};
 
-	private ValueCallback callback = null;
+	private IdCallback callback = null;
 
 
-	public ResolverTooltip(){
+	public ResolverTooltip(Resolver resolver){
 		super(true);
+
+		setResolver(resolver);
+
+		this.table = new FlexTable();
+		setWidget(this.table);
 	}
 
 	private void resolve(){
 		final
-		ValueCallback callback = getCallback();
+		IdCallback callback = getCallback();
 		if(callback == null){
 			return;
 		}
 
+		Resolver resolver = getResolver();
+
+		final
+		Map<String, String> values = resolver.resolve(callback.getId());
+
+		final
+		String imageValue = getValue(values, Arrays.asList(Resolver.INCHI, Resolver.SMILES, Resolver.NAME));
+
 		UrlBuilder builder = new UrlBuilder();
 		builder.setProtocol("http");
 		builder.setHost("cactus.nci.nih.gov");
-		builder.setPath("chemical/structure/" + callback.getValue() + "/image");
+		builder.setPath("chemical/structure/" + imageValue + "/image");
 		builder.setParameter("format", "png");
+
+		String url = builder.buildString();
 
 		ImageLoadHandler loadHandler = new ImageLoadHandler(){
 
@@ -46,36 +67,67 @@ public class ResolverTooltip extends PopupPanel {
 				if(isActive(callback)){
 					Dimensions size = event.getDimensions();
 
-					if(size != null){
-						setImage(event.getImageUrl(), size.getWidth(), size.getHeight());
+					if(size == null){
+						return;
 					}
+
+					Image image = new Image(event.getImageUrl());
+					image.setPixelSize(size.getWidth(), size.getHeight());
+
+					resetTable(image, values, imageValue);
+
+					setPopupPositionAndShow(callback);
 				}
 			}
 		};
 
-		ImagePreloader.load(builder.buildString(), loadHandler);
+		ImagePreloader.load(url, loadHandler);
 	}
 
-	private void setImage(String url, int width, int height){
-		Image image = new Image(url);
-		image.setPixelSize(width, height);
-		setWidget(image);
+	private void resetTable(Image image, Map<String, String> values, String imageValue){
 
-		final
-		ValueCallback callback = getCallback();
-		if(callback == null){
-			return;
+		if(this.table.getRowCount() > 0){
+			this.table.removeAllRows();
 		}
 
-		setPopupPositionAndShow(callback);
+		FlexTable.FlexCellFormatter formatter = (FlexTable.FlexCellFormatter)this.table.getCellFormatter();
+
+		int row = 0;
+
+		if(image != null){
+			formatter.setColSpan(row, 0, 2);
+
+			this.table.setWidget(row, 0, image);
+			formatter.setHorizontalAlignment(row, 0, HasHorizontalAlignment.ALIGN_LEFT);
+
+			row++;
+		}
+
+		Set<Map.Entry<String, String>> entries = values.entrySet();
+		for(Map.Entry<String, String> entry : entries){
+			String key = entry.getKey();
+			String value = entry.getValue();
+
+			if(value == null){
+				continue;
+			}
+
+			this.table.setWidget(row, 0, new HTML("<b>" + key + "</b>")); // XXX
+			formatter.setHorizontalAlignment(row, 0, HasHorizontalAlignment.ALIGN_LEFT);
+
+			this.table.setWidget(row, 1, new HTML((value).equals(imageValue) ? "<u>" + value + "</u>" : value)); // XXX
+			formatter.setHorizontalAlignment(row, 1, HasHorizontalAlignment.ALIGN_LEFT);
+
+			row++;
+		}
 	}
 
-	public void schedule(String value, final NativeEvent event){
-		ValueCallback callback = new ValueCallback(value){
+	public void schedule(String id, final int x, final int y){
+		IdCallback callback = new IdCallback(id){
 
 			@Override
 			public void setPosition(int width, int height){
-				setPopupPosition(event.getScreenX() + 10, event.getScreenY());
+				setPopupPosition(x, y);
 			}
 		};
 
@@ -101,52 +153,74 @@ public class ResolverTooltip extends PopupPanel {
 		}
 	}
 
-	private boolean isActive(ValueCallback callback){
+	private boolean isActive(IdCallback callback){
 		return callback != null && (callback).equals(getCallback());
 	}
 
-	private ValueCallback getCallback(){
+	public Resolver getResolver(){
+		return this.resolver;
+	}
+
+	private void setResolver(Resolver resolver){
+		this.resolver = resolver;
+	}
+
+	private IdCallback getCallback(){
 		return this.callback;
 	}
 
-	private void setCallback(ValueCallback callback){
+	private void setCallback(IdCallback callback){
 		this.callback = callback;
 	}
 
 	static
+	public String getValue(Map<String, String> values, List<String> keys){
+
+		for(String key : keys){
+			String value = values.get(key);
+
+			if(value != null){
+				return value;
+			}
+		}
+
+		return null;
+	}
+
+	static
 	abstract
-	private class ValueCallback implements PositionCallback {
+	private class IdCallback implements PositionCallback {
 
-		private String value = null;
+		private String id = null;
 
 
-		public ValueCallback(String value){
-			setValue(value);
+		public IdCallback(String id){
+			setId(id);
 		}
 
 		@Override
 		public int hashCode(){
-			return getValue().hashCode();
+			return getId().hashCode();
 		}
 
 		@Override
 		public boolean equals(Object object){
 
-			if(object instanceof ValueCallback){
-				ValueCallback that = (ValueCallback)object;
+			if(object instanceof IdCallback){
+				IdCallback that = (IdCallback)object;
 
-				return (this.getValue()).equals(that.getValue());
+				return (this.getId()).equals(that.getId());
 			}
 
 			return false;
 		}
 
-		public String getValue(){
-			return this.value;
+		public String getId(){
+			return this.id;
 		}
 
-		private void setValue(String value){
-			this.value = value;
+		private void setId(String id){
+			this.id = id;
 		}
 	}
 

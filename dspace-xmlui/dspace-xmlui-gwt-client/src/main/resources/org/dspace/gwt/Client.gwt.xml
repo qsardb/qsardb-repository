@@ -21,6 +21,10 @@
 	/>
 
 	<inherits
+		name="ca.nanometrics.gflot.GFlot"
+	/>
+
+	<inherits
 		name="com.reveregroup.gwt.imagepreloader.ImagePreloader"
 	/>
 </module>

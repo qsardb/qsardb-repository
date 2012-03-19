@@ -18,10 +18,12 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		TableSectionElement element = getTableBodyElement();
 		element.setAttribute("style", "white-space: nowrap;"); // XXX
 
+		Resolver resolver = new Resolver(table);
+
 		addColumn(new IdentifierTextColumn(), "Id");
 
 		NameColumn name = table.getColumn(NameColumn.class);
-		addColumn(new NameTextColumn(name), "Name");
+		addColumn(new NameTextColumn(resolver, name), "Name");
 
 		CasColumn cas = table.getColumn(CasColumn.class);
 		if(cas != null){
@@ -34,7 +36,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 		for(PredictionColumn prediction : predictions){
 			addColumn(new PredictionTextColumn(prediction), prediction.getName());
-			addColumn(new ErrorTextColumn(property, prediction), "Error");
+			addColumn(new PredictionErrorTextColumn(prediction), "Error");
 		}
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
@@ -218,8 +220,8 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	static
 	public class NameTextColumn extends AttributeTextColumn {
 
-		public NameTextColumn(NameColumn attribute){
-			super(new ResolverTextCell(), attribute);
+		public NameTextColumn(Resolver resolver, NameColumn attribute){
+			super(new ResolverTextCell(resolver), attribute);
 		}
 
 		@Override
@@ -354,17 +356,14 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
-	public class ErrorTextColumn extends CompoundTextColumn {
-
-		private PropertyColumn property = null;
+	public class PredictionErrorTextColumn extends CompoundTextColumn {
 
 		private PredictionColumn prediction = null;
 
 
-		public ErrorTextColumn(PropertyColumn property, PredictionColumn prediction){
+		public PredictionErrorTextColumn(PredictionColumn prediction){
 			super(new TextCell());
 
-			setProperty(property);
 			setPrediction(prediction);
 		}
 
@@ -376,22 +375,12 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		public BigDecimal getError(Compound compound){
-			Object expValue = getProperty().getValue(compound.getId());
-
-			if(expValue instanceof BigDecimal){
-				Object calcValue = getPrediction().getValue(compound.getId());
-
-				if(calcValue instanceof BigDecimal){
-					return ((BigDecimal)calcValue).subtract((BigDecimal)expValue);
-				}
-			}
-
-			return null;
+			return getPrediction().getError(compound.getId());
 		}
 
 		@Override
 		public int getLength(){
-			Map<String, Object> values = getProperty().getValues();
+			Map<String, BigDecimal> values = getPrediction().getErrors();
 
 			return ParameterTextColumn.getLength(values.values());
 		}
@@ -402,17 +391,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 				@Override
 				public int compare(Compound left, Compound right){
-					return ErrorTextColumn.this.compare(getError(left), getError(right));
+					return PredictionErrorTextColumn.this.compare(getError(left), getError(right));
 				}
 			};
-		}
-
-		public PropertyColumn getProperty(){
-			return this.property;
-		}
-
-		private void setProperty(PropertyColumn property){
-			this.property = property;
 		}
 
 		public PredictionColumn getPrediction(){

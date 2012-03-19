@@ -8,15 +8,17 @@ import com.google.gwt.text.shared.*;
 
 public class ResolverTextCell extends AbstractSafeHtmlCell<String> {
 
-	private ResolverTooltip tooltip = new ResolverTooltip();
+	private ResolverTooltip tooltip = null;
 
 
-	public ResolverTextCell(){
-		this(SimpleSafeHtmlRenderer.getInstance());
+	public ResolverTextCell(Resolver resolver){
+		this(resolver, SimpleSafeHtmlRenderer.getInstance());
 	}
 
-	public ResolverTextCell(SafeHtmlRenderer<String> renderer){
+	public ResolverTextCell(Resolver resolver, SafeHtmlRenderer<String> renderer){
 		super(renderer, (MouseMoveEvent.getType()).getName(), (MouseOverEvent.getType()).getName(), (MouseOutEvent.getType()).getName());
+
+		this.tooltip = new ResolverTooltip(resolver);
 	}
 
 	@Override
@@ -26,7 +28,9 @@ public class ResolverTextCell extends AbstractSafeHtmlCell<String> {
 		String type = event.getType();
 
 		if((MouseMoveEvent.getType()).getName().equals(type)){
-			this.tooltip.schedule(value, event);
+			Compound compound = (Compound)context.getKey();
+
+			this.tooltip.schedule(compound.getId(), PopupUtil.getPopupX(event) + 5, PopupUtil.getPopupY(event) + 5);
 		} else
 
 		if((MouseOverEvent.getType()).getName().equals(type) || (MouseOutEvent.getType()).getName().equals(type)){

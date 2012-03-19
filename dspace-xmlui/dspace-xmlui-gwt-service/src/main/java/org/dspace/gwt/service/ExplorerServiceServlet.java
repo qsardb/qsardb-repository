@@ -57,9 +57,21 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 
 		List<QdbColumn<?>> columns = new ArrayList<QdbColumn<?>>();
 
-		Collection<Prediction> predictions = (qdb.getPredictionRegistry()).getByModel(model);
+		List<Prediction> predictions = new ArrayList<Prediction>();
+		predictions.addAll((qdb.getPredictionRegistry()).getByModel(model));
+
+		Comparator<Prediction> comparator = new Comparator<Prediction>(){
+
+			@Override
+			public int compare(Prediction left, Prediction right){
+				return (left.getType()).compareTo(right.getType());
+			}
+		};
+		Collections.sort(predictions, comparator);
+
 		for(Prediction prediction : predictions){
 			PredictionColumn column = loadPredictionColumn(prediction);
+			column.setType((prediction.getType()).name());
 
 			Map<String, ?> values = column.getValues();
 			keys.addAll(values.keySet());

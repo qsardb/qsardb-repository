@@ -40,7 +40,11 @@ public class QdbExplorer extends Application {
 	}
 
 	private Widget createWidget(ModelTable table){
-		DataGridPanel panel = new DataGridPanel(table);
+		Panel panel = new FlowPanel();
+
+		panel.add(new DataGridPanel(table));
+		panel.add(new HTML("&nbsp;")); // XXX
+		panel.add(new DataAnalysisPanel(table));
 
 		return panel;
 	}
@@ -55,6 +59,13 @@ public class QdbExplorer extends Application {
 				convertParameterColumn((ParameterColumn)column);
 			}
 		}
+
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+
+		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
+		for(PredictionColumn prediction : predictions){
+			prediction.setErrors(calculateErrors(prediction, property));
+		}
 	}
 
 	static
@@ -63,7 +74,6 @@ public class QdbExplorer extends Application {
 
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();
 		for(Map.Entry<String, Object> entry : entries){
-			String key = entry.getKey();
 			Object value = entry.getValue();
 
 			try {
@@ -76,5 +86,26 @@ public class QdbExplorer extends Application {
 				// Ignored
 			}
 		}
+	}
+
+	static
+	private Map<String, BigDecimal> calculateErrors(PredictionColumn prediction, PropertyColumn property){
+		Map<String, BigDecimal> result = new LinkedHashMap<String, BigDecimal>();
+
+		Set<String> ids = new LinkedHashSet<String>((prediction.getValues()).keySet());
+		ids.retainAll((property.getValues()).keySet());
+
+		for(String id : ids){
+			Object left = prediction.getValue(id);
+			Object right = property.getValue(id);
+
+			if(left instanceof BigDecimal && right instanceof BigDecimal){
+				BigDecimal error = ((BigDecimal)left).subtract((BigDecimal)right);
+
+				result.put(id, error);
+			}
+		}
+
+		return result;
 	}
 }
