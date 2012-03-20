@@ -36,7 +36,7 @@ class ItemContentPanel {
 		};
 
 		try {
-			QdbUtil.invoke(context, item, callable);
+			QdbUtil.invokeInternal(context, item, callable);
 		} catch(IOException ioe){
 			throw ioe;
 		} catch(WingException we){

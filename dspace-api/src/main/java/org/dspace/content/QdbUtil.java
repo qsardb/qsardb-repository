@@ -7,11 +7,79 @@ import java.util.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
 
+import org.dspace.authorize.*;
 import org.dspace.core.*;
 
 public class QdbUtil {
 
 	private QdbUtil(){
+	}
+
+	static
+	public <X> X invokeOriginal(Context context, Item item, QdbCallable<X> callable) throws Exception {
+		Bitstream bitstream = getOriginalBitstream(context, item);
+
+		return invoke(bitstream, callable);
+	}
+
+	static
+	public <X> X invokeInternal(Context context, Item item, QdbCallable<X> callable) throws Exception {
+		Bitstream bitstream;
+
+		try {
+			bitstream = getInternalBitstream(context, item);
+		} catch(QdbConfigurationException qce){
+
+			if(QdbUtil.SAFE_MODE){
+				bitstream = getOriginalBitstream(context, item);
+			} else
+
+			{
+				throw qce;
+			}
+		}
+
+		return invoke(bitstream, callable);
+	}
+
+	static
+	private <X> X invoke(Bitstream bitstream, QdbCallable<X> callable) throws Exception {
+		File file = loadFile(bitstream);
+
+		try {
+			Qdb qdb = new Qdb(new ZipFileInput(file));
+
+			try {
+				return callable.call(qdb);
+			} finally {
+				qdb.close();
+			}
+		} finally {
+			file.delete();
+		}
+	}
+
+	static
+	public File loadFile(Bitstream bitstream) throws AuthorizeException, SQLException, IOException {
+		File file = createTempFile();
+
+		InputStream is = bitstream.retrieve();
+
+		try {
+			OutputStream os = new FileOutputStream(file);
+
+			try {
+				Utils.copy(is, os);
+
+				os.flush();
+			} finally {
+				os.close();
+			}
+		} finally {
+			is.close();
+		}
+
+		return file;
 	}
 
 	static
@@ -25,8 +93,19 @@ public class QdbUtil {
 	}
 
 	static
-	public Bitstream getBitstream(Context context, Item item) throws SQLException {
-		List<Bitstream> bitstreams = getAllBitstreams(context, item);
+	public Bitstream getOriginalBitstream(Context context, Item item) throws SQLException {
+		return getBitstream(context, item, ORIGINAL_BUNDLE_NAME);
+	}
+
+	static
+	public Bitstream getInternalBitstream(Context context, Item item) throws SQLException {
+		return getBitstream(context, item, INTERNAL_BUNDLE_NAME);
+	}
+
+	static
+	private Bitstream getBitstream(Context context, Item item, String name) throws SQLException {
+		List<Bitstream> bitstreams = getAllBitstreams(context, item, name);
+
 		if(bitstreams.size() < 1){
 			throw new QdbConfigurationException("No QsarDB bitstreams");
 		} else
@@ -39,12 +118,12 @@ public class QdbUtil {
 	}
 
 	static
-	public List<Bitstream> getAllBitstreams(Context context, Item item) throws SQLException {
-		BitstreamFormat format = getBitstreamFormat(context);
-
+	private List<Bitstream> getAllBitstreams(Context context, Item item, String name) throws SQLException {
 		List<Bitstream> result = new ArrayList<Bitstream>();
 
-		Bundle[] bundles = item.getBundles(Constants.DEFAULT_BUNDLE_NAME);
+		BitstreamFormat format = getBitstreamFormat(context);
+
+		Bundle[] bundles = item.getBundles(name);
 		for(Bundle bundle : bundles){
 			Bitstream[] bitstreams = bundle.getBitstreams();
 
@@ -60,43 +139,80 @@ public class QdbUtil {
 	}
 
 	static
-	public <X> X invoke(Context context, Item item, QdbCallable<X> callable) throws Exception {
-		Bitstream bitstream = getBitstream(context, item);
-
-		return invoke(bitstream, callable);
+	public Bitstream addOriginalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+		return addBitstream(context, item, ORIGINAL_BUNDLE_NAME, data);
 	}
 
 	static
-	public <X> X invoke(Bitstream bitstream, QdbCallable<X> callable) throws Exception {
-		File file = File.createTempFile("bitstream", ".qdb");
+	public Bitstream addInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+		return addBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
+	}
+
+	static
+	private Bitstream addBitstream(Context context, Item item, String name, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+		BitstreamFormat format = getBitstreamFormat(context);
+
+		Bundle bundle;
+
+		Bundle[] bundles = item.getBundles(name);
+		if(bundles != null && bundles.length > 1){
+			bundle = bundles[0];
+		} else
+
+		{
+			bundle = item.createBundle(name);
+		}
+
+		InputStream is = data.getInputStream();
 
 		try {
-			InputStream is = bitstream.retrieve();
+			Bitstream bitstream = bundle.createBitstream(is);
+			bitstream.setName(data.getName());
+			bitstream.setDescription(data.getDescription());
+			bitstream.setSource(data.getSource());
+			bitstream.setFormat(format);
+
+			bitstream.update();
+
+			bundle.update();
+
+			return bitstream;
+		} finally {
+			is.close();
+		}
+	}
+
+	static
+	public File optimize(File file) throws QdbException, IOException {
+		File result = createTempFile();
+
+		ZipFileInput input = new ZipFileInput(file);
+
+		try {
+			Qdb qdb = new Qdb(input);
 
 			try {
-				OutputStream os = new FileOutputStream(file);
+				ZipFileOutput output = new ZipFileOutput(result);
+				output.setLevel(0);
 
 				try {
-					Utils.copy(is, os);
-
-					os.flush();
+					qdb.copyTo(output);
 				} finally {
-					os.close();
+					output.close();
 				}
-			} finally {
-				is.close();
-			}
-
-			Qdb qdb = new Qdb(new ZipFileInput(file));
-
-			try {
-				return callable.call(qdb);
 			} finally {
 				qdb.close();
 			}
 		} finally {
-			file.delete();
+			input.close();
 		}
+
+		return result;
+	}
+
+	static
+	private File createTempFile() throws IOException {
+		return File.createTempFile("bitstream", ".qdb");
 	}
 
 	static
@@ -143,4 +259,58 @@ public class QdbUtil {
 	private String[] toArray(List<String> strings){
 		return strings.toArray(new String[strings.size()]);
 	}
+
+	static
+	public interface BitstreamData {
+
+		String getName();
+
+		String getDescription();
+
+		String getSource();
+
+		InputStream getInputStream() throws IOException;
+	}
+
+	static
+	public class FileBitstreamData implements BitstreamData {
+
+		private File file = null;
+
+
+		public FileBitstreamData(File file){
+
+			if(file == null){
+				throw new NullPointerException();
+			}
+
+			this.file = file;
+		}
+
+		@Override
+		public String getName(){
+			return this.file.getName();
+		}
+
+		@Override
+		public String getDescription(){
+			return null;
+		}
+
+		@Override
+		public String getSource(){
+			return this.file.getName();
+		}
+
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return new FileInputStream(this.file);
+		}
+	}
+
+	private static final boolean SAFE_MODE = true;
+
+	private static final String ORIGINAL_BUNDLE_NAME = Constants.DEFAULT_BUNDLE_NAME;
+
+	private static final String INTERNAL_BUNDLE_NAME = "INTERNAL";
 }

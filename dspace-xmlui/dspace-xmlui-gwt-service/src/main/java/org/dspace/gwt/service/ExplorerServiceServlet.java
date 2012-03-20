@@ -34,7 +34,7 @@ public class ExplorerServiceServlet extends ItemServiceServlet implements Explor
 				}
 			};
 
-			return QdbUtil.invoke(context, item, callable);
+			return QdbUtil.invokeInternal(context, item, callable);
 		} catch(DSpaceException de){
 			throw de;
 		} catch(Exception e){

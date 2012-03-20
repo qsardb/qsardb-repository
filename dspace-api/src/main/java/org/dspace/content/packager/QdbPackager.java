@@ -36,7 +36,25 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester, Pac
 				qdb.close();
 			}
 
-			createBundle(context, item, file);
+			QdbUtil.BitstreamData data = new QdbUtil.FileBitstreamData(file);
+
+			QdbUtil.addOriginalBitstream(context, item, data);
+
+			File internalFile = QdbUtil.optimize(file);
+
+			try {
+				QdbUtil.BitstreamData internalData = new QdbUtil.FileBitstreamData(internalFile){
+
+					@Override
+					public String getName(){
+						return "archive.qdb";
+					}
+				};
+
+				QdbUtil.addInternalBitstream(context, item, internalData);
+			} finally {
+				internalFile.delete();
+			}
 
 			item.update();
 
@@ -85,24 +103,6 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester, Pac
 	@Override
 	public List<File> disseminateAll(Context context, DSpaceObject object, PackageParameters parameters, File file){
 		throw new UnsupportedOperationException();
-	}
-
-	private void createBundle(Context context, Item item, File file) throws AuthorizeException, IOException, SQLException {
-		BitstreamFormat format = QdbUtil.getBitstreamFormat(context);
-
-		Bundle bundle = item.createBundle(Constants.DEFAULT_BUNDLE_NAME);
-
-		InputStream is = new FileInputStream(file);
-
-		try {
-			Bitstream data = bundle.createBitstream(is);
-			data.setName(file.getName());
-			data.setFormat(format);
-
-			data.update();
-		} finally {
-			is.close();
-		}
 	}
 
 	static

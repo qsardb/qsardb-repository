@@ -1,7 +1,5 @@
 package org.dspace.submit.step;
 
-import java.util.*;
-
 import javax.servlet.http.*;
 
 import org.qsardb.model.*;
@@ -36,7 +34,7 @@ public class QdbValidateStep extends AbstractProcessingStep {
 		};
 
 		try {
-			Boolean result = QdbUtil.invoke(context, item, callable);
+			Boolean result = QdbUtil.invokeOriginal(context, item, callable);
 			if(!result.booleanValue()){
 				return STATUS_VALIDATION_ERROR;
 			}

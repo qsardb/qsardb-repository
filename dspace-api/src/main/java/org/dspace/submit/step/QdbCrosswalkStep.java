@@ -36,7 +36,7 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 		};
 
 		try {
-			QdbUtil.invoke(context, item, callable);
+			QdbUtil.invokeInternal(context, item, callable);
 		} catch(IOException ioe){
 			throw ioe;
 		} catch(Exception e){

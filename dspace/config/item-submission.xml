@@ -181,6 +181,9 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
+			<processing-class>org.dspace.submit.step.QdbOptimizeStep</processing-class>
+		</step>
+		<step>
 			<processing-class>org.dspace.submit.step.QdbCrosswalkStep</processing-class>
 		</step>
 		<step>
