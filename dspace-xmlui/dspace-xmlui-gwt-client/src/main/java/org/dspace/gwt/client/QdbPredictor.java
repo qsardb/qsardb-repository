@@ -1,11 +1,10 @@
 package org.dspace.gwt.client;
 
-import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.gwt.rpc.*;
 
-public class QdbPredictor extends Application {
+public class QdbPredictor extends QdbApplication {
 
 	@Override
 	public String getId(){
@@ -13,23 +12,16 @@ public class QdbPredictor extends Application {
 	}
 
 	@Override
-	public void onModuleLoad(){
-		setWidget(new Label("Loading.."));
-
-		PredictorServiceAsync service = (PredictorServiceAsync.MANAGER).getInstance();
-
-		AsyncCallback<String> callback = new ServiceCallback<String>(){
-
-			@Override
-			public void onSuccess(String string){
-				setWidget(createWidget(string));
-			}
-		};
-
-		service.run(callback);
+	public String getPath(){
+		return "predictor";
 	}
 
-	private Widget createWidget(String string){
-		return new Label(string);
+	@Override
+	public Widget createWidget(ModelTable table){
+		Panel panel = new FlowPanel();
+
+		// TODO
+
+		return panel;
 	}
 }

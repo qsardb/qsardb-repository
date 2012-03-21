@@ -5,15 +5,15 @@ import com.google.gwt.user.client.rpc.*;
 
 import org.dspace.gwt.client.*;
 
-public interface ExplorerServiceAsync {
+public interface QdbServiceAsync {
 
 	void loadModelTable(String handle, String id, AsyncCallback<ModelTable> callback) throws DSpaceException;
 
-	public static final ServiceManager<ExplorerServiceAsync> MANAGER = new ServiceManager<ExplorerServiceAsync>("/xmlui/rpc/explorer"){
+	public static final ServiceManager<QdbServiceAsync> MANAGER = new ServiceManager<QdbServiceAsync>("/xmlui/rpc/service"){
 
 		@Override
 		protected Object createObject(){
-			return GWT.create(ExplorerService.class);
+			return GWT.create(QdbService.class);
 		}
 	};
 }

@@ -189,13 +189,8 @@
     -->
 
 	<servlet>
-		<servlet-name>ExplorerServiceServlet</servlet-name>
-		<servlet-class>org.dspace.gwt.service.ExplorerServiceServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>PredictorServiceServlet</servlet-name>
-		<servlet-class>org.dspace.gwt.service.PredictorServiceServlet</servlet-class>
+		<servlet-name>QdbServiceServlet</servlet-name>
+		<servlet-class>org.dspace.gwt.service.QdbServiceServlet</servlet-class>
 	</servlet>
 
     <servlet>
@@ -212,15 +207,9 @@
 
     <!-- URL space mappings ============================================= -->
 
-	<!-- GWT Service servlets -->
 	<servlet-mapping>
-		<servlet-name>ExplorerServiceServlet</servlet-name>
-		<url-pattern>/rpc/explorer</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>PredictorServiceServlet</servlet-name>
-		<url-pattern>/rpc/predictor</url-pattern>
+		<servlet-name>QdbServiceServlet</servlet-name>
+		<url-pattern>/rpc/service</url-pattern>
 	</servlet-mapping>
 
     <!--

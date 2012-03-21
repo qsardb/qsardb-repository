@@ -14,7 +14,7 @@ import org.dspace.content.*;
 import org.dspace.core.*;
 import org.dspace.gwt.rpc.*;
 
-public class ExplorerServiceServlet extends ItemServiceServlet implements ExplorerService {
+public class QdbServiceServlet extends ItemServiceServlet implements QdbService {
 
 	@Override
 	public ModelTable loadModelTable(final String handle, final String id) throws DSpaceException {
