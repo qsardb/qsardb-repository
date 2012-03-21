@@ -5,7 +5,6 @@ import java.util.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 import com.reveregroup.gwt.imagepreloader.*;
 
@@ -65,16 +64,15 @@ public class ResolverTooltip extends PopupPanel {
 			public void imageLoaded(ImageLoadEvent event){
 
 				if(isActive(callback)){
-					Dimensions size = event.getDimensions();
+					Image image = null;
 
-					if(size == null){
-						return;
+					Dimensions size = event.getDimensions();
+					if(size != null){
+						image = new Image(event.getImageUrl());
+						image.setPixelSize(size.getWidth(), size.getHeight());
 					}
 
-					Image image = new Image(event.getImageUrl());
-					image.setPixelSize(size.getWidth(), size.getHeight());
-
-					resetTable(image, values, imageValue);
+					resetTable(image, values, image != null ? imageValue : null);
 
 					setPopupPositionAndShow(callback);
 				}
