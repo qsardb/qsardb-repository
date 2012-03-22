@@ -11,8 +11,19 @@ public class SeriesListBox extends ListBox {
 	private List<Map<PredictionColumn, Boolean>> values = new ArrayList<Map<PredictionColumn, Boolean>>();
 
 
-	public SeriesListBox(){
+	public SeriesListBox(List<PredictionColumn> predictions){
 		setVisibleItemCount(1);
+
+		if(predictions.size() > 1){
+			addItem("All predictions", createValue(predictions));
+		}
+
+		addItem("Training prediction", createValue(predictions, "training"));
+
+		if(predictions.size() > 1){
+			addItem("Validation prediction(s)", createValue(predictions, "validation"));
+			addItem("Testing prediction(s)", createValue(predictions, "testing"));
+		}
 	}
 
 	public void addItem(String label, Map<PredictionColumn, Boolean> value){
@@ -34,12 +45,12 @@ public class SeriesListBox extends ListBox {
 	}
 
 	static
-	public Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions){
+	private Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions){
 		return createValue(predictions, null);
 	}
 
 	static
-	public Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions, String type){
+	private Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions, String type){
 		Map<PredictionColumn, Boolean> result = new LinkedHashMap<PredictionColumn, Boolean>();
 
 		for(PredictionColumn prediction : predictions){

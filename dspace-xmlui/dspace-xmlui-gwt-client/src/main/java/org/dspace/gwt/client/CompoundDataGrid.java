@@ -68,7 +68,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			int length = ((CompoundTextColumn)column).getLength();
 
 			if(length > 0){
-				setColumnWidth(column, length * 8, Unit.PT);
+				setColumnWidth(column, Math.min(Math.max(length, 2), 60) * 8, Unit.PT);
 			}
 		}
 	}

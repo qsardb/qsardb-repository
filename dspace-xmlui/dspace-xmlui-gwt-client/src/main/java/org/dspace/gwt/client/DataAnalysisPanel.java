@@ -22,22 +22,11 @@ public class DataAnalysisPanel extends Composite {
 	private Widget createSeriesPanel(QdbTable table){
 		Panel panel = new FlowPanel();
 
-		final
-		SeriesListBox seriesList = new SeriesListBox();
-		panel.add(seriesList);
-
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		if(predictions.size() > 1){
-			seriesList.addItem("All predictions", SeriesListBox.createValue(predictions));
-		}
-
-		seriesList.addItem("Training prediction", SeriesListBox.createValue(predictions, "training"));
-
-		if(predictions.size() > 1){
-			seriesList.addItem("Validation prediction(s)", SeriesListBox.createValue(predictions, "validation"));
-			seriesList.addItem("Testing prediction(s)", SeriesListBox.createValue(predictions, "testing"));
-		}
+		final
+		SeriesListBox seriesList = new SeriesListBox(predictions);
+		panel.add(seriesList);
 
 		ChangeHandler changeHandler = new ChangeHandler(){
 

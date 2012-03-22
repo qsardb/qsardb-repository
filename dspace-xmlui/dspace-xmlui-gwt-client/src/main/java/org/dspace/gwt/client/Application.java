@@ -68,14 +68,44 @@ public class Application implements EntryPoint {
 			public void onUncaughtException(Throwable throwable){
 				throwable.printStackTrace();
 
-				String message = throwable.toString();
+				StringBuffer sb = new StringBuffer();
 
-				Throwable causeThrowable = throwable.getCause();
-				if(causeThrowable != null){
-					message += " (" + causeThrowable.toString() + ")";
+				sb.append(format(throwable));
+
+				Throwable cause = throwable.getCause();
+				if(cause != null){
+
+					while(true){
+						Throwable nextCause = cause.getCause();
+						if(nextCause == null){
+							break;
+						}
+
+						cause = nextCause;
+					}
+
+					sb.append("\n");
+					sb.append("Caused by:");
+
+					sb.append("\n");
+					sb.append(format(cause));
 				}
 
-				Window.alert(message);
+				Window.alert(sb.toString());
+			}
+
+			private String format(Throwable throwable){
+				StringBuffer sb = new StringBuffer();
+
+				sb.append(throwable.toString());
+
+				StackTraceElement[] elements = throwable.getStackTrace();
+				for(StackTraceElement element : elements){
+					sb.append("\n");
+					sb.append(element.toString());
+				}
+
+				return sb.toString();
 			}
 		};
 

@@ -1,6 +1,5 @@
 package org.dspace.gwt.client;
 
-import java.math.*;
 import java.util.*;
 
 import org.dspace.gwt.rpc.*;
