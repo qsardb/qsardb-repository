@@ -25,6 +25,9 @@ public class ItemServiceServlet extends RemoteServiceServlet {
 	};
 
 	@Override
+	@SuppressWarnings (
+		value = {"unused"}
+	)
 	public String processCall(String payload) throws SerializationException {
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpServletResponse response = getThreadLocalResponse();

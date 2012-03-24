@@ -20,7 +20,7 @@ public class QdbPredictor extends QdbApplication {
 	public Widget createWidget(ModelTable table){
 		Panel panel = new FlowPanel();
 
-		// TODO
+		panel.add(new DataInputPanel(table));
 
 		return panel;
 	}

@@ -1,5 +1,6 @@
 package org.dspace.gwt.client;
 
+import java.math.*;
 import java.util.*;
 
 import ca.nanometrics.gflot.client.*;
@@ -151,8 +152,8 @@ public class QdbPlot extends SimplePlot {
 		Collection<?> values = map.values();
 		for(Object value : values){
 
-			if(value instanceof Number){
-				result.update((Number)value);
+			if(value instanceof BigDecimal){
+				result.update((BigDecimal)value);
 			}
 		}
 
@@ -163,10 +164,10 @@ public class QdbPlot extends SimplePlot {
 	public Bounds symmetricalBounds(Bounds bounds){
 		Bounds result = new Bounds();
 
-		double max = Math.max(Math.abs((bounds.getMin()).doubleValue()), Math.abs((bounds.getMax()).doubleValue()));
+		BigDecimal max = (bounds.getMin().abs()).max(bounds.getMax().abs());
 
-		result.setMin(Double.valueOf(-1 * max));
-		result.setMax(Double.valueOf(max));
+		result.setMin(MINUS_ONE.multiply(max));
+		result.setMax(max);
 
 		return result;
 	}
@@ -187,9 +188,9 @@ public class QdbPlot extends SimplePlot {
 	static
 	public class Bounds {
 
-		private Number min = null;
+		private BigDecimal min = null;
 
-		private Number max = null;
+		private BigDecimal max = null;
 
 
 		public Bounds(){
@@ -203,40 +204,58 @@ public class QdbPlot extends SimplePlot {
 			}
 		}
 
-		public void update(Number value){
+		public BigDecimal validate(BigDecimal value){
+
+			if(this.min != null && (this.min).compareTo(value) > 0){
+				return this.min;
+			} // End if
+
+			if(this.max != null && (this.max).compareTo(value) < 0){
+				return this.max;
+			}
+
+			return value;
+		}
+
+		public int scale(){
+			return Math.max(getMin().scale(), getMax().scale());
+		}
+
+		public MathContext getMathContext(){
+			return new MathContext(scale(), RoundingMode.HALF_UP);
+		}
+
+		public void update(BigDecimal value){
 
 			if(value == null){
 				return;
 			} // End if
 
-			if(this.min == null || compare(this.min, value) > 0){
+			if(this.min == null || (this.min).compareTo(value) > 0){
 				this.min = value;
 			} // End if
 
-			if(this.max == null || compare(this.max, value) < 0){
+			if(this.max == null || (this.max).compareTo(value) < 0){
 				this.max = value;
 			}
 		}
 
-		public Number getMin(){
+		public BigDecimal getMin(){
 			return this.min;
 		}
 
-		public void setMin(Number min){
+		public void setMin(BigDecimal min){
 			this.min = min;
 		}
 
-		public Number getMax(){
+		public BigDecimal getMax(){
 			return this.max;
 		}
 
-		public void setMax(Number max){
+		public void setMax(BigDecimal max){
 			this.max = max;
 		}
-
-		static
-		private double compare(Number left, Number right){
-			return (left.doubleValue() - right.doubleValue());
-		}
 	}
+
+	private static final BigDecimal MINUS_ONE = new BigDecimal(-1);
 }

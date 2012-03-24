@@ -25,6 +25,10 @@
 	/>
 
 	<inherits
+		name="com.kiouri.sliderbar.SliderBarMVP"
+	/>
+
+	<inherits
 		name="com.reveregroup.gwt.imagepreloader.ImagePreloader"
 	/>
 </module>

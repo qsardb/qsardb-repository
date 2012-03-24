@@ -29,6 +29,16 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!--
+		mvn -o install:install-file -DgroupId=com.kiouri.sliderbar -DartifactId=gwt-slider-bar -Dversion=1.0 -Dpackaging=jar -Dfile=gwt-slider-bar-1.0.jar
+		-->
+		<dependency>
+			<groupId>com.kiouri.sliderbar</groupId>
+			<artifactId>gwt-slider-bar</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>com.reveregroup.gwt</groupId>
 			<artifactId>gwt-image-loader</artifactId>

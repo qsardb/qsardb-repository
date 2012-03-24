@@ -19,8 +19,6 @@ public class QdbApplication extends Application {
 	public void onModuleLoad(){
 		setWidget(new Label("Loading.."));
 
-		QdbServiceAsync service = (QdbServiceAsync.MANAGER).getInstance();
-
 		AsyncCallback<ModelTable> callback = new ServiceCallback<ModelTable>(){
 
 			@Override
@@ -31,10 +29,20 @@ public class QdbApplication extends Application {
 			}
 		};
 
+		QdbServiceAsync service = (QdbServiceAsync.MANAGER).getInstance();
+
 		try {
-			service.loadModelTable(match(getPath() + "/(.*)", 1, Window.Location.getPath()), match("(.*)", 1, Window.Location.getParameter("model")), callback);
+			service.loadModelTable(getHandle(), getModelId(), callback);
 		} catch(DSpaceException de){
 			setWidget(new Label("Loading failed: " + de.getMessage()));
 		}
+	}
+
+	public String getHandle(){
+		return match(getPath() + "/(.*)", 1, Window.Location.getPath());
+	}
+
+	public String getModelId(){
+		return match("(.*)", 1, Window.Location.getParameter("model"));
 	}
 }

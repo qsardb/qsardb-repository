@@ -1,5 +1,6 @@
 package org.dspace.gwt.client;
 
+import java.math.*;
 import java.util.*;
 
 import org.dspace.gwt.rpc.*;
@@ -57,8 +58,8 @@ public class DescriptorPlotGrid extends PlotGrid {
 		}
 
 		QdbPlot.Bounds yBounds = new QdbPlot.Bounds();
-		yBounds.setMin(Integer.valueOf(0));
-		yBounds.setMax(Integer.valueOf(height));
+		yBounds.setMin(new BigDecimal(0));
+		yBounds.setMax(new BigDecimal(height));
 
 		for(int i = 0; i < descriptors.size(); i++){
 			HistogramPlot histogramPlot = (HistogramPlot)getPlot(1, i);

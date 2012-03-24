@@ -17,20 +17,17 @@ import org.dspace.gwt.rpc.*;
 public class QdbServiceServlet extends ItemServiceServlet implements QdbService {
 
 	@Override
-	public ModelTable loadModelTable(final String handle, final String id) throws DSpaceException {
+	public ModelTable loadModelTable(final String handle, final String modelId) throws DSpaceException {
 		Context context = getThreadLocalContext();
 
 		try {
-			Item item = obtainItem(context, handle);
-			if(item == null || item.isWithdrawn()){
-				throw new DSpaceException("Handle \'" + handle + "\' not found or not valid");
-			}
+			Item item = obtainValidItem(context, handle);
 
 			QdbCallable<ModelTable> callable = new QdbCallable<ModelTable>(){
 
 				@Override
 				public ModelTable call(Qdb qdb) throws Exception {
-					return loadModelTable(qdb, id);
+					return loadModelTable(qdb, modelId);
 				}
 			};
 
@@ -42,12 +39,44 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 	}
 
-	private ModelTable loadModelTable(Qdb qdb, String id) throws Exception {
+	@Override
+	public String evaluateModel(final String handle, final String modelId, final Map<String, String> parameters) throws DSpaceException {
+		Context context = getThreadLocalContext();
+
+		try {
+			Item item = obtainValidItem(context, handle);
+
+			QdbCallable<String> callable = new QdbCallable<String>(){
+
+				@Override
+				public String call(Qdb qdb) throws Exception {
+					return evaluateModel(qdb, modelId, parameters);
+				}
+			};
+
+			return QdbUtil.invokeInternal(context, item, callable);
+		} catch(DSpaceException de){
+			throw de;
+		} catch(Exception e){
+			throw new DSpaceException(e.getMessage());
+		}
+	}
+
+	private Item obtainValidItem(Context context, String handle) throws Exception {
+		Item item = obtainItem(context, handle);
+		if(item == null || item.isWithdrawn()){
+			throw new DSpaceException("Handle \'" + handle + "\' not found or not valid");
+		}
+
+		return item;
+	}
+
+	private ModelTable loadModelTable(Qdb qdb, String modelId) throws Exception {
 		ModelTable table = new ModelTable();
 
-		Model model = qdb.getModel(id);
+		Model model = qdb.getModel(modelId);
 		if(model == null){
-			throw new DSpaceException("Model \'" + id + "\' not found");
+			throw new DSpaceException("Model \'" + modelId + "\' not found");
 		}
 
 		table.setId(model.getId());
@@ -171,6 +200,37 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		return table;
 	}
 
+	private String evaluateModel(Qdb qdb, String modelId, Map<String, String> parameters) throws Exception {
+		Model model = qdb.getModel(modelId);
+		if(model == null){
+			throw new DSpaceException("Model \'" + modelId + "\' not found");
+		}
+
+		Evaluator evaluator = getEvaluator(model);
+		if(evaluator != null){
+			evaluator.init();
+
+			try {
+				List<Descriptor> descriptors = evaluator.getDescriptors();
+
+				Evaluator.Result result = evaluator.evaluate(mapValues(descriptors, parameters));
+
+				Object value = result.getValue();
+				if(value != null){
+					return String.valueOf(value);
+				}
+
+				return null;
+			} finally {
+				evaluator.destroy();
+			}
+		} else
+
+		{
+			throw new DSpaceException("Model \'" + modelId + "\' is not evaluatable");
+		}
+	}
+
 	private PredictionColumn loadPredictionColumn(Prediction prediction) throws IOException {
 		PredictionColumn column = new PredictionColumn();
 		column.setId(prediction.getId());
@@ -211,6 +271,16 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		if(keys != null && keys.size() > 0){
 			(values.keySet()).retainAll(keys);
+		}
+
+		return values;
+	}
+
+	private <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){
+		Map<Descriptor, V> values = new LinkedHashMap<Descriptor, V>();
+
+		for(Descriptor descriptor : descriptors){
+			values.put(descriptor, parameters.get(descriptor.getId()));
 		}
 
 		return values;
