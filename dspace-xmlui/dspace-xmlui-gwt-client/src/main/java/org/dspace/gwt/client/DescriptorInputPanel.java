@@ -22,7 +22,7 @@ public class DescriptorInputPanel extends Composite {
 	private SliderBarHorizontal slider = null;
 
 
-	public DescriptorInputPanel(DescriptorColumn descriptor){
+	public DescriptorInputPanel(final DescriptorColumn descriptor){
 		setDescriptor(descriptor);
 
 		this.bounds = QdbPlot.bounds(descriptor.getValues());
@@ -55,7 +55,7 @@ public class DescriptorInputPanel extends Composite {
 				value.setText(String.valueOf(getValue()));
 
 				// XXX
-				fireEvent(new InputChangeEvent());
+				fireEvent(new DescriptorValueChangeEvent(descriptor));
 			}
 		};
 		this.slider.addBarValueChangedHandler(valueHandler);
@@ -63,8 +63,8 @@ public class DescriptorInputPanel extends Composite {
 		initWidget(table);
 	}
 
-	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
-		return addHandler(handler, InputChangeEvent.TYPE);
+	public HandlerRegistration addDescriptorValueChangeEventHandler(DescriptorValueChangeEventHandler handler){
+		return addHandler(handler, DescriptorValueChangeEvent.TYPE);
 	}
 
 	public MathContext getMathContext(){

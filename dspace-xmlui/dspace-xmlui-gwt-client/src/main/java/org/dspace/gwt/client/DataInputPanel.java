@@ -11,8 +11,6 @@ import org.dspace.gwt.rpc.*;
 
 public class DataInputPanel extends Composite implements InputChangeEventHandler {
 
-	private List<DescriptorInputPanel> descriptorPanels = new ArrayList<DescriptorInputPanel>();
-
 	private Timer timer = new Timer(){
 
 		@Override
@@ -21,43 +19,24 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		}
 	};
 
+	private Map<String, String> values = null;
+
 
 	public DataInputPanel(QdbTable table){
-		Panel panel = new VerticalPanel();
+		Panel panel = new FlowPanel();
 
-		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
+		ModelInputPanel modelPanel = new ModelInputPanel(table);
+		modelPanel.addInputChangeEventHandler(this);
 
-		Map<String, Object> trainingValues = null;
-
-		for(PredictionColumn prediction : predictions){
-
-			if((prediction.getType()).equalsIgnoreCase("training")){
-				trainingValues = prediction.getValues();
-			}
-		}
-
-		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
-		for(DescriptorColumn descriptor : descriptors){
-			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(descriptor);
-			panel.add(descriptorPanel);
-
-			this.descriptorPanels.add(descriptorPanel);
-
-			Map<String, ?> trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
-
-			Double mean = MathUtil.mean(trainingDescriptorValues.values());
-
-			descriptorPanel.setValue(mean.toString());
-
-			// Receive notifications about subsequent value changes
-			descriptorPanel.addInputChangeEventHandler(this);
-		}
+		panel.add(modelPanel);
 
 		initWidget(panel);
 	}
 
 	@Override
-	public void onValueChanged(InputChangeEvent event){
+	public void onInputChanged(InputChangeEvent event){
+		setValues(event.getValues());
+
 		this.timer.schedule(1000);
 	}
 
@@ -75,30 +54,17 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		QdbServiceAsync service = (QdbServiceAsync.MANAGER).getInstance();
 
 		try {
-			service.evaluateModel(predictor.getHandle(), predictor.getModelId(), getDescriptorValues(), callback);
+			service.evaluateModel(predictor.getHandle(), predictor.getModelId(), getValues(), callback);
 		} catch(DSpaceException de){
 			Window.alert("Evaluation failed: " + de.getMessage());
 		}
 	}
 
-	public Map<String, String> getDescriptorValues(){
-		Map<String, String> values = new LinkedHashMap<String, String>();
-
-		for(DescriptorInputPanel descriptorPanel : this.descriptorPanels){
-			values.put(descriptorPanel.getId(), String.valueOf(descriptorPanel.getValue()));
-		}
-
-		return values;
+	public Map<String, String> getValues(){
+		return this.values;
 	}
 
-	public void setDescriptorValues(Map<String, String> values){
-
-		for(DescriptorInputPanel descriptorPanel : this.descriptorPanels){
-			String value = values.get(descriptorPanel.getId());
-
-			if(value != null){
-				descriptorPanel.setValue(value);
-			}
-		}
+	private void setValues(Map<String, String> values){
+		this.values = values;
 	}
 }
