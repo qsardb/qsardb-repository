@@ -21,7 +21,10 @@ public class QdbExplorer extends QdbApplication {
 		Panel panel = new FlowPanel();
 
 		panel.add(new DataGridPanel(table));
-		panel.add(new HTML("&nbsp;")); // XXX
+
+		// XXX
+		panel.add(new HTML("&nbsp;"));
+
 		panel.add(new DataAnalysisPanel(table));
 
 		return panel;

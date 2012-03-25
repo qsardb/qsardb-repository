@@ -4,15 +4,26 @@ import java.io.*;
 import java.util.*;
 import java.util.Collection;
 
+import org.qsardb.cargo.bodo.*;
 import org.qsardb.cargo.map.*;
 import org.qsardb.cargo.pmml.*;
 import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 
+import net.sf.jniinchi.*;
+
 import org.dspace.content.*;
 import org.dspace.core.*;
 import org.dspace.gwt.rpc.*;
+import org.openscience.cdk.*;
+import org.openscience.cdk.exception.*;
+import org.openscience.cdk.graph.*;
+import org.openscience.cdk.inchi.*;
+import org.openscience.cdk.interfaces.*;
+import org.openscience.cdk.qsar.*;
+import org.openscience.cdk.qsar.result.*;
+import org.openscience.cdk.smiles.*;
 
 public class QdbServiceServlet extends ItemServiceServlet implements QdbService {
 
@@ -28,6 +39,29 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 				@Override
 				public ModelTable call(Qdb qdb) throws Exception {
 					return loadModelTable(qdb, modelId);
+				}
+			};
+
+			return QdbUtil.invokeInternal(context, item, callable);
+		} catch(DSpaceException de){
+			throw de;
+		} catch(Exception e){
+			throw new DSpaceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public Map<String, String> calculateModelDescriptors(final String handle, final String modelId, final String string) throws DSpaceException {
+		Context context = getThreadLocalContext();
+
+		try {
+			Item item = obtainValidItem(context, handle);
+
+			QdbCallable<Map<String, String>> callable = new QdbCallable<Map<String, String>>(){
+
+				@Override
+				public Map<String, String> call(Qdb qdb) throws Exception {
+					return calculateModelDescriptors(qdb, modelId, string);
 				}
 			};
 
@@ -200,6 +234,46 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		return table;
 	}
 
+	private Map<String, String> calculateModelDescriptors(Qdb qdb, String modelId, String string) throws Exception {
+		Model model = qdb.getModel(modelId);
+		if(model == null){
+			throw new DSpaceException("Model \'" + modelId + "\' not found");
+		}
+
+		IAtomContainer molecule = parseMolecule(string);
+
+		Evaluator evaluator = getEvaluator(model);
+		if(evaluator != null){
+			evaluator.init();
+
+			try {
+				Map<String, String> values = new LinkedHashMap<String, String>();
+
+				List<Descriptor> descriptors = evaluator.getDescriptors();
+				for(Descriptor descriptor : descriptors){
+
+					if(!descriptor.hasCargo(BODOCargo.class)){
+						continue;
+					}
+
+					BODOCargo bodoCargo = descriptor.getCargo(BODOCargo.class);
+
+					IDescriptor cdkDescriptor = BODOUtil.parse(bodoCargo.loadBodoDescriptor());
+
+					values.put(descriptor.getId(), calculateCdkDescriptor((IMolecularDescriptor)cdkDescriptor, molecule));
+				}
+
+				return values;
+			} finally {
+				evaluator.destroy();
+			}
+		} else
+
+		{
+			throw new DSpaceException("Model \'" + modelId + "\' is not evaluatable");
+		}
+	}
+
 	private String evaluateModel(Qdb qdb, String modelId, Map<String, String> parameters) throws Exception {
 		Model model = qdb.getModel(modelId);
 		if(model == null){
@@ -255,6 +329,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		column.setName(descriptor.getName());
 		column.setValues(loadValues(descriptor, keys));
 
+		column.setCalculable(descriptor.hasCargo(BODOCargo.class));
+
 		return column;
 	}
 
@@ -274,6 +350,54 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 
 		return values;
+	}
+
+	private IAtomContainer parseMolecule(String string) throws Exception {
+
+		if(string.startsWith("InChI=")){
+			return parseInChIMolecule(string);
+		}
+
+		return parseSmilesMolecule(string);
+	}
+
+	private IAtomContainer parseInChIMolecule(String string) throws CDKException, IOException {
+		InChIGeneratorFactory factory = InChIGeneratorFactory.getInstance();
+
+		InChIToStructure converter = factory.getInChIToStructure(string, DefaultChemObjectBuilder.getInstance());
+
+		INCHI_RET status = converter.getReturnStatus();
+		switch(status){
+			case OKAY:
+				break;
+			default:
+				throw new IOException();
+		}
+
+		IAtomContainer atomContainer = converter.getAtomContainer();
+		if(!ConnectivityChecker.isConnected(atomContainer)){
+			throw new IOException();
+		}
+
+		return new Molecule(atomContainer);
+	}
+
+	private IAtomContainer parseSmilesMolecule(String string) throws InvalidSmilesException {
+		SmilesParser parser = new SmilesParser(DefaultChemObjectBuilder.getInstance());
+
+		return parser.parseSmiles(string);
+	}
+
+	private String calculateCdkDescriptor(IMolecularDescriptor descriptor, IAtomContainer molecule){
+		DescriptorValue value = descriptor.calculate(molecule);
+
+		IDescriptorResult result = value.getValue();
+
+		if((result instanceof BooleanResult) || (result instanceof DoubleResult) || (result instanceof IntegerResult)){
+			return result.toString();
+		}
+
+		throw new IllegalArgumentException(result.toString());
 	}
 
 	private <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){

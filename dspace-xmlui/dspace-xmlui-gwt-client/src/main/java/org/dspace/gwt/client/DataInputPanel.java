@@ -25,10 +25,20 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	public DataInputPanel(QdbTable table){
 		Panel panel = new FlowPanel();
 
+		CompoundInputPanel compoundPanel = new CompoundInputPanel(table);
+		compoundPanel.addInputChangeEventHandler(this);
+
+		panel.add(compoundPanel);
+
+		// XXX
+		panel.add(new HTML("&nbsp;"));
+
 		ModelInputPanel modelPanel = new ModelInputPanel(table);
 		modelPanel.addInputChangeEventHandler(this);
 
 		panel.add(modelPanel);
+
+		compoundPanel.addInputChangeEventHandler(modelPanel);
 
 		initWidget(panel);
 	}
