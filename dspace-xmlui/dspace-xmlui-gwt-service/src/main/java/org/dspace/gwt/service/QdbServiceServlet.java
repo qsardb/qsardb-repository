@@ -134,7 +134,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		for(Prediction prediction : predictions){
 			PredictionColumn column = loadPredictionColumn(prediction);
-			column.setType((prediction.getType()).name());
+			column.setType(PredictionColumn.Type.valueOf((prediction.getType()).name()));
 
 			Map<String, ?> values = column.getValues();
 			keys.addAll(values.keySet());

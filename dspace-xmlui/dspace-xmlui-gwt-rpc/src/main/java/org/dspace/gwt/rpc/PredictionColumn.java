@@ -5,16 +5,16 @@ import java.util.*;
 
 public class PredictionColumn extends ParameterColumn {
 
-	private String type = null;
+	private Type type = null;
 
 	private Map<String, BigDecimal> errors = null;
 
 
-	public String getType(){
+	public Type getType(){
 		return this.type;
 	}
 
-	public void setType(String type){
+	public void setType(Type type){
 		this.type = type;
 	}
 
@@ -32,5 +32,13 @@ public class PredictionColumn extends ParameterColumn {
 
 	public void setErrors(Map<String, BigDecimal> errors){
 		this.errors = errors;
+	}
+
+	static
+	public enum Type {
+		TRAINING,
+		VALIDATION,
+		TESTING,
+		;
 	}
 }

@@ -29,7 +29,7 @@ public class PropertyPlotGrid extends PlotGrid {
 			Map<String, Object> predictionValues = prediction.getValues();
 			Map<String, BigDecimal> predictionErrors = prediction.getErrors();
 
-			if((prediction.getType()).equalsIgnoreCase("training")){
+			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
 				trainingErrors = predictionErrors;
 			}
 

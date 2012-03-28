@@ -18,11 +18,11 @@ public class SeriesListBox extends ListBox {
 			addItem("All predictions", createValue(predictions));
 		}
 
-		addItem("Training prediction", createValue(predictions, "training"));
+		addItem("Training prediction", createValue(predictions, PredictionColumn.Type.TRAINING));
 
 		if(predictions.size() > 1){
-			addItem("Validation prediction(s)", createValue(predictions, "validation"));
-			addItem("Testing prediction(s)", createValue(predictions, "testing"));
+			addItem("Validation prediction(s)", createValue(predictions, PredictionColumn.Type.VALIDATION));
+			addItem("Testing prediction(s)", createValue(predictions, PredictionColumn.Type.TESTING));
 		}
 	}
 
@@ -50,12 +50,12 @@ public class SeriesListBox extends ListBox {
 	}
 
 	static
-	private Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions, String type){
+	private Map<PredictionColumn, Boolean> createValue(Collection<PredictionColumn> predictions, PredictionColumn.Type type){
 		Map<PredictionColumn, Boolean> result = new LinkedHashMap<PredictionColumn, Boolean>();
 
 		for(PredictionColumn prediction : predictions){
 
-			if(type == null || (prediction.getType()).equalsIgnoreCase(type)){
+			if(type == null || (prediction.getType()).equals(type)){
 				result.put(prediction, Boolean.TRUE);
 			}
 		}

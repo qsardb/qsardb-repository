@@ -18,7 +18,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		for(PredictionColumn prediction : predictions){
 
-			if((prediction.getType()).equalsIgnoreCase("training")){
+			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
 				trainingValues = prediction.getValues();
 			}
 		}
