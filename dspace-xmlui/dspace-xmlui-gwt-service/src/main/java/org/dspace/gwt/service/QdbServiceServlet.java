@@ -43,10 +43,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			};
 
 			return QdbUtil.invokeInternal(context, item, callable);
-		} catch(DSpaceException de){
-			throw de;
 		} catch(Exception e){
-			throw new DSpaceException(e.getMessage());
+			throw formatException(e);
 		}
 	}
 
@@ -66,10 +64,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			};
 
 			return QdbUtil.invokeInternal(context, item, callable);
-		} catch(DSpaceException de){
-			throw de;
 		} catch(Exception e){
-			throw new DSpaceException(e.getMessage());
+			throw formatException(e);
 		}
 	}
 
@@ -89,10 +85,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			};
 
 			return QdbUtil.invokeInternal(context, item, callable);
-		} catch(DSpaceException de){
-			throw de;
 		} catch(Exception e){
-			throw new DSpaceException(e.getMessage());
+			throw formatException(e);
 		}
 	}
 
@@ -287,14 +281,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			try {
 				List<Descriptor> descriptors = evaluator.getDescriptors();
 
-				Evaluator.Result result = evaluator.evaluate(mapValues(descriptors, parameters));
-
-				Object value = result.getValue();
-				if(value != null){
-					return String.valueOf(value);
-				}
-
-				return null;
+				return (String)evaluator.evaluateAndFormat(mapValues(descriptors, parameters), null);
 			} finally {
 				evaluator.destroy();
 			}
@@ -303,6 +290,16 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		{
 			throw new DSpaceException("Model \'" + modelId + "\' is not evaluatable");
 		}
+	}
+
+	private DSpaceException formatException(Exception e){
+		log(e.getMessage(), e);
+
+		if(e instanceof DSpaceException){
+			return (DSpaceException)e;
+		}
+
+		return new DSpaceException(e.getMessage());
 	}
 
 	private PredictionColumn loadPredictionColumn(Prediction prediction) throws IOException {
