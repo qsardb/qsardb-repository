@@ -36,11 +36,24 @@ public class CompoundInputPanel extends Composite {
 
 			@Override
 			public void onKeyPress(KeyPressEvent event){
-				int code = event.getCharCode();
+				int charCode = event.getUnicodeCharCode();
 
-				if(code == KeyCodes.KEY_ENTER){
-					calculate(textBox.getText());
+				// Not an alphanumeric key
+				if(charCode == 0){
+					int keyCode = (event.getNativeEvent()).getKeyCode();
+
+					if(keyCode == KeyCodes.KEY_ENTER){
+						onEnter();
+					}
+				} else
+
+				if(charCode == KeyCodes.KEY_ENTER){
+					onEnter();
 				}
+			}
+
+			private void onEnter(){
+				calculate(textBox.getText());
 			}
 		};
 		textBox.addKeyPressHandler(keyHandler);
