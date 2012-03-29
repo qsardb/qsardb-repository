@@ -13,8 +13,8 @@ public class HistogramPlot extends QdbPlot {
 	private List<List<HistogramDataPoint>> seriesPoints = new ArrayList<List<HistogramDataPoint>>();
 
 
-	public HistogramPlot(Bounds xBounds, int size){
-		this.bars = new BarList((xBounds.getMin()).doubleValue(), (xBounds.getMax()).doubleValue(), size);
+	public HistogramPlot(Number min, Number max, int size){
+		this.bars = new BarList(min.doubleValue(), max.doubleValue(), size);
 
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 		globalSeriesOptions.setStack(true);
@@ -32,8 +32,6 @@ public class HistogramPlot extends QdbPlot {
 		barSeriesOptions.setAlignment(BarSeriesOptions.BarAlignment.CENTER);
 		barSeriesOptions.setBarWidth(barWidth);
 		barSeriesOptions.setShow(true);
-
-		setXAxisBounds(xBounds);
 	}
 
 	public void addSeries(Series series, Map<String, ?> values){

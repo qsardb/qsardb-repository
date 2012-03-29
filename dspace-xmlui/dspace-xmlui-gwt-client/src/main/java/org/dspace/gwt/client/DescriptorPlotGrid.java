@@ -39,8 +39,12 @@ public class DescriptorPlotGrid extends PlotGrid {
 			Map<String, Object> descriptorValues = descriptor.getValues();
 			QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
-			ScatterPlot scatterPlot = new ScatterPlot(resolver, descriptorBounds, propertyBounds);
-			HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds, size);
+			ScatterPlot scatterPlot = new ScatterPlot(resolver);
+			scatterPlot.setXAxisBounds(descriptorBounds);
+			scatterPlot.setYAxisBounds(propertyBounds);
+
+			HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds.getMin(), descriptorBounds.getMax(), size);
+			histogramPlot.setXAxisBounds(descriptorBounds);
 
 			for(PredictionColumn prediction : predictions){
 				Set<String> keys = (prediction.getValues()).keySet();

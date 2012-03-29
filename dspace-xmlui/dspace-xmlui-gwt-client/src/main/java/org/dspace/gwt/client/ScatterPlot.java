@@ -13,7 +13,7 @@ public class ScatterPlot extends QdbPlot {
 	private List<List<ScatterDataPoint>> seriesPoints = new ArrayList<List<ScatterDataPoint>>();
 
 
-	public ScatterPlot(final Resolver resolver, Bounds xBounds, Bounds yBounds){
+	public ScatterPlot(final Resolver resolver){
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 		globalSeriesOptions.setShadowSize(0);
 
@@ -47,9 +47,6 @@ public class ScatterPlot extends QdbPlot {
 			}
 		};
 		addHoverListener(hoverListener, false);
-
-		setXAxisBounds(xBounds);
-		setYAxisBounds(yBounds);
 	}
 
 	public void addSeries(Series series, Map<String, ?> xValues, Map<String, ?> yValues){
