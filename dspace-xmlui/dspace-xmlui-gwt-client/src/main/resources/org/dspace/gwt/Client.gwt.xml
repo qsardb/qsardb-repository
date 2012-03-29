@@ -31,4 +31,21 @@
 	<inherits
 		name="com.reveregroup.gwt.imagepreloader.ImagePreloader"
 	/>
+
+	<set-property
+		name="gflot.load.flot.image"
+		value="DISABLED"
+	/>
+	<set-property
+		name="gflot.load.flot.pie"
+		value="DISABLED"
+	/>
+	<set-property
+		name="gflot.load.flot.selection"
+		value="DISABLED"
+	/>
+	<set-property
+		name="gflot.load.flot.symbol"
+		value="DISABLED"
+	/>
 </module>
