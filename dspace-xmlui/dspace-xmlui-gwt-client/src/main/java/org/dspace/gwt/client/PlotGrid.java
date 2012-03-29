@@ -14,10 +14,12 @@ public class PlotGrid extends Grid implements SeriesDisplayEventHandler {
 
 	@Override
 	public void onVisibilityChanged(SeriesDisplayEvent event){
+		int rows = getRowCount();
+		int columns = getColumnCount();
 
-		for(int row = 0; row < getRowCount(); row++){
+		for(int row = 0; row < rows; row++){
 
-			for(int column = 0; column < getColumnCount(); column++){
+			for(int column = 0; column < columns; column++){
 				Widget widget = getWidget(row, column);
 
 				if(widget instanceof QdbPlot){

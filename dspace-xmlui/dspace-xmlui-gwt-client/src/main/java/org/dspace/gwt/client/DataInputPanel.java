@@ -2,6 +2,7 @@ package org.dspace.gwt.client;
 
 import java.util.*;
 
+import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
@@ -50,6 +51,10 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		this.timer.schedule(1000);
 	}
 
+	public HandlerRegistration addEvaluationEventHandler(EvaluationEventHandler handler){
+		return addHandler(handler, EvaluationEvent.TYPE);
+	}
+
 	public void evaluate(){
 		QdbPredictor predictor = (QdbPredictor)Application.getInstance();
 
@@ -57,7 +62,7 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 			@Override
 			public void onSuccess(String string){
-				Window.alert(string);
+				fireEvent(new EvaluationEvent(string));
 			}
 		};
 
