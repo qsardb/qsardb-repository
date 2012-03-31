@@ -11,7 +11,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 		Panel panel = new FlowPanel();
 
 		this.table = new FlexTable();
-		this.table.setHTML(0, 0, "Loading...");
+		this.table.setHTML(0, 0, "Loading..");
 
 		FlexTable.ColumnFormatter formatter = this.table.getColumnFormatter();
 

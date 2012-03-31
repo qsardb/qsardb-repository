@@ -22,6 +22,8 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 
 		setDragWidget(new Image(images.drag()));
 
+		setWidth((20 + maxValue + 20) + "px");
+
 		setBounds(bounds);
 	}
 

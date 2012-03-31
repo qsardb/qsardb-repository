@@ -22,7 +22,7 @@ public class CompoundInputPanel extends Composite {
 			calculable &= descriptor.isCalculable();
 		}
 
-		panel.add(new Label("Chemical structure in InChI or SMILES format:"));
+		panel.add(new HTML("<u>Chemical structure input</u> (InChI or SMILES format):"));
 
 		final
 		TextBox textBox = new TextBox();

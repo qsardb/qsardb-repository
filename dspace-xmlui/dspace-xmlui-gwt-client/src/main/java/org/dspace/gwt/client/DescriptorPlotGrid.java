@@ -62,7 +62,7 @@ public class DescriptorPlotGrid extends PlotGrid {
 		}
 
 		QdbPlot.Bounds yBounds = new QdbPlot.Bounds();
-		yBounds.setMin(new BigDecimal(0));
+		yBounds.setMin(BigDecimal.ZERO);
 		yBounds.setMax(new BigDecimal(height));
 
 		for(int i = 0; i < descriptors.size(); i++){

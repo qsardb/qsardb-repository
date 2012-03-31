@@ -14,12 +14,12 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		Map<String, Object> trainingValues = null;
+		PredictionColumn training = null;
 
 		for(PredictionColumn prediction : predictions){
 
 			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
-				trainingValues = prediction.getValues();
+				training = prediction;
 			}
 		}
 
@@ -31,16 +31,12 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			}
 		};
 
+		panel.add(new HTML("<u>Descriptor input</u>:"));
+
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(descriptor);
+			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(descriptor, training);
 			panel.add(descriptorPanel);
-
-			Map<String, ?> trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
-
-			Double mean = MathUtil.mean(trainingDescriptorValues.values());
-
-			descriptorPanel.setValue(mean.toString());
 
 			// Receive notifications about subsequent value changes
 			descriptorPanel.addDescriptorValueChangeEventHandler(changeHandler);

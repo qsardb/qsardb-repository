@@ -1,6 +1,7 @@
 package org.dspace.gwt.client;
 
 import java.math.*;
+import java.util.*;
 
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.*;
@@ -16,8 +17,12 @@ public class DescriptorInputPanel extends Composite {
 	private DescriptorSliderBarHorizontal slider = null;
 
 
-	public DescriptorInputPanel(final DescriptorColumn descriptor){
+	public DescriptorInputPanel(final DescriptorColumn descriptor, PredictionColumn training){
 		setDescriptor(descriptor);
+
+		Map<String, ?> trainingValues = training.getValues();
+
+		Map<String, ?> trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
 
 		FlexTable table = new FlexTable();
 
@@ -35,11 +40,9 @@ public class DescriptorInputPanel extends Composite {
 
 		formatter.setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 
-		QdbPlot.Bounds bounds = QdbPlot.bounds(descriptor.getValues());
+		QdbPlot.Bounds xBounds = QdbPlot.bounds(trainingDescriptorValues);
 
-		this.slider = new DescriptorSliderBarHorizontal(500, bounds);
-		this.slider.setWidth("500px");
-
+		this.slider = new DescriptorSliderBarHorizontal(300, xBounds);
 		table.setWidget(2, 0, this.slider);
 
 		BarValueChangedHandler valueHandler = new BarValueChangedHandler(){
@@ -53,6 +56,35 @@ public class DescriptorInputPanel extends Composite {
 			}
 		};
 		this.slider.addBarValueChangedHandler(valueHandler);
+
+		final
+		HistogramPlot histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
+		histogramPlot.setXAxisBounds(xBounds);
+
+		histogramPlot.addSeries(new PredictionSeries(training), trainingDescriptorValues);
+
+		QdbPlot.Bounds yBounds = new QdbPlot.Bounds();
+		yBounds.setMin(BigDecimal.ZERO);
+		yBounds.setMax(new BigDecimal(histogramPlot.getMaxHeight()));
+
+		histogramPlot.setYAxisBounds(yBounds);
+
+		table.setWidget(3, 0, histogramPlot);
+
+		histogramPlot.setVisible(false);
+
+		MouseFocusHandler focusHandler = new MouseFocusHandler(){
+
+			@Override
+			public void focusChanged(boolean focus){
+				histogramPlot.setVisible(focus);
+			}
+		};
+		focusHandler.install(this.slider);
+
+		Double mean = MathUtil.mean(trainingDescriptorValues.values());
+
+		setValue(mean.toString());
 
 		initWidget(table);
 	}
