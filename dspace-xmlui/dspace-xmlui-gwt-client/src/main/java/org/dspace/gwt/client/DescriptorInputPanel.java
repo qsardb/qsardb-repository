@@ -4,6 +4,7 @@ import java.math.*;
 import java.util.*;
 
 import com.google.gwt.event.shared.*;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 
 import com.kiouri.sliderbar.client.event.*;
@@ -73,11 +74,26 @@ public class DescriptorInputPanel extends Composite {
 
 		histogramPlot.setVisible(false);
 
+		final
+		Timer timer = new Timer(){
+
+			@Override
+			public void run(){
+				histogramPlot.setVisible(true);
+			}
+		};
+
 		MouseFocusHandler focusHandler = new MouseFocusHandler(){
 
 			@Override
 			public void focusChanged(boolean focus){
-				histogramPlot.setVisible(focus);
+				timer.cancel();
+
+				if(focus){
+					timer.schedule(TIMER_DELAY);
+				}
+
+				histogramPlot.setVisible(false);
 			}
 		};
 		focusHandler.install(this.slider);
@@ -118,4 +134,6 @@ public class DescriptorInputPanel extends Composite {
 	private void setDescriptor(DescriptorColumn descriptor){
 		this.descriptor = descriptor;
 	}
+
+	private static final int TIMER_DELAY = 500;
 }
