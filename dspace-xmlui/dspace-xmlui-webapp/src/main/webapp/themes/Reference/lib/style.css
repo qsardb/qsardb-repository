@@ -563,6 +563,16 @@ span.underline {
         text-decoration: underline;
 }
 
+span.superscript {
+	font-size: .83em;
+	vertical-align: super;
+}
+
+span.subscript {
+	font-size: .83em;
+	vertical-align: sub;
+}
+
 span.floatleft {
 	border:none;
 	float:right;

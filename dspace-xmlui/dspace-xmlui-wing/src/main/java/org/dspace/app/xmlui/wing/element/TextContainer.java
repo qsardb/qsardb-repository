@@ -79,4 +79,10 @@ public abstract class TextContainer extends Container
         Data data = new Data(context, message);
         contents.add(data);
     }
+
+	public void addHtmlContent(String characters) throws WingException {
+		SimpleHTMLFragment data = new SimpleHTMLFragment(context, false, characters);
+
+		contents.add(data);
+	}
 }

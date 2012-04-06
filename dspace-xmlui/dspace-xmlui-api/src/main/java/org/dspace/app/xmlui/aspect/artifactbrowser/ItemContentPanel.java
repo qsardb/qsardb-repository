@@ -89,10 +89,10 @@ class ItemContentPanel {
 				sizeCell.addContent("n");
 
 				Cell rsqCell = headerRow.addCell();
-				rsqCell.addContent("RSq"); // XXX: R<sup>2</sup>
+				rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
 
 				Cell stdevCell = headerRow.addCell();
-				stdevCell.addContent("StDev");
+				stdevCell.addHtmlContent("<p>&#x3c3;</p>");
 			}
 
 			for(Model propertyModel : propertyModels){
