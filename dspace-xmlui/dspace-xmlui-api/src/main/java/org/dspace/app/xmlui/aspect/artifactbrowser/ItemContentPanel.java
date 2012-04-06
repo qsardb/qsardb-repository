@@ -82,16 +82,16 @@ class ItemContentPanel {
 			Row headerRow = modelsTable.addRow("header");
 
 			{
-				Cell nameCell = headerRow.addCell();
+				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
 				nameCell.addContent((String)null);
 
-				Cell sizeCell = headerRow.addCell();
+				Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
 				sizeCell.addContent("n");
 
-				Cell rsqCell = headerRow.addCell();
+				Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
 				rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
 
-				Cell stdevCell = headerRow.addCell();
+				Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
 				stdevCell.addHtmlContent("<p>&#x3c3;</p>");
 			}
 
@@ -100,10 +100,8 @@ class ItemContentPanel {
 
 				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
 				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
-				modelSummary.addContent(" ");
-				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_explorer);
-				modelSummary.addContent(" ");
-				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_predictor);
+				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_explorer, "application-link");
+				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_predictor, "application-link");
 
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 				for(Prediction modelPrediction : modelPredictions){

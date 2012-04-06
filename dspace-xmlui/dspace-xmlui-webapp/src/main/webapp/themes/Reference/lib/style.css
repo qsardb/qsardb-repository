@@ -485,7 +485,17 @@ th.doubleIndent {
     padding-right: 0;
 }
 
+th.short {
+	width: 50px;
+}
 
+th.medium {
+	width: 100px;
+}
+
+th.long {
+	width: 200px;
+}
 
 /* highlight a single row */
 tr.ds-table-row.highlight {
@@ -549,6 +559,10 @@ table.ds-gloss-list td ul {
 
 a.image-link img {
         border: none;
+}
+
+a.application-link {
+	margin-left: 5px;
 }
 
 span.bold {
