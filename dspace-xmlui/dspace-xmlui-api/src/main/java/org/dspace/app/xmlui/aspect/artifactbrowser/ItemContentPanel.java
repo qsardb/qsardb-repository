@@ -66,18 +66,19 @@ class ItemContentPanel {
 				continue;
 			}
 
-			int rows = 1;
-			int columns = 4;
+			java.util.Collection<Prediction> propertyPredictions = new LinkedHashSet<Prediction>();
 
 			for(Model propertyModel : propertyModels){
-				rows += 1;
-
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
-				rows += modelPredictions.size();
+
+				propertyPredictions.addAll(modelPredictions);
 			}
 
+			int rows = (propertyModels.size() + propertyPredictions.size());
+			int columns = 5;
+
 			Table modelsTable = division.addTable("property-models-" + property.getId(), rows, columns);
-			modelsTable.setHead(T_property_models_head.parameterize(propertyModels.size()));
+			modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
 
 			Row headerRow = modelsTable.addRow("header");
 
@@ -85,8 +86,11 @@ class ItemContentPanel {
 				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
 				nameCell.addContent((String)null);
 
+				Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "medium");
+				typeCell.addContent("Type"); // XXX
+
 				Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				sizeCell.addContent("n");
+				sizeCell.addContent("Values"); // XXX
 
 				Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
 				rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
@@ -100,16 +104,24 @@ class ItemContentPanel {
 
 				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
 				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
-				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_explorer, "application-link");
-				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_predictor, "application-link");
+				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_explorer, "application-link");
+				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_predictor, "application-link");
 
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
+
+				Values<?> trainingValues = null;
+
 				for(Prediction modelPrediction : modelPredictions){
+					Values<?> predictionValues = loadValues(modelPrediction);
+
+					if((modelPrediction.getType()).equals(Prediction.Type.TRAINING)){
+						trainingValues = predictionValues;
+					}
+
 					Row predictionRow = modelsTable.addRow("data");
 
-					Values predictionValues = loadValues(modelPrediction);
-
 					predictionRow.addCellContent(T_prediction_name.parameterize(modelPrediction.getName()));
+					predictionRow.addCellContent(T_prediction_type.parameterize(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues)));
 					predictionRow.addCellContent(T_prediction_values.parameterize(predictionValues.size()));
 					predictionRow.addCellContent(T_prediction_rsq.parameterize(predictionValues.rsq(propertyValues)));
 					predictionRow.addCellContent(T_prediction_stdev.parameterize(predictionValues.stdev(propertyValues)));
@@ -140,6 +152,33 @@ class ItemContentPanel {
 		}
 
 		throw new IOException();
+	}
+
+	static
+	private String formatPredictionType(Prediction.Type type, Values<?> trainingValues, Values<?> values){
+
+		switch(type){
+			case TRAINING:
+				return "training";
+			case VALIDATION:
+				if(trainingValues != null){
+					Set<String> trainingKeys = trainingValues.keySet();
+					Set<String> keys = values.keySet();
+
+					if((trainingKeys).containsAll(keys)){
+						return "internal validation";
+					} else
+
+					if(Collections.disjoint(trainingKeys, keys)){
+						return "external validation";
+					}
+				}
+				return "validation";
+			case TESTING:
+				return "testing";
+		}
+
+		return null;
 	}
 
 	static
@@ -175,45 +214,6 @@ class ItemContentPanel {
 
 		public java.util.Collection<X> values(){
 			return this.values.values();
-		}
-	}
-
-	static
-	private class FlexBigDecimalFormat extends BigDecimalFormat {
-
-		private boolean valid = false;
-
-
-		@Override
-		public BigDecimal parseString(String string){
-
-			if(isText(string)){
-				return null;
-			}
-
-			BigDecimal result = super.parseString(string);
-
-			this.valid |= true;
-
-			return result;
-		}
-
-		private boolean isValid(){
-			return this.valid;
-		}
-
-		static
-		private boolean isText(String string){
-
-			for(int i = 0; string != null && i < string.length(); i++){
-				char c = string.charAt(i);
-
-				if(!Character.isLetter(c)){
-					return false;
-				}
-			}
-
-			return true;
 		}
 	}
 
@@ -295,19 +295,60 @@ class ItemContentPanel {
 		}
 	}
 
+	static
+	private class FlexBigDecimalFormat extends BigDecimalFormat {
+
+		private boolean valid = false;
+
+
+		@Override
+		public BigDecimal parseString(String string){
+
+			if(isText(string)){
+				return null;
+			}
+
+			BigDecimal result = super.parseString(string);
+
+			this.valid |= true;
+
+			return result;
+		}
+
+		private boolean isValid(){
+			return this.valid;
+		}
+
+		static
+		private boolean isText(String string){
+
+			for(int i = 0; string != null && i < string.length(); i++){
+				char c = string.charAt(i);
+
+				if(!Character.isLetter(c)){
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+
 	private static final Message T_property_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property");
 
 	private static final Message T_property_values = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_values");
 
-	private static final Message T_property_models_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_models");
+	private static final Message T_property_table_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_table");
 
 	private static final Message T_model_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_summary");
 
-	private static final Message T_model_explorer = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_explorer");
+	private static final Message T_model_link_explorer = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_link_explorer");
 
-	private static final Message T_model_predictor = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_predictor");
+	private static final Message T_model_link_predictor = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_link_predictor");
 
 	private static final Message T_prediction_name = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_name");
+
+	private static final Message T_prediction_type = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_type");
 
 	private static final Message T_prediction_values = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_values");
 
