@@ -84,7 +84,7 @@ class ItemContentPanel {
 		int rows = (propertyModels.size() + propertyPredictions.size());
 		int columns = 5;
 
-		Table modelsTable = division.addTable("property-models-" + property.getId(), rows, columns);
+		Table modelsTable = propertyDivision.addTable("property-models", rows, columns);
 		modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
 
 		Row headerRow = modelsTable.addRow("header");
