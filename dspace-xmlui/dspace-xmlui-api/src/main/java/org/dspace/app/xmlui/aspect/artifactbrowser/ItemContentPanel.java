@@ -49,83 +49,89 @@ class ItemContentPanel {
 	static
 	public void generate(ItemViewer viewer, Item item, Qdb qdb, Division division) throws IOException, WingException {
 		PropertyRegistry properties = qdb.getPropertyRegistry();
+
+		for(Property property : properties){
+			generatePropertyDivision(viewer, item, qdb, property, division);
+		}
+	}
+
+	static
+	private void generatePropertyDivision(ItemViewer viewer, Item item, Qdb qdb, Property property, Division division) throws IOException, WingException {
 		ModelRegistry models = qdb.getModelRegistry();
 		PredictionRegistry predictions = qdb.getPredictionRegistry();
 
-		for(Property property : properties){
-			Division propertyDivision = division.addDivision("property-" + property.getId(), "secondary");
-			propertyDivision.setHead(T_property_head.parameterize(property.getId(), property.getName()));
+		Division propertyDivision = division.addDivision("property-" + property.getId(), "secondary");
+		propertyDivision.setHead(T_property_head.parameterize(property.getId(), property.getName()));
 
-			Para propertyValuesPara = propertyDivision.addPara("property-values", null);
+		Para propertyValuesPara = propertyDivision.addPara("property-values", null);
 
-			Values<?> propertyValues = loadValues(property);
-			propertyValuesPara.addContent(T_property_values.parameterize(propertyValues.size()));
+		Values<?> propertyValues = loadValues(property);
+		propertyValuesPara.addContent(T_property_values.parameterize(propertyValues.size()));
 
-			java.util.Collection<Model> propertyModels = models.getByProperty(property);
-			if(propertyModels.isEmpty()){
-				continue;
-			}
+		java.util.Collection<Model> propertyModels = models.getByProperty(property);
+		if(propertyModels.isEmpty()){
+			return;
+		}
 
-			java.util.Collection<Prediction> propertyPredictions = new LinkedHashSet<Prediction>();
+		java.util.Collection<Prediction> propertyPredictions = new LinkedHashSet<Prediction>();
 
-			for(Model propertyModel : propertyModels){
-				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
+		for(Model propertyModel : propertyModels){
+			java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 
-				propertyPredictions.addAll(modelPredictions);
-			}
+			propertyPredictions.addAll(modelPredictions);
+		}
 
-			int rows = (propertyModels.size() + propertyPredictions.size());
-			int columns = 5;
+		int rows = (propertyModels.size() + propertyPredictions.size());
+		int columns = 5;
 
-			Table modelsTable = division.addTable("property-models-" + property.getId(), rows, columns);
-			modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
+		Table modelsTable = division.addTable("property-models-" + property.getId(), rows, columns);
+		modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
 
-			Row headerRow = modelsTable.addRow("header");
+		Row headerRow = modelsTable.addRow("header");
 
-			{
-				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
-				nameCell.addContent((String)null);
+		{
+			Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
+			nameCell.addContent((String)null);
 
-				Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "medium");
-				typeCell.addContent("Type"); // XXX
+			Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "medium");
+			typeCell.addContent("Type"); // XXX
 
-				Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				sizeCell.addContent("Values"); // XXX
+			Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+			sizeCell.addContent("Values"); // XXX
 
-				Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
+			Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+			rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
 
-				Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				stdevCell.addHtmlContent("<p>&#x3c3;</p>");
-			}
+			Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+			stdevCell.addHtmlContent("<p>&#x3c3;</p>");
+		}
 
-			for(Model propertyModel : propertyModels){
-				Row modelRow = modelsTable.addRow("model-" + propertyModel.getId(), "header", "subheader");
+		for(Model propertyModel : propertyModels){
+			Row modelRow = modelsTable.addRow("model-" + propertyModel.getId(), "header", "subheader");
 
-				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
-				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
-				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_explorer, "application-link");
-				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_predictor, "application-link");
+			Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
+			modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
+			modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_explorer, "application-link");
+			modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_predictor, "application-link");
 
-				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
+			java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 
-				Values<?> trainingValues = null;
+			Values<?> trainingValues = null;
 
-				for(Prediction modelPrediction : modelPredictions){
-					Values<?> predictionValues = loadValues(modelPrediction);
+			for(Prediction modelPrediction : modelPredictions){
+				Values<?> predictionValues = loadValues(modelPrediction);
 
-					if((modelPrediction.getType()).equals(Prediction.Type.TRAINING)){
-						trainingValues = predictionValues;
-					}
-
-					Row predictionRow = modelsTable.addRow("data");
-
-					predictionRow.addCellContent(T_prediction_name.parameterize(modelPrediction.getName()));
-					predictionRow.addCellContent(T_prediction_type.parameterize(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues)));
-					predictionRow.addCellContent(T_prediction_values.parameterize(predictionValues.size()));
-					predictionRow.addCellContent(T_prediction_rsq.parameterize(predictionValues.rsq(propertyValues)));
-					predictionRow.addCellContent(T_prediction_stdev.parameterize(predictionValues.stdev(propertyValues)));
+				if((modelPrediction.getType()).equals(Prediction.Type.TRAINING)){
+					trainingValues = predictionValues;
 				}
+
+				Row predictionRow = modelsTable.addRow("data");
+
+				predictionRow.addCellContent(T_prediction_name.parameterize(modelPrediction.getName()));
+				predictionRow.addCellContent(T_prediction_type.parameterize(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues)));
+				predictionRow.addCellContent(T_prediction_values.parameterize(predictionValues.size()));
+				predictionRow.addCellContent(T_prediction_rsq.parameterize(predictionValues.rsq(propertyValues)));
+				predictionRow.addCellContent(T_prediction_stdev.parameterize(predictionValues.stdev(propertyValues)));
 			}
 		}
 	}
