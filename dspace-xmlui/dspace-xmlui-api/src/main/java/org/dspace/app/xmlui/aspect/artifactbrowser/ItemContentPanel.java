@@ -3,7 +3,6 @@ package org.dspace.app.xmlui.aspect.artifactbrowser;
 import java.io.*;
 import java.math.*;
 import java.util.*;
-import java.util.List;
 
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
@@ -18,8 +17,9 @@ import org.apache.commons.math.stat.regression.*;
 
 import org.dspace.app.xmlui.wing.*;
 import org.dspace.app.xmlui.wing.element.*;
+import org.dspace.app.xmlui.wing.element.Item;
+import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.content.*;
-import org.dspace.content.Item;
 import org.dspace.core.*;
 
 class ItemContentPanel {
@@ -28,7 +28,7 @@ class ItemContentPanel {
 	}
 
 	static
-	public void generate(final ItemViewer viewer, final Item item, final Division division) throws IOException, WingException {
+	public void generate(final ItemViewer viewer, final org.dspace.content.Item item, final Division division) throws IOException, WingException {
 		Context context = viewer.getContext();
 
 		QdbCallable<Object> callable = new QdbCallable<Object>(){
@@ -53,7 +53,7 @@ class ItemContentPanel {
 	}
 
 	static
-	public void generate(ItemViewer viewer, Item item, Qdb qdb, Division division) throws IOException, WingException {
+	public void generate(ItemViewer viewer, org.dspace.content.Item item, Qdb qdb, Division division) throws IOException, WingException {
 		PropertyRegistry properties = qdb.getPropertyRegistry();
 
 		for(Property property : properties){
@@ -62,7 +62,7 @@ class ItemContentPanel {
 	}
 
 	static
-	private void generatePropertyDivision(ItemViewer viewer, Item item, Qdb qdb, Property property, Division division) throws IOException, WingException {
+	private void generatePropertyDivision(ItemViewer viewer, org.dspace.content.Item item, Qdb qdb, Property property, Division division) throws IOException, WingException {
 		ModelRegistry models = qdb.getModelRegistry();
 		PredictionRegistry predictions = qdb.getPredictionRegistry();
 
@@ -155,10 +155,10 @@ class ItemContentPanel {
 		} // End if
 
 		if(bibliography.size() > 0){
-			Division bibliographyDivision = propertyDivision.addDivision("property-bibliography-" + property.getId(), "secondary");
-			bibliographyDivision.setHead(T_property_bibliography_head);
+			List bibliographyList = propertyDivision.addList("property-bibliography-" + property.getId(), null);
+			bibliographyList.setHead(T_property_bibliography_head);
 
-			List<Key> keys = new ArrayList<Key>(bibliography.keySet());
+			java.util.List<Key> keys = new ArrayList<Key>(bibliography.keySet());
 
 			Comparator<Key> comparator = new Comparator<Key>(){
 
@@ -174,8 +174,8 @@ class ItemContentPanel {
 			for(Key key : keys){
 				BibTeXEntry entry = bibliography.get(key);
 
-				Para referencePara = bibliographyDivision.addPara("property-reference-" + key.getValue(), null);
-				referencePara.addContent(formatter.format(entry));
+				Item referencePara = bibliographyList.addItem("property-reference-" + key.getValue(), null);
+				referencePara.addHtmlContent(formatter.format(entry, true));
 			}
 		}
 	}
