@@ -20,16 +20,16 @@ public class QdbPlot extends SimplePlot {
 		setPixelSize(300 + 20, 300 + 20);
 	}
 
-	public void changeSeriesVisibility(Map<PredictionColumn, Boolean> values){
+	public void changeSeriesVisibility(SeriesDisplayEvent event){
 		QdbPlotModel model = getModel();
+
+		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);
 
 		List<SeriesHandler> handlers = model.getHandlers();
 		for(SeriesHandler handler : handlers){
 			PredictionSeries series = (PredictionSeries)handler.getSeries();
 
-			Boolean value = values.get(series.getPrediction());
-
-			handler.setVisible(value != null ? value.booleanValue() : false);
+			handler.setVisible(visiblePredictions.contains(series.getPrediction()));
 		}
 
 		redraw();

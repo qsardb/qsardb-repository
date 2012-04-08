@@ -25,7 +25,7 @@ public class PlotGrid extends Grid implements SeriesDisplayEventHandler {
 				if(widget instanceof QdbPlot){
 					QdbPlot plot = (QdbPlot)widget;
 
-					plot.changeSeriesVisibility(event.getValues());
+					plot.changeSeriesVisibility(event);
 				}
 			}
 		}

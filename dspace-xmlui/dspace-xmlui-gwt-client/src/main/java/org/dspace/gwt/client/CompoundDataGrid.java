@@ -15,8 +15,8 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public CompoundDataGrid(QdbTable table){
 		super(50);
 
-		TableSectionElement element = getTableBodyElement();
-		element.setAttribute("style", "white-space: nowrap;"); // XXX
+		TableSectionElement body = getTableBodyElement();
+		body.setAttribute("style", "white-space: nowrap;"); // XXX
 
 		Resolver resolver = new Resolver(table);
 

@@ -15,6 +15,20 @@ public class SeriesDisplayEvent extends GwtEvent<SeriesDisplayEventHandler> {
 		setValues(values);
 	}
 
+	public Set<PredictionColumn> getValues(Boolean value){
+		Set<PredictionColumn> result = new LinkedHashSet<PredictionColumn>();
+
+		Collection<Map.Entry<PredictionColumn, Boolean>> entries = getValues().entrySet();
+		for(Map.Entry<PredictionColumn, Boolean> entry : entries){
+
+			if((entry.getValue()).equals(value)){
+				result.add(entry.getKey());
+			}
+		}
+
+		return result;
+	}
+
 	public Map<PredictionColumn, Boolean> getValues(){
 		return this.values;
 	}

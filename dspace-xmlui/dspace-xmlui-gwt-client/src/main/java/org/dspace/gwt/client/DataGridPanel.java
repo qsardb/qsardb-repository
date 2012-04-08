@@ -2,18 +2,23 @@ package org.dspace.gwt.client;
 
 import java.util.*;
 
+import com.google.gwt.event.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.gwt.rpc.*;
 
-public class DataGridPanel extends Composite {
+public class DataGridPanel extends Composite implements SeriesDisplayEventHandler {
 
 	public DataGridPanel(QdbTable table){
 		DockPanel panel = new DockPanel();
 
+		List<Compound> compounds = CompoundDataProvider.format(table.getKeys());
+
 		final
-		CompoundDataProvider dataProvider = new CompoundDataProvider(CompoundDataProvider.format(table.getKeys()));
+		CompoundDataProvider dataProvider = new CompoundDataProvider(compounds);
+
+		addSeriesDisplayEventHandler(dataProvider);
 
 		final
 		CompoundDataGrid dataGrid = new CompoundDataGrid(table);
@@ -33,6 +38,7 @@ public class DataGridPanel extends Composite {
 			@Override
 			public void onColumnSort(ColumnSortEvent event){
 				Comparator<Compound> comparator = dataGrid.getComparator(event.getColumn());
+
 				if(comparator == null){
 					return;
 				} // End if
@@ -57,5 +63,14 @@ public class DataGridPanel extends Composite {
 		panel.setCellHeight(dataGridPager, "20px");
 
 		initWidget(panel);
+	}
+
+	@Override
+	public void onVisibilityChanged(SeriesDisplayEvent event){
+		fireEvent(event);
+	}
+
+	public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler){
+		return addHandler(handler, SeriesDisplayEvent.TYPE);
 	}
 }

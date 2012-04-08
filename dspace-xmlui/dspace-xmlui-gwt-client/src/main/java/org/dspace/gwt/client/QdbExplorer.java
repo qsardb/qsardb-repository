@@ -20,13 +20,34 @@ public class QdbExplorer extends QdbApplication {
 	public Widget createWidget(ModelTable table){
 		Panel panel = new FlowPanel();
 
-		panel.add(new DataGridPanel(table));
+		SeriesPanel seriesPanel = new SeriesPanel(table);
+		panel.add(seriesPanel);
 
-		// XXX
-		panel.add(new HTML("&nbsp;"));
+		panel.add(createHeader("Data table"));
 
-		panel.add(new DataAnalysisPanel(table));
+		DataGridPanel gridPanel = new DataGridPanel(table);
+		seriesPanel.addSeriesDisplayEventHandler(gridPanel);
+
+		panel.add(gridPanel);
+
+		panel.add(createHeader("Property analysis"));
+
+		PlotGrid propertyGrid = new PropertyPlotGrid(table);
+		seriesPanel.addSeriesDisplayEventHandler(propertyGrid);
+
+		panel.add(new ScrollPanel(propertyGrid));
+
+		panel.add(createHeader("Descriptor analysis"));
+
+		PlotGrid descriptorGrid = new DescriptorPlotGrid(table);
+		seriesPanel.addSeriesDisplayEventHandler(descriptorGrid);
+
+		panel.add(new ScrollPanel(descriptorGrid));
 
 		return panel;
+	}
+
+	private Widget createHeader(String string){
+		return new HTML("<h4>" + string + "</h4>");
 	}
 }
