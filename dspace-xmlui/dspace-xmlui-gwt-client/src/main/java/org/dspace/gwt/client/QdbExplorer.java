@@ -23,21 +23,21 @@ public class QdbExplorer extends QdbApplication {
 		SeriesPanel seriesPanel = new SeriesPanel(table);
 		panel.add(seriesPanel);
 
-		panel.add(createHeader("Data table"));
+		panel.add(new Heading("Data table", 3));
 
 		DataGridPanel gridPanel = new DataGridPanel(table);
 		seriesPanel.addSeriesDisplayEventHandler(gridPanel);
 
 		panel.add(gridPanel);
 
-		panel.add(createHeader("Property analysis"));
+		panel.add(new Heading("Property analysis", 3));
 
 		PlotGrid propertyGrid = new PropertyPlotGrid(table);
 		seriesPanel.addSeriesDisplayEventHandler(propertyGrid);
 
 		panel.add(new ScrollPanel(propertyGrid));
 
-		panel.add(createHeader("Descriptor analysis"));
+		panel.add(new Heading("Descriptor analysis", 3));
 
 		PlotGrid descriptorGrid = new DescriptorPlotGrid(table);
 		seriesPanel.addSeriesDisplayEventHandler(descriptorGrid);
@@ -45,9 +45,5 @@ public class QdbExplorer extends QdbApplication {
 		panel.add(new ScrollPanel(descriptorGrid));
 
 		return panel;
-	}
-
-	private Widget createHeader(String string){
-		return new HTML("<h4>" + string + "</h4>");
 	}
 }

@@ -22,6 +22,9 @@ public class Application implements EntryPoint {
 			panel.clear();
 		}
 
+		Element element = panel.getElement();
+		element.setInnerHTML("");
+
 		panel.add(widget);
 	}
 
