@@ -186,6 +186,8 @@ public class QdbPlot extends SimplePlot {
 		return result;
 	}
 
+	private static final BigDecimal MINUS_ONE = new BigDecimal(-1);
+
 	static
 	protected class QdbPlotModel extends PlotModel {
 
@@ -216,19 +218,6 @@ public class QdbPlot extends SimplePlot {
 				setMin(bounds.getMin());
 				setMax(bounds.getMax());
 			}
-		}
-
-		public BigDecimal validate(BigDecimal value){
-
-			if(this.min != null && (this.min).compareTo(value) > 0){
-				return this.min;
-			} // End if
-
-			if(this.max != null && (this.max).compareTo(value) < 0){
-				return this.max;
-			}
-
-			return value;
 		}
 
 		public int scale(){
@@ -271,5 +260,6 @@ public class QdbPlot extends SimplePlot {
 		}
 	}
 
-	private static final BigDecimal MINUS_ONE = new BigDecimal(-1);
+	public static final String COLOR_TWO_SIGMA = "#ffff00";
+	public static final String COLOR_THREE_SIGMA = "#ff8080";
 }

@@ -99,6 +99,9 @@ public class DescriptorInputPanel extends Composite {
 		focusHandler.install(this.slider);
 
 		Double mean = MathUtil.mean(trainingDescriptorValues.values());
+		Double sigma = MathUtil.standardDeviation(trainingDescriptorValues.values());
+
+		this.slider.addMarkings(mean, sigma);
 
 		setValue(mean.toString());
 

@@ -52,11 +52,11 @@ public class PropertyPlotGrid extends PlotGrid {
 			errorScatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getErrors());
 		}
 
-		Number stDev = MathUtil.standardDeviation(trainingErrors.values());
+		Number sigma = MathUtil.standardDeviation(trainingErrors.values());
 
 		Markings markings = new Markings();
-		markings.addMarkings(createStDevMarkings(stDev, Double.valueOf(2), "#ffff00"));
-		markings.addMarkings(createStDevMarkings(stDev, Double.valueOf(3), "#ff8080"));
+		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(2), QdbPlot.COLOR_TWO_SIGMA));
+		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(3), QdbPlot.COLOR_THREE_SIGMA));
 
 		GridOptions gridOptions = errorScatterPlot.ensureGridOptions();
 		gridOptions.setMarkings(markings);
@@ -66,10 +66,12 @@ public class PropertyPlotGrid extends PlotGrid {
 	}
 
 	static
-	private Marking[] createStDevMarkings(Number stDev, Number multiplier, String color){
+	private Marking[] createStDevMarkings(Number sigma, Number multiplier, String color){
+		double value = (sigma.doubleValue() * multiplier.doubleValue());
+
 		return new Marking[]{
-			createLineMarking(Double.valueOf(-1 * stDev.doubleValue() * multiplier.doubleValue()), color),
-			createLineMarking(Double.valueOf(stDev.doubleValue() * multiplier.doubleValue()), color)
+			createLineMarking(Double.valueOf(-1 * value), color),
+			createLineMarking(Double.valueOf(value), color)
 		};
 	}
 
