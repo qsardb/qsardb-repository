@@ -17,8 +17,8 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 	private List<Marking> markings = new ArrayList<Marking>();
 
 
-	public DescriptorSliderBarHorizontal(int maxValue, QdbPlot.Bounds bounds){
-		setMaxValue(maxValue);
+	public DescriptorSliderBarHorizontal(QdbPlot.Bounds bounds){
+		setMaxValue(QdbPlot.SIZE);
 
 		setLessWidget(new Image(images.less()));
 		setScaleWidget(new Image(images.scale().getSafeUri()), 15);
@@ -26,7 +26,7 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 
 		setDragWidget(new Image(images.drag()));
 
-		setWidth((20 + maxValue + 20) + "px");
+		setWidth((20 + QdbPlot.SIZE + 20) + "px");
 
 		setBounds(bounds);
 	}

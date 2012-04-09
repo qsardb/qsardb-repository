@@ -40,12 +40,12 @@ public class PropertyPlotGrid extends PlotGrid {
 		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.setXAxisBounds(propertyBounds);
-		scatterPlot.setYAxisBounds(propertyBounds);
+		scatterPlot.addXAxisOptions(propertyBounds);
+		scatterPlot.addYAxisOptions(propertyBounds);
 
 		ScatterPlot errorScatterPlot = new ScatterPlot(resolver);
-		errorScatterPlot.setXAxisBounds(propertyBounds);
-		errorScatterPlot.setYAxisBounds(errorBounds);
+		errorScatterPlot.addXAxisOptions(propertyBounds);
+		errorScatterPlot.addYAxisOptions(errorBounds);
 
 		for(PredictionColumn prediction : predictions){
 			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getValues());

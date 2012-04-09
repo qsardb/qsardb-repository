@@ -17,7 +17,7 @@ public class QdbPlot extends SimplePlot {
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
 
-		setPixelSize(300 + 20, 300 + 20);
+		setPixelSize(SIZE + 20, SIZE + 20);
 	}
 
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
@@ -35,24 +35,16 @@ public class QdbPlot extends SimplePlot {
 		redraw();
 	}
 
-	public void setXAxisBounds(Bounds bounds){
-		setXAxisBounds(bounds, 20);
-	}
-
-	public void setXAxisBounds(Bounds bounds, int height){
+	public void addXAxisOptions(Bounds bounds){
 		AxisOptions axisOptions = convertBounds(bounds);
-		axisOptions.setLabelHeight(height);
+		axisOptions.setLabelHeight(20);
 
 		ensureXAxesOptions().addAxisOptions(axisOptions);
 	}
 
-	public void setYAxisBounds(Bounds bounds){
-		setYAxisBounds(bounds, 20);
-	}
-
-	public void setYAxisBounds(Bounds bounds, int width){
+	public void addYAxisOptions(Bounds bounds){
 		AxisOptions axisOptions = convertBounds(bounds);
-		axisOptions.setLabelWidth(width);
+		axisOptions.setLabelWidth(20);
 
 		ensureYAxesOptions().addAxisOptions(axisOptions);
 	}
@@ -259,6 +251,8 @@ public class QdbPlot extends SimplePlot {
 			this.max = max;
 		}
 	}
+
+	public static final int SIZE = 300;
 
 	public static final String COLOR_TWO_SIGMA = "#ffff00";
 	public static final String COLOR_THREE_SIGMA = "#ff8080";

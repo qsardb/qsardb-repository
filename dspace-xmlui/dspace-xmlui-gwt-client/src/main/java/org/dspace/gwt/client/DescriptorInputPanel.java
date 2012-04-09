@@ -43,7 +43,7 @@ public class DescriptorInputPanel extends Composite {
 
 		QdbPlot.Bounds xBounds = QdbPlot.bounds(trainingDescriptorValues);
 
-		this.slider = new DescriptorSliderBarHorizontal(300, xBounds);
+		this.slider = new DescriptorSliderBarHorizontal(xBounds);
 		table.setWidget(2, 0, this.slider);
 
 		BarValueChangedHandler valueHandler = new BarValueChangedHandler(){
@@ -60,7 +60,7 @@ public class DescriptorInputPanel extends Composite {
 
 		final
 		HistogramPlot histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
-		histogramPlot.setXAxisBounds(xBounds);
+		histogramPlot.addXAxisOptions(xBounds);
 
 		histogramPlot.addSeries(new PredictionSeries(training), trainingDescriptorValues);
 
@@ -68,7 +68,7 @@ public class DescriptorInputPanel extends Composite {
 		yBounds.setMin(BigDecimal.ZERO);
 		yBounds.setMax(new BigDecimal(histogramPlot.getMaxHeight()));
 
-		histogramPlot.setYAxisBounds(yBounds);
+		histogramPlot.addYAxisOptions(yBounds);
 
 		table.setWidget(3, 0, histogramPlot);
 
