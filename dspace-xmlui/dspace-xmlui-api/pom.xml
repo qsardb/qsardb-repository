@@ -55,10 +55,16 @@
             <groupId>org.dspace</groupId>
             <artifactId>dspace-stats</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.qsardb</groupId>
             <artifactId>bundle</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>evaluation</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>

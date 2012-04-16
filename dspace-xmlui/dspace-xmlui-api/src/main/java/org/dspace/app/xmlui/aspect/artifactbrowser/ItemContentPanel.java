@@ -6,6 +6,8 @@ import java.util.*;
 
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
+import org.qsardb.cargo.pmml.*;
+import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.model.Container;
 
@@ -128,7 +130,7 @@ class ItemContentPanel {
 				Row modelRow = modelsTable.addRow("model-" + propertyModel.getId(), "header", "subheader");
 
 				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
-				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
+				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName(), loadSummary(propertyModel)));
 				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_explorer, "application-link");
 				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_predictor, "application-link");
 
@@ -244,6 +246,44 @@ class ItemContentPanel {
 				return "validation";
 			case TESTING:
 				return "testing";
+		}
+
+		return null;
+	}
+
+	static
+	private String loadSummary(Model model){
+
+		try {
+			Evaluator evaluator = getEvaluator(model);
+
+			if(evaluator != null){
+				evaluator.init();
+
+				try {
+					String summary = evaluator.getSummary();
+					if(summary != null){
+						return summary;
+					}
+				} finally {
+					evaluator.destroy();
+				}
+			}
+		} catch(Exception e){
+			// Ignored
+		}
+
+		return "Unknown";
+	}
+
+	static
+	private Evaluator getEvaluator(Model model) throws Exception {
+		Qdb qdb = model.getQdb();
+
+		if(model.hasCargo(PMMLCargo.class)){
+			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
+
+			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
 		}
 
 		return null;
