@@ -212,14 +212,6 @@ public class QdbPlot extends SimplePlot {
 			}
 		}
 
-		public int scale(){
-			return Math.max(getMin().scale(), getMax().scale());
-		}
-
-		public MathContext getMathContext(){
-			return new MathContext(scale(), RoundingMode.HALF_UP);
-		}
-
 		public void update(BigDecimal value){
 
 			if(value == null){

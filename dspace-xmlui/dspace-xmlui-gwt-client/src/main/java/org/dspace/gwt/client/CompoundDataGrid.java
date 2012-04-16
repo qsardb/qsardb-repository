@@ -16,7 +16,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		super(50);
 
 		TableSectionElement body = getTableBodyElement();
-		body.setAttribute("style", "white-space: nowrap;"); // XXX
+		(body.getStyle()).setProperty("white-space", "nowrap"); // XXX
 
 		Resolver resolver = new Resolver(table);
 

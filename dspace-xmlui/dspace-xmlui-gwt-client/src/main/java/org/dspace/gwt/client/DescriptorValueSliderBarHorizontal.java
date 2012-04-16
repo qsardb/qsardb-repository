@@ -10,14 +10,14 @@ import com.google.gwt.user.client.ui.*;
 
 import com.kiouri.sliderbar.client.view.*;
 
-public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
+public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 
 	private QdbPlot.Bounds bounds = null;
 
 	private List<Marking> markings = new ArrayList<Marking>();
 
 
-	public DescriptorSliderBarHorizontal(QdbPlot.Bounds bounds){
+	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds){
 		setMaxValue(QdbPlot.SIZE);
 
 		setLessWidget(new Image(images.less()));
@@ -40,31 +40,23 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 		}
 	}
 
-	public void addMarkings(Double mean, Double sigma){
+	public void addMarkings(BigDecimal mean, BigDecimal sigma){
 		addMeanMarking(mean);
 
-		addStDevMarkings(mean, sigma, Double.valueOf(2), QdbPlot.COLOR_TWO_SIGMA);
-		addStDevMarkings(mean, sigma, Double.valueOf(3), QdbPlot.COLOR_THREE_SIGMA);
+		addStDevMarkings(mean, sigma, new BigDecimal(2), QdbPlot.COLOR_TWO_SIGMA);
+		addStDevMarkings(mean, sigma, new BigDecimal(3), QdbPlot.COLOR_THREE_SIGMA);
 	}
 
-	private void addMeanMarking(Double mean){
+	private void addMeanMarking(BigDecimal mean){
 		addMarking(mean, "#000000", "Avg");
 	}
 
-	private void addStDevMarkings(Double mean, Double sigma, Double multiplier, String color){
-		double value = (sigma.doubleValue() * multiplier.doubleValue());
-
-		addMarking(Double.valueOf(mean.doubleValue() - value), color, ("-" + multiplier.intValue() + "\u03C3"));
-		addMarking(Double.valueOf(mean.doubleValue() + value), color, ("+" + multiplier.intValue() + "\u03C3"));
+	private void addStDevMarkings(BigDecimal mean, BigDecimal sigma, BigDecimal multiplier, String color){
+		addMarking(mean.add(sigma.multiply(multiplier)), color, ("+" + multiplier.intValue() + "\u03C3"));
+		addMarking(mean.subtract(sigma.multiply(multiplier)), color, ("-" + multiplier.intValue() + "\u03C3"));
 	}
 
 	private void addMarking(Number value, String color, String title){
-		MathContext context = getMathContext();
-
-		addMarking(new BigDecimal(value.toString(), context), color, title);
-	}
-
-	private void addMarking(BigDecimal value, String color, String title){
 
 		try {
 			value = validate(value, false);
@@ -78,51 +70,40 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 		this.markings.add(marking);
 	}
 
-	public MathContext getMathContext(){
-		return this.bounds.getMathContext();
+	@Override
+	public void setValue(int value){
+		super.setValue(value);
 	}
 
-	public BigDecimal getUserValue(){
+	public Number getUserValue(){
 		return fromSliderValue(getValue());
 	}
 
-	private BigDecimal fromSliderValue(int value){
-		MathContext context = getMathContext();
-
+	private Double fromSliderValue(int value){
 		BigDecimal min = this.bounds.getMin();
 		BigDecimal max = this.bounds.getMax();
 
-		BigDecimal sliderMaxValue = new BigDecimal(getMaxValue());
-		BigDecimal sliderValue = new BigDecimal(value);
-
-		BigDecimal userValue = (min).add((max.subtract(min)).multiply(sliderValue).divide(sliderMaxValue, context));
-
-		return userValue.setScale(context.getPrecision(), context.getRoundingMode());
+		return Double.valueOf(min.doubleValue() + (max.doubleValue() - min.doubleValue()) * value / getMaxValue());
 	}
 
-	public void setUserValue(BigDecimal value){
+	public void setUserValue(Number value){
 		value = validate(value, true);
 
 		setValue(toSliderValue(value));
 	}
 
-	private int toSliderValue(BigDecimal userValue){
-		MathContext context = getMathContext();
-
+	private int toSliderValue(Number value){
 		BigDecimal min = this.bounds.getMin();
 		BigDecimal max = this.bounds.getMax();
 
-		BigDecimal sliderMaxValue = new BigDecimal(getMaxValue());
-		BigDecimal sliderValue = ((userValue).subtract(min)).divide(max.subtract(min), context).multiply(sliderMaxValue);
-
-		return sliderValue.intValue();
+		return (int)((value.doubleValue() - min.doubleValue()) / (max.doubleValue() - min.doubleValue()) * getMaxValue());
 	}
 
-	private BigDecimal validate(BigDecimal value, boolean replace){
+	private Number validate(Number value, boolean replace){
 		QdbPlot.Bounds bounds = getBounds();
 
 		BigDecimal min = bounds.getMin();
-		if(min != null && (min).compareTo(value) > 0){
+		if(min != null && value.doubleValue() < min.doubleValue()){
 
 			if(replace){
 				return min;
@@ -132,7 +113,7 @@ public class DescriptorSliderBarHorizontal extends SliderBarHorizontal {
 		}
 
 		BigDecimal max = bounds.getMax();
-		if(max != null && (max).compareTo(value) < 0){
+		if(max != null && value.doubleValue() > max.doubleValue()){
 
 			if(replace){
 				return max;

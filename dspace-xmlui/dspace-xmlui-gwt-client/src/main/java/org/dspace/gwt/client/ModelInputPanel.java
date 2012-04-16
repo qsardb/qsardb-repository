@@ -3,6 +3,7 @@ package org.dspace.gwt.client;
 import java.util.*;
 
 import com.google.gwt.event.shared.*;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.gwt.rpc.*;
@@ -27,7 +28,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 			@Override
 			public void onDescriptorValueChanged(DescriptorValueChangeEvent event){
-				fireEvent(new InputChangeEvent(getDescriptorValues()));
+				fireInputChangeEvent();
 			}
 		};
 
@@ -42,11 +43,24 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			descriptorPanel.addDescriptorValueChangeEventHandler(changeHandler);
 		}
 
+		Timer timer = new Timer(){
+
+			@Override
+			public void run(){
+				fireInputChangeEvent();
+			}
+		};
+		timer.schedule(1000);
+
 		initWidget(panel);
 	}
 
 	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
 		return addHandler(handler, InputChangeEvent.TYPE);
+	}
+
+	private void fireInputChangeEvent(){
+		fireEvent(new InputChangeEvent(getDescriptorValues()));
 	}
 
 	@Override
