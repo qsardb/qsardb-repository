@@ -20,11 +20,18 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds){
 		setMaxValue(QdbPlot.SIZE);
 
-		setLessWidget(new Image(images.less()));
-		setScaleWidget(new Image(images.scale().getSafeUri()), 15);
-		setMoreWidget(new Image(images.more()));
+		Image less = new Image(images.less());
+		(less.getElement()).getStyle().setZIndex(100);
+		setLessWidget(less);
 
-		setDragWidget(new Image(images.drag()));
+		setScaleWidget(new Image(images.scale().getSafeUri()), 15);
+
+		Image more = new Image(images.more());
+		(more.getElement()).getStyle().setZIndex(100);
+		setMoreWidget(more);
+
+		Image drag = new Image(images.drag());
+		setDragWidget(drag);
 
 		setWidth((20 + QdbPlot.SIZE + 20) + "px");
 
@@ -36,7 +43,7 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 		super.placeWidgets(widgets);
 
 		for(Marking marking : this.markings){
-			super.absPanel.add(marking, super.startPosition + marking.getValue(), 0);
+			super.absPanel.add(marking, super.startPosition + marking.getValue() - marking.getOffsetWidth() / 2, 0);
 		}
 	}
 
@@ -139,7 +146,7 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 
 
 		public Marking(String color, int value){
-			setPixelSize(1, 15);
+			setPixelSize(2, 20);
 
 			Element element = getElement();
 			DOM.setStyleAttribute(element, "backgroundColor", color);
