@@ -5,6 +5,7 @@ import java.util.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
 
 import org.dspace.gwt.rpc.*;
 
@@ -52,17 +53,21 @@ public class DataGridPanel extends Composite implements SeriesDisplayEventHandle
 		};
 		dataGrid.addColumnSortHandler(sortHandler);
 
-		final
+		createGridPager(panel, dataGrid, DockPanel.NORTH);
+		createGridPager(panel, dataGrid, DockPanel.SOUTH);
+
+		initWidget(panel);
+	}
+
+	private void createGridPager(DockPanel panel, DataGrid<Compound> dataGrid, DockLayoutConstant position){
 		CompoundSimplePager dataGridPager = new CompoundSimplePager();
 		dataGridPager.setDisplay(dataGrid);
 
-		panel.add(dataGridPager, DockPanel.SOUTH);
+		panel.add(dataGridPager, position);
 
 		// XXX
 		panel.setCellWidth(dataGridPager, "100%");
 		panel.setCellHeight(dataGridPager, "20px");
-
-		initWidget(panel);
 	}
 
 	@Override

@@ -15,17 +15,31 @@ public class CompoundSimplePager extends SimplePager {
 	private void adjustCellAlignment(){
 		HorizontalPanel panel = (HorizontalPanel)getWidget();
 
-		if(panel.getWidgetCount() != alignment.length){
+		if(panel.getWidgetCount() != 5){
 			throw new IllegalStateException();
 		}
 
-		for(int i = 0; i < alignment.length; i++){
+		for(int i = 0; i < 5; i++){
 			Widget widget = panel.getWidget(i);
 
 			Element td = DOM.getParent(widget.getElement());
-			DOM.setElementAttribute(td, "align", alignment[i]);
+
+			setAttribute(td, "align", alignments[i]);
+			setAttribute(td, "valign", "middle");
+
+			setAttribute(td, "width", widths[i]);
 		}
 	}
 
-	private static final String[] alignment = {"left", "left", "center", "right", "right"};
+	static
+	private void setAttribute(Element element, String name, String value){
+
+		if(value != null){
+			DOM.setElementAttribute(element, name, value);
+		}
+	}
+
+	private static final String[] alignments = {"left", "left", "center", "right", "right"};
+
+	private static final String[] widths = {"30px", "30px", null, "30px", "30px"};
 }
