@@ -40,11 +40,11 @@ public class DescriptorPlotGrid extends PlotGrid {
 			QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
 			ScatterPlot scatterPlot = new ScatterPlot(resolver);
-			scatterPlot.addXAxisOptions(descriptorBounds);
-			scatterPlot.addYAxisOptions(propertyBounds);
+			scatterPlot.addXAxisOptions(descriptorBounds, descriptor.getName());
+			scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (exp.)");
 
 			HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds.getMin(), descriptorBounds.getMax(), size);
-			histogramPlot.addXAxisOptions(descriptorBounds);
+			histogramPlot.addXAxisOptions(descriptorBounds, descriptor.getName());
 
 			for(PredictionColumn prediction : predictions){
 				Set<String> keys = (prediction.getValues()).keySet();
@@ -68,7 +68,7 @@ public class DescriptorPlotGrid extends PlotGrid {
 		for(int i = 0; i < descriptors.size(); i++){
 			HistogramPlot histogramPlot = (HistogramPlot)getPlot(1, i);
 
-			histogramPlot.addYAxisOptions(yBounds);
+			histogramPlot.addYAxisOptions(yBounds, "Frequency");
 		}
 	}
 }

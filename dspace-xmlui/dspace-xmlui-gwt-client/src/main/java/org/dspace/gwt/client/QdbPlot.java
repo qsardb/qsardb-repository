@@ -17,7 +17,8 @@ public class QdbPlot extends SimplePlot {
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
 
-		setPixelSize(SIZE + 20, SIZE + 20);
+		setWidth(SIZE + 20);
+		setHeight(SIZE + 20);
 	}
 
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
@@ -36,15 +37,37 @@ public class QdbPlot extends SimplePlot {
 	}
 
 	public void addXAxisOptions(Bounds bounds){
+		addXAxisOptions(bounds, null);
+	}
+
+	public void addXAxisOptions(Bounds bounds, String label){
 		AxisOptions axisOptions = convertBounds(bounds);
 		axisOptions.setLabelHeight(20);
+
+		if(label != null){
+			axisOptions.setLabel(label);
+
+			// XXX
+			setHeight(getHeight() + 16);
+		}
 
 		ensureXAxesOptions().addAxisOptions(axisOptions);
 	}
 
 	public void addYAxisOptions(Bounds bounds){
+		addYAxisOptions(bounds, null);
+	}
+
+	public void addYAxisOptions(Bounds bounds, String label){
 		AxisOptions axisOptions = convertBounds(bounds);
 		axisOptions.setLabelWidth(20);
+
+		if(label != null){
+			axisOptions.setLabel(label);
+
+			// XXX
+			setWidth(getWidth() + 16);
+		}
 
 		ensureYAxesOptions().addAxisOptions(axisOptions);
 	}
