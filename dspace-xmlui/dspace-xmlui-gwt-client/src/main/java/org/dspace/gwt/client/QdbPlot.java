@@ -270,7 +270,7 @@ public class QdbPlot extends SimplePlot {
 		}
 	}
 
-	public static final int SIZE = 300;
+	public static final int SIZE = 360;
 
 	public static final String COLOR_TWO_SIGMA = "#ffff00";
 	public static final String COLOR_THREE_SIGMA = "#ff8080";

@@ -100,6 +100,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		abstract
 		public Comparator<Compound> getComparator();
 
+		@SuppressWarnings (
+			value = {"cast", "rawtypes", "unchecked"}
+		)
 		protected int compare(Object left, Object right){
 
 			if(left == null || right == null){

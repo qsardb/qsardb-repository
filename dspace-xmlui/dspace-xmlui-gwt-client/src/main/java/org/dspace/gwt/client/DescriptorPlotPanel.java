@@ -2,6 +2,8 @@ package org.dspace.gwt.client;
 
 import java.util.*;
 
+import com.google.gwt.user.client.ui.*;
+
 import org.dspace.gwt.rpc.*;
 
 public class DescriptorPlotPanel extends PlotPanel {
@@ -32,6 +34,9 @@ public class DescriptorPlotPanel extends PlotPanel {
 		scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (exp.)");
 
 		add(scatterPlot);
+
+		// XXX
+		add(new HTML("&nbsp;"));
 
 		HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds.getMin(), descriptorBounds.getMax(), size);
 		histogramPlot.addXAxisOptions(descriptorBounds, descriptor.getName());

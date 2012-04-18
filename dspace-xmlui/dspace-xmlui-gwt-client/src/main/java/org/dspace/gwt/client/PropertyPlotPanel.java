@@ -5,6 +5,8 @@ import java.util.*;
 
 import ca.nanometrics.gflot.client.options.*;
 
+import com.google.gwt.user.client.ui.*;
+
 import org.dspace.gwt.rpc.*;
 
 public class PropertyPlotPanel extends PlotPanel {
@@ -40,6 +42,9 @@ public class PropertyPlotPanel extends PlotPanel {
 		scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (calc.)");
 
 		add(scatterPlot);
+
+		// XXX
+		add(new HTML("&nbsp;"));
 
 		ScatterPlot errorScatterPlot = new ScatterPlot(resolver);
 		errorScatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
