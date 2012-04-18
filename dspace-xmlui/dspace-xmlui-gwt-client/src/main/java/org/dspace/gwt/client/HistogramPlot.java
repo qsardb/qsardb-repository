@@ -85,6 +85,10 @@ public class HistogramPlot extends QdbPlot {
 		return barSeriesOptions;
 	}
 
+	public void addYAxisOptions(String label){
+		super.addYAxisOptions(null, label);
+	}
+
 	static
 	private class BarList extends ArrayList<Bar> {
 

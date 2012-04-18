@@ -23,26 +23,20 @@ public class QdbExplorer extends QdbApplication {
 		SeriesPanel seriesPanel = new SeriesPanel(table);
 		panel.add(seriesPanel);
 
-		panel.add(new Heading("Data table", 3));
+		TableExplorerPanel tableExplorer = new TableExplorerPanel(table);
+		panel.add(tableExplorer);
 
-		DataGridPanel gridPanel = new DataGridPanel(table);
-		seriesPanel.addSeriesDisplayEventHandler(gridPanel);
+		seriesPanel.addSeriesDisplayEventHandler(tableExplorer);
 
-		panel.add(gridPanel);
+		PropertyExplorerPanel propertyExplorer = new PropertyExplorerPanel(table);
+		panel.add(propertyExplorer);
 
-		panel.add(new Heading("Property analysis", 3));
+		seriesPanel.addSeriesDisplayEventHandler(propertyExplorer);
 
-		PlotGrid propertyGrid = new PropertyPlotGrid(table);
-		seriesPanel.addSeriesDisplayEventHandler(propertyGrid);
+		DescriptorExplorerPanel descriptorExplorer = new DescriptorExplorerPanel(table);
+		panel.add(descriptorExplorer);
 
-		panel.add(new ScrollPanel(propertyGrid));
-
-		panel.add(new Heading("Descriptor analysis", 3));
-
-		PlotGrid descriptorGrid = new DescriptorPlotGrid(table);
-		seriesPanel.addSeriesDisplayEventHandler(descriptorGrid);
-
-		panel.add(new ScrollPanel(descriptorGrid));
+		seriesPanel.addSeriesDisplayEventHandler(descriptorExplorer);
 
 		return panel;
 	}

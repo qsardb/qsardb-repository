@@ -3,11 +3,8 @@ package org.dspace.gwt.client;
 import java.math.*;
 import java.util.*;
 
-import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.event.shared.*;
-import com.google.gwt.resources.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import com.kiouri.sliderbar.client.event.*;
@@ -44,78 +41,44 @@ public class DescriptorInputPanel extends Composite {
 		final
 		BigDecimal sigma = new BigDecimal(MathUtil.standardDeviation(trainingDescriptorValues.values()).toString(), getContext());
 
-		final
 		DisclosurePanel panel = new DisclosurePanel();
-		panel.setHeader(createHeader(panel, descriptor, mean, sigma));
 
-		OpenHandler<DisclosurePanel> openHandler = new OpenHandler<DisclosurePanel>(){
+		LazyHeader header = new LazyHeader(panel){
 
 			@Override
-			public void onOpen(OpenEvent<DisclosurePanel> event){
+			public Label createLeft(){
+				return new Label(descriptor.getName());
+			}
 
-				if(panel.getContent() != null){
-					return;
-				}
-
-				panel.setContent(createContent(panel, descriptor, training, trainingDescriptorValues, mean, sigma));
+			@Override
+			public Label createRight(){
+				return createValueLabel(descriptor, mean, sigma);
 			}
 		};
-		panel.addOpenHandler(openHandler);
+		panel.setHeader(header);
+
+		header.ensureWidget();
+
+		LazyContent content = new LazyContent(panel){
+
+			@Override
+			public Widget createWidget(){
+				return createContent(descriptor, training, trainingDescriptorValues, mean, sigma);
+			}
+		};
+		panel.setContent(content);
 
 		initWidget(panel);
 	}
 
-	private Widget createHeader(DisclosurePanel parent, DescriptorColumn descriptor, final BigDecimal mean, final BigDecimal sigma){
-		Panel panel = new FlowPanel();
-
-		final
-		Image image = new Image(images.expand());
-
-		panel.add(image);
-
-		Style imageStyle = (image.getElement()).getStyle();
-
-		imageStyle.setFloat(Style.Float.LEFT);
-
-		imageStyle.setMarginTop(1, Style.Unit.PX);
-		imageStyle.setMarginRight(3, Style.Unit.PX);
-		imageStyle.setMarginBottom(1, Style.Unit.PX);
-
-		OpenHandler<DisclosurePanel> openHandler = new OpenHandler<DisclosurePanel>(){
-
-			@Override
-			public void onOpen(OpenEvent<DisclosurePanel> event){
-				image.setResource(images.collapse());
-			}
-		};
-		parent.addOpenHandler(openHandler);
-
-		CloseHandler<DisclosurePanel> closeHandler = new CloseHandler<DisclosurePanel>(){
-
-			@Override
-			public void onClose(CloseEvent<DisclosurePanel> event){
-				image.setResource(images.expand());
-			}
-		};
-		parent.addCloseHandler(closeHandler);
-
-		Label name = new Label(descriptor.getName());
-
-		panel.add(name);
-
-		(name.getElement()).getStyle().setFloat(Style.Float.LEFT);
-
+	private Label createValueLabel(final DescriptorColumn descriptor, final BigDecimal mean, final BigDecimal sigma){
 		this.label = new DescriptorValueLabel();
 		this.label.setUserValue(getValue());
 
-		panel.add(this.label);
-
-		(this.label.getElement()).getStyle().setFloat(Style.Float.RIGHT);
-
-		return panel;
+		return this.label;
 	}
 
-	private Widget createContent(DisclosurePanel parent, DescriptorColumn descriptor, PredictionColumn training, Map<String, ?> trainingDescriptorValues, final BigDecimal mean, final BigDecimal sigma){
+	private Widget createContent(DescriptorColumn descriptor, PredictionColumn training, Map<String, ?> trainingDescriptorValues, final BigDecimal mean, final BigDecimal sigma){
 		Panel panel = new FlowPanel();
 
 		QdbPlot.Bounds xBounds = QdbPlot.bounds(trainingDescriptorValues);
@@ -143,17 +106,11 @@ public class DescriptorInputPanel extends Composite {
 		};
 		this.slider.addBarValueChangedHandler(valueHandler);
 
-		final
 		HistogramPlot histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
 		histogramPlot.addXAxisOptions(xBounds);
+		histogramPlot.addYAxisOptions((String)null);
 
 		histogramPlot.addSeries(new PredictionSeries(training), trainingDescriptorValues);
-
-		QdbPlot.Bounds yBounds = new QdbPlot.Bounds();
-		yBounds.setMin(BigDecimal.ZERO);
-		yBounds.setMax(new BigDecimal(histogramPlot.getMaxHeight()));
-
-		histogramPlot.addYAxisOptions(yBounds);
 
 		panel.add(histogramPlot);
 
@@ -223,19 +180,4 @@ public class DescriptorInputPanel extends Composite {
 	private void setDescriptor(DescriptorColumn descriptor){
 		this.descriptor = descriptor;
 	}
-
-	interface Images extends ClientBundle {
-
-		@Source (
-			value = "com/google/gwt/user/client/ui/disclosurePanelClosed.png"
-		)
-		ImageResource expand();
-
-		@Source (
-			value = "com/google/gwt/user/client/ui/disclosurePanelOpen.png"
-		)
-		ImageResource collapse();
-	}
-
-	private static final Images images = GWT.create(Images.class);
 }

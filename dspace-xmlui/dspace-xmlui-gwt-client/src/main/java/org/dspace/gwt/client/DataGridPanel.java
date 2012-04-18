@@ -2,24 +2,17 @@ package org.dspace.gwt.client;
 
 import java.util.*;
 
-import com.google.gwt.event.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
+import com.google.gwt.view.client.*;
 
 import org.dspace.gwt.rpc.*;
 
-public class DataGridPanel extends Composite implements SeriesDisplayEventHandler {
+public class DataGridPanel extends Composite {
 
-	public DataGridPanel(QdbTable table){
+	public DataGridPanel(QdbTable table, final ListDataProvider<Compound> dataProvider){
 		DockPanel panel = new DockPanel();
-
-		List<Compound> compounds = CompoundDataProvider.format(table.getKeys());
-
-		final
-		CompoundDataProvider dataProvider = new CompoundDataProvider(compounds);
-
-		addSeriesDisplayEventHandler(dataProvider);
 
 		final
 		CompoundDataGrid dataGrid = new CompoundDataGrid(table);
@@ -68,14 +61,5 @@ public class DataGridPanel extends Composite implements SeriesDisplayEventHandle
 		// XXX
 		panel.setCellWidth(dataGridPager, "100%");
 		panel.setCellHeight(dataGridPager, "20px");
-	}
-
-	@Override
-	public void onVisibilityChanged(SeriesDisplayEvent event){
-		fireEvent(event);
-	}
-
-	public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler){
-		return addHandler(handler, SeriesDisplayEvent.TYPE);
 	}
 }

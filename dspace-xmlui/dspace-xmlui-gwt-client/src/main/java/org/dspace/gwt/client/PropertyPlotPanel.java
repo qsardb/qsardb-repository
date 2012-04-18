@@ -7,17 +7,13 @@ import ca.nanometrics.gflot.client.options.*;
 
 import org.dspace.gwt.rpc.*;
 
-public class PropertyPlotGrid extends PlotGrid {
+public class PropertyPlotPanel extends PlotPanel {
 
-	public PropertyPlotGrid(QdbTable table){
+	public PropertyPlotPanel(QdbTable table, PropertyColumn property){
 		Resolver resolver = new Resolver(table);
-
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		Map<String, Object> propertyValues = property.getValues();
 		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
-
-		resize(2, 1);
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
@@ -43,9 +39,13 @@ public class PropertyPlotGrid extends PlotGrid {
 		scatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
 		scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (calc.)");
 
+		add(scatterPlot);
+
 		ScatterPlot errorScatterPlot = new ScatterPlot(resolver);
 		errorScatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
 		errorScatterPlot.addYAxisOptions(errorBounds, "Prediction error");
+
+		add(errorScatterPlot);
 
 		for(PredictionColumn prediction : predictions){
 			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getValues());
@@ -60,9 +60,6 @@ public class PropertyPlotGrid extends PlotGrid {
 
 		GridOptions gridOptions = errorScatterPlot.ensureGridOptions();
 		gridOptions.setMarkings(markings);
-
-		setPlot(0, 0, scatterPlot);
-		setPlot(1, 0, errorScatterPlot);
 	}
 
 	static

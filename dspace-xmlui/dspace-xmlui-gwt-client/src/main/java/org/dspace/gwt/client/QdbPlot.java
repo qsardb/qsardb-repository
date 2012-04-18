@@ -163,8 +163,11 @@ public class QdbPlot extends SimplePlot {
 	static
 	public AxisOptions convertBounds(Bounds bounds){
 		AxisOptions options = new AxisOptions();
-		options.setMinimum((bounds.getMin()).doubleValue());
-		options.setMaximum((bounds.getMax()).doubleValue());
+
+		if(bounds != null){
+			options.setMinimum((bounds.getMin()).doubleValue());
+			options.setMaximum((bounds.getMax()).doubleValue());
+		}
 
 		return options;
 	}
