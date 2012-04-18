@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.*;
 public class PlotPanel extends FlowPanel implements SeriesDisplayEventHandler {
 
 	@Override
-	public void onVisibilityChanged(SeriesDisplayEvent event){
+	public void onSeriesVisibilityChanged(SeriesDisplayEvent event){
 
 		for(Iterator<Widget> it = iterator(); it.hasNext(); ){
 			Widget widget = it.next();

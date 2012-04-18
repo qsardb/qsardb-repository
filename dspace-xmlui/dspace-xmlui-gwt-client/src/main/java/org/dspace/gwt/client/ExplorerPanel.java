@@ -1,17 +1,22 @@
 package org.dspace.gwt.client;
 
-import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.*;
 
 abstract
-public class ExplorerPanel extends Composite implements SeriesDisplayEventHandler {
+public class ExplorerPanel extends Composite {
 
-	@Override
-	public void onVisibilityChanged(SeriesDisplayEvent event){
-		fireEvent(event);
+	private ExplorerContext context = null;
+
+
+	public ExplorerPanel(ExplorerContext context){
+		setContext(context);
 	}
 
-	public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler){
-		return addHandler(handler, SeriesDisplayEvent.TYPE);
+	public ExplorerContext getContext(){
+		return this.context;
+	}
+
+	private void setContext(ExplorerContext context){
+		this.context = context;
 	}
 }

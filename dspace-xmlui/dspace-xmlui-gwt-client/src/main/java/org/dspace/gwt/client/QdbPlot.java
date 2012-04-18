@@ -33,7 +33,9 @@ public class QdbPlot extends SimplePlot {
 			handler.setVisible(visiblePredictions.contains(series.getPrediction()));
 		}
 
-		redraw();
+		if(isAttached()){
+			redraw();
+		}
 	}
 
 	public void addXAxisOptions(Bounds bounds){

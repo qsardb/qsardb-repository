@@ -8,7 +8,9 @@ import org.dspace.gwt.rpc.*;
 
 public class DescriptorExplorerPanel extends ExplorerPanel {
 
-	public DescriptorExplorerPanel(QdbTable table){
+	public DescriptorExplorerPanel(ExplorerContext context, QdbTable table){
+		super(context);
+
 		Panel panel = new FlowPanel();
 
 		panel.add(new Heading("Descriptor analysis", 3));
@@ -50,7 +52,8 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 			@Override
 			public Widget createWidget(){
 				PlotPanel plotPanel = new DescriptorPlotPanel(table, property, descriptor);
-				addSeriesDisplayEventHandler(plotPanel);
+
+				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 
 				return plotPanel;
 			}

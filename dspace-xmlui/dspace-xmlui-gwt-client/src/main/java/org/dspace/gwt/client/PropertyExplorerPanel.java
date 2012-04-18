@@ -6,7 +6,9 @@ import org.dspace.gwt.rpc.*;
 
 public class PropertyExplorerPanel extends ExplorerPanel {
 
-	public PropertyExplorerPanel(QdbTable table){
+	public PropertyExplorerPanel(ExplorerContext context, QdbTable table){
+		super(context);
+
 		Panel panel = new FlowPanel();
 
 		panel.add(new Heading("Property analysis", 3));
@@ -45,7 +47,8 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 			@Override
 			public Widget createWidget(){
 				PlotPanel plotPanel = new PropertyPlotPanel(table, property);
-				addSeriesDisplayEventHandler(plotPanel);
+
+				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 
 				return plotPanel;
 			}

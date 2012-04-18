@@ -10,27 +10,37 @@ import org.dspace.gwt.rpc.*;
 
 public class SeriesPanel extends Composite {
 
+	private SeriesListBox seriesList = null;
+
+
 	public SeriesPanel(QdbTable table){
 		Panel panel = new FlowPanel();
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		final
-		SeriesListBox seriesList = new SeriesListBox(predictions);
-		panel.add(seriesList);
+		this.seriesList = new SeriesListBox(predictions);
+		panel.add(this.seriesList);
 
 		ChangeHandler changeHandler = new ChangeHandler(){
 
 			@Override
 			public void onChange(ChangeEvent event){
-				Map<PredictionColumn, Boolean> value = seriesList.getSelectedValue();
-
-				fireEvent(new SeriesDisplayEvent(value));
+				fireSeriesDisplayEvent();
 			}
 		};
-		seriesList.addChangeHandler(changeHandler);
+		this.seriesList.addChangeHandler(changeHandler);
 
 		initWidget(panel);
+	}
+
+	private void fireSeriesDisplayEvent(){
+		fireEvent(createSeriesDisplayEvent());
+	}
+
+	protected SeriesDisplayEvent createSeriesDisplayEvent(){
+		Map<PredictionColumn, Boolean> value = this.seriesList.getSelectedValue();
+
+		return new SeriesDisplayEvent(value);
 	}
 
 	public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler){

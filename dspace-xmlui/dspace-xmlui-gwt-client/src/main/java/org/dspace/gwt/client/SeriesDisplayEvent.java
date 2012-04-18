@@ -39,7 +39,7 @@ public class SeriesDisplayEvent extends GwtEvent<SeriesDisplayEventHandler> {
 
 	@Override
 	public void dispatch(SeriesDisplayEventHandler handler){
-		handler.onVisibilityChanged(this);
+		handler.onSeriesVisibilityChanged(this);
 	}
 
 	@Override

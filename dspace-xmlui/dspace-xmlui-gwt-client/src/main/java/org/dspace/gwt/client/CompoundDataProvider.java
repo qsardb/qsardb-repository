@@ -18,7 +18,7 @@ public class CompoundDataProvider extends ListDataProvider<Compound> implements 
 	}
 
 	@Override
-	public void onVisibilityChanged(SeriesDisplayEvent event){
+	public void onSeriesVisibilityChanged(SeriesDisplayEvent event){
 		Set<String> visibleIds = new LinkedHashSet<String>();
 
 		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);

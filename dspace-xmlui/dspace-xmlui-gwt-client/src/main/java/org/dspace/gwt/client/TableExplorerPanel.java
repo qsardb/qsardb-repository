@@ -8,7 +8,9 @@ import org.dspace.gwt.rpc.*;
 
 public class TableExplorerPanel extends ExplorerPanel {
 
-	public TableExplorerPanel(QdbTable table){
+	public TableExplorerPanel(ExplorerContext context, QdbTable table){
+		super(context);
+
 		Panel panel = new FlowPanel();
 
 		panel.add(new Heading("Data table", 3));
@@ -17,7 +19,7 @@ public class TableExplorerPanel extends ExplorerPanel {
 
 		CompoundDataProvider dataProvider = new CompoundDataProvider(compounds);
 
-		addSeriesDisplayEventHandler(dataProvider);
+		context.addSeriesDisplayEventHandler(dataProvider, false);
 
 		DataGridPanel gridPanel = new DataGridPanel(table, dataProvider);
 		panel.add(gridPanel);

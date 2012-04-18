@@ -1,5 +1,6 @@
 package org.dspace.gwt.client;
 
+import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.gwt.rpc.*;
@@ -20,23 +21,32 @@ public class QdbExplorer extends QdbApplication {
 	public Widget createWidget(ModelTable table){
 		Panel panel = new FlowPanel();
 
+		final
 		SeriesPanel seriesPanel = new SeriesPanel(table);
 		panel.add(seriesPanel);
 
-		TableExplorerPanel tableExplorer = new TableExplorerPanel(table);
+		ExplorerContext context = new ExplorerContext(){
+
+			@Override
+			public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler, boolean notify){
+				HandlerRegistration result = seriesPanel.addSeriesDisplayEventHandler(handler);
+
+				if(notify){
+					handler.onSeriesVisibilityChanged(seriesPanel.createSeriesDisplayEvent());
+				}
+
+				return result;
+			}
+		};;
+
+		TableExplorerPanel tableExplorer = new TableExplorerPanel(context, table);
 		panel.add(tableExplorer);
 
-		seriesPanel.addSeriesDisplayEventHandler(tableExplorer);
-
-		PropertyExplorerPanel propertyExplorer = new PropertyExplorerPanel(table);
+		PropertyExplorerPanel propertyExplorer = new PropertyExplorerPanel(context, table);
 		panel.add(propertyExplorer);
 
-		seriesPanel.addSeriesDisplayEventHandler(propertyExplorer);
-
-		DescriptorExplorerPanel descriptorExplorer = new DescriptorExplorerPanel(table);
+		DescriptorExplorerPanel descriptorExplorer = new DescriptorExplorerPanel(context, table);
 		panel.add(descriptorExplorer);
-
-		seriesPanel.addSeriesDisplayEventHandler(descriptorExplorer);
 
 		return panel;
 	}

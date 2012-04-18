@@ -4,5 +4,5 @@ import com.google.gwt.event.shared.*;
 
 public interface SeriesDisplayEventHandler extends EventHandler {
 
-	void onVisibilityChanged(SeriesDisplayEvent event);
+	void onSeriesVisibilityChanged(SeriesDisplayEvent event);
 }
