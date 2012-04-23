@@ -14,6 +14,7 @@ import org.qsardb.model.*;
 import net.sf.jniinchi.*;
 
 import org.dspace.content.*;
+import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 import org.dspace.gwt.rpc.*;
 import org.openscience.cdk.*;

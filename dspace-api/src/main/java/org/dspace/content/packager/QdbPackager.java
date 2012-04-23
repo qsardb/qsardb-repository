@@ -10,6 +10,7 @@ import org.qsardb.storage.zipfile.*;
 import org.dspace.authorize.*;
 import org.dspace.content.*;
 import org.dspace.content.Collection;
+import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 
 public class QdbPackager extends SelfNamedPlugin implements PackageIngester, PackageDisseminator {

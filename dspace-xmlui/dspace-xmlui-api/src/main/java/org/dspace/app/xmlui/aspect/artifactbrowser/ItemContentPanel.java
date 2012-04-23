@@ -22,6 +22,7 @@ import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.app.xmlui.wing.element.Item;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.content.*;
+import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 
 class ItemContentPanel {

@@ -10,6 +10,7 @@ import org.qsardb.model.*;
 import org.dspace.app.util.*;
 import org.dspace.authorize.*;
 import org.dspace.content.*;
+import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 import org.dspace.submit.*;
 
