@@ -490,6 +490,11 @@
               <artifactId>evaluation</artifactId>
               <version>1.0-SNAPSHOT</version>
           </dependency>
+          <dependency>
+              <groupId>org.qsardb</groupId>
+              <artifactId>validation</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
 
                  <!-- Explicitly Specify Latest Version of Spring -->
         <dependency>

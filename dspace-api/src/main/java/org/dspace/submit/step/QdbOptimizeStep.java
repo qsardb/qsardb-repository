@@ -25,6 +25,11 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, SQLException, IOException {
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
+		File tempFile = ItemMessageCollector.getFile(item);
+		if(tempFile.isFile()){
+			tempFile.delete();
+		}
+
 		Bitstream original = QdbUtil.getOriginalBitstream(context, item);
 
 		File file = QdbUtil.loadFile(original);

@@ -1,11 +1,18 @@
 package org.dspace.app.xmlui.aspect.submission.submit;
 
+import java.util.*;
+
 import org.apache.cocoon.environment.*;
+import org.apache.log4j.*;
 
 import org.dspace.app.xmlui.aspect.submission.*;
 import org.dspace.app.xmlui.wing.*;
 import org.dspace.app.xmlui.wing.element.*;
-import org.dspace.content.*;
+import org.dspace.app.xmlui.wing.element.List;
+import org.dspace.content.Collection;
+import org.dspace.content.Item;
+import org.dspace.submit.step.*;
+import org.dspace.submit.step.QdbValidateStep.Level;
 
 public class QdbValidateStep extends AbstractSubmissionStep {
 
@@ -15,6 +22,8 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 	@Override
 	public void addBody(Body body) throws WingException {
+		Item item = super.submissionInfo.getSubmissionItem().getItem();
+
 		Request request = ObjectModelHelper.getRequest(getObjectModel());
 
 		Collection collection = super.submission.getCollection();
@@ -35,12 +44,53 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		String level = (String)request.get("level");
 
-		levelSelect.addOption("basic".equals(level), "basic", T_option_basic);
-		levelSelect.addOption("intermediate".equals(level), "intermediate", T_option_intermediate);
-		levelSelect.addOption("advanced".equals(level), "advanced", T_option_advanced);
+		levelSelect.addOption((Level.BASIC.getValue()).equals(level), Level.BASIC.getValue(), T_option_basic);
+		levelSelect.addOption((Level.INTERMEDIATE.getValue()).equals(level), Level.INTERMEDIATE.getValue(), T_option_intermediate);
+		levelSelect.addOption((Level.ADVANCED.getValue()).equals(level), Level.ADVANCED.getValue(), T_option_advanced);
 
 		Button validateButton = (content.addItem()).addButton("validate");
 		validateButton.setValue(T_validate);
+
+		java.util.List<org.qsardb.validation.Message> messages = Collections.<org.qsardb.validation.Message>emptyList();
+
+		try {
+			ItemMessageCollector collector = ItemMessageCollector.load(item);
+
+			if(collector != null){
+				messages = collector.getMessages();
+			}
+		} catch(Exception e){
+			// Ignored
+		}
+
+		if(messages.size() > 0){
+			Table messagesTable = division.addTable("messages", messages.size(), 2);
+
+			if(true){
+				Row headerRow = messagesTable.addRow("header");
+
+				Cell pathCell = headerRow.addCell("header");
+				pathCell.addContent("Archive path");
+
+				Cell contentCell = headerRow.addCell("header");
+				contentCell.addContent("Content");
+			}
+
+			for(org.qsardb.validation.Message message : messages){
+				Row messageRow = messagesTable.addRow(null, "data", "message-" + (message.getLevel()).getValue());
+
+				messageRow.addCellContent(message.getPath());
+				messageRow.addCellContent(message.getContent());
+			}
+		} // End if
+
+		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
+
+			// Check that the user has really submitted the validation form
+			if(level != null){
+				division.addPara(T_validation_success);
+			}
+		} else
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR){
 			division.addPara(T_qdb_error);
@@ -48,11 +98,6 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR){
 			division.addPara(T_validation_error);
-		} // End if
-
-		// Give feedback for selected conformance level
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE && level != null){
-			division.addPara(T_validation_success);
 		}
 
 		List controls = division.addList("controls", List.TYPE_FORM);

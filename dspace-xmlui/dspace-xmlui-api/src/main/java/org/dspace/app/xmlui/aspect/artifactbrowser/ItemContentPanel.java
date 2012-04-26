@@ -108,9 +108,9 @@ class ItemContentPanel {
 			Table modelsTable = propertyDivision.addTable("property-models", rows, columns);
 			modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
 
-			Row headerRow = modelsTable.addRow("header");
+			if(true){
+				Row headerRow = modelsTable.addRow("header");
 
-			{
 				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
 				nameCell.addContent("Name"); // XXX
 

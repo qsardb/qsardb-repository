@@ -64,6 +64,10 @@
             <groupId>org.qsardb</groupId>
             <artifactId>evaluation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>validation</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
