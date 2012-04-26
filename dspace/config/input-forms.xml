@@ -68,7 +68,27 @@
 				<repeatable>true</repeatable>
 				<label>Species</label>
 				<input-type>onebox</input-type>
-				<hint>Species</hint>
+				<hint>Binomial name</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>qdb</dc-schema>
+				<dc-element>descriptor</dc-element>
+				<dc-qualifier>application</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>Descriptor calculation software</label>
+				<input-type>onebox</input-type>
+				<hint>The name of the application</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>qdb</dc-schema>
+				<dc-element>prediction</dc-element>
+				<dc-qualifier>application</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>Prediction training or validation software</label>
+				<input-type>onebox</input-type>
+				<hint>The name of the application</hint>
 				<required></required>
 			</field>
 		</page>

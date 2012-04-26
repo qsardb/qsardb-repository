@@ -166,8 +166,10 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.author.column_heading">Authors Name</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.subject.column_heading">Subject</message>
 
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.endpoint.column_heading">Endpoint</message>
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.species.column_heading">Species</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_endpoint.column_heading">Endpoint</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_species.column_heading">Species</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.descriptor_application.column_heading">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.prediction_application.column_heading">Modeling software</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.author">Browsing {0} by Author {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.author">Browsing {0} by Author</message>
@@ -175,11 +177,17 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.subject">Browsing {0} by Subject {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.subject">Browsing {0} by Subject</message>
 
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.endpoint">Browsing {0} by Endpoint {1}</message>
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.endpoint">Browsing {0} by Endpoint</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_endpoint">Browsing {0} by Endpoint {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_endpoint">Browsing {0} by Endpoint</message>
 
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.species">Browsing {0} by Species {1}</message>
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.species">Browsing {0} by Species</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_species">Browsing {0} by Species {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_species">Browsing {0} by Species</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.descriptor_application">Browsing {0} by Descriptor calculation software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.descriptor_application">Browsing {0} by Descriptor calculation software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.prediction_application">Browsing {0} by Modeling software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.prediction_application">Browsing {0} by Modeling software</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.item.title">Browsing {0} by Title {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.item.title">Browsing {0} by Title</message>
@@ -292,8 +300,10 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_subject">Subjects</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateissued">By Issue Date</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateaccessioned">By Submit Date</message>
-	<message key="xmlui.ArtifactBrowser.Navigation.browse_endpoint">Endpoints</message>
-	<message key="xmlui.ArtifactBrowser.Navigation.browse_species">Species</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_endpoint">Endpoints</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_species">Species</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_descriptor_application">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_prediction_application">Modeling software</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_collection">This Collection</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_community">This Community</message>
 

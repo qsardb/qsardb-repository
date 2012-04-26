@@ -42,6 +42,17 @@
   4.2 Initialize the browse index:
     [dspace]/bin/dspace index-init
 
+  4.3 Update [dspace-src]/dspace-xmlui/dspace-xmlui-webapp/src/main/webapp/i18n/messages.xml
+
+    4.3.1 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.<entry>"
+
+    4.3.2 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.<entry>"
+
+    4.3.3 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.<entry>"
+
+    4.3.4 Add mapping for key "xmlui.ArtifactBrowser.Navigation.browse_<entry>"
+
+
 5. HOW TO ADD A NEW GWT CLIENT APPLICATION (XML-UI)
 
   5.1 Create a subclass of AbstractDSpaceTransformer that will be responsible for transforming the DRI document. For most common (ie. Item-oriented) scenarios consider subclassing ApplicationTransformer.

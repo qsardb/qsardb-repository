@@ -230,34 +230,86 @@ public class QdbUtil {
 
 	static
 	public void collectQsarDBMetadata(Item item, Qdb qdb){
-		List<String> endpointValues = new ArrayList<String>();
-		List<String> speciesValues = new ArrayList<String>();
+		collectPropertyMetadata(item, qdb);
+		collectDescriptorMetadata(item, qdb);
+		collectPredictionMetadata(item, qdb);
+	}
+
+	static
+	private void collectPropertyMetadata(Item item, Qdb qdb){
+		ValueCollector propertyEndpoints = new ValueCollector();
+		ValueCollector propertySpecies = new ValueCollector();
 
 		PropertyRegistry properties = qdb.getPropertyRegistry();
 		for(Property property : properties){
-			String endpoint = property.getEndpoint();
-			if(endpoint != null){
-				endpointValues.add(endpoint);
-			}
-
-			String species = property.getSpecies();
-			if(species != null){
-				speciesValues.add(species);
-			}
+			propertyEndpoints.add(property.getEndpoint());
+			propertySpecies.add(property.getSpecies());
 		}
 
-		if(endpointValues.size() > 0){
-			item.addMetadata("qdb", "property", "endpoint", null, toArray(endpointValues));
+		if(propertyEndpoints.size() > 0){
+			item.addMetadata("qdb", "property", "endpoint", null, propertyEndpoints.toArray());
 		} // End if
 
-		if(speciesValues.size() > 0){
-			item.addMetadata("qdb", "property", "species", null, toArray(speciesValues));
+		if(propertySpecies.size() > 0){
+			item.addMetadata("qdb", "property", "species", null, propertySpecies.toArray());
 		}
 	}
 
 	static
-	private String[] toArray(List<String> strings){
-		return strings.toArray(new String[strings.size()]);
+	private void collectDescriptorMetadata(Item item, Qdb qdb){
+		ValueCollector descriptorApplications = new ValueCollector();
+
+		DescriptorRegistry descriptors = qdb.getDescriptorRegistry();
+		for(Descriptor descriptor : descriptors){
+			descriptorApplications.add(formatApplication(descriptor.getApplication()));
+		}
+
+		if(descriptorApplications.size() > 0){
+			item.addMetadata("qdb", "descriptor", "application", null, descriptorApplications.toArray());
+		}
+	}
+
+	static
+	private void collectPredictionMetadata(Item item, Qdb qdb){
+		ValueCollector predictionApplications = new ValueCollector();
+
+		PredictionRegistry predictions = qdb.getPredictionRegistry();
+		for(Prediction prediction : predictions){
+			predictionApplications.add(formatApplication(prediction.getApplication()));
+		}
+
+		if(predictionApplications.size() > 0){
+			item.addMetadata("qdb", "prediction", "application", null, predictionApplications.toArray());
+		}
+	}
+
+	static
+	private String formatApplication(Application application){
+		return (application != null ? application.getName() : null);
+	}
+
+	static
+	public class ValueCollector {
+
+		private Set<String> values = new LinkedHashSet<String>();
+
+
+		public int size(){
+			return this.values.size();
+		}
+
+		public void add(String value){
+
+			if(value == null){
+				return;
+			}
+
+			this.values.add(value);
+		}
+
+		public String[] toArray(){
+			return this.values.toArray(new String[this.values.size()]);
+		}
 	}
 
 	static
