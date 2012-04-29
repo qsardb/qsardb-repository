@@ -101,10 +101,11 @@ public class QdbValidateStep extends AbstractProcessingStep {
 			result.add(new PredictionRegistryValidator());
 			result.add(new BasicCargoValidator());
 			result.add(new ValuesValidator());
+			result.add(new UCUMValidator());
 			result.add(new ReferencesValidator());
 			result.add(new PMMLValidator());
 			result.add(new BibTeXValidator());
-			result.add(new UCUMValidator());
+			result.add(new BODOValidator());
 		} // End if
 
 		if((Level.INTERMEDIATE).compareTo(level) <= 0){
@@ -116,7 +117,7 @@ public class QdbValidateStep extends AbstractProcessingStep {
 		} // End if
 
 		if((Level.ADVANCED).compareTo(level) <= 0){
-			result.add(new ValuesReproducibilityValidator());
+			result.add(new PredictionReproducibilityValidator());
 		}
 
 		return result;

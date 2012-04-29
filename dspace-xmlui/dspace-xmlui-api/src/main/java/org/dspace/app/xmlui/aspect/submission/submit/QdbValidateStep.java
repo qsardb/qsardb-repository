@@ -3,7 +3,6 @@ package org.dspace.app.xmlui.aspect.submission.submit;
 import java.util.*;
 
 import org.apache.cocoon.environment.*;
-import org.apache.log4j.*;
 
 import org.dspace.app.xmlui.aspect.submission.*;
 import org.dspace.app.xmlui.wing.*;
@@ -37,16 +36,23 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		List content = division.addList("validate", List.TYPE_FORM);
 
-		Select levelSelect = (content.addItem()).addSelect("level");
-		levelSelect.setLabel(T_level);
-		levelSelect.setHelp(T_level_help);
-		levelSelect.setRequired(true);
+		Radio levelRadio = (content.addItem()).addRadio("level");
+		levelRadio.setLabel(T_level);
+		levelRadio.setRequired(true);
 
 		String level = (String)request.get("level");
 
-		levelSelect.addOption((Level.BASIC.getValue()).equals(level), Level.BASIC.getValue(), T_option_basic);
-		levelSelect.addOption((Level.INTERMEDIATE.getValue()).equals(level), Level.INTERMEDIATE.getValue(), T_option_intermediate);
-		levelSelect.addOption((Level.ADVANCED.getValue()).equals(level), Level.ADVANCED.getValue(), T_option_advanced);
+		Option basic = levelRadio.addOption((Level.BASIC.getValue()).equals(level) || (level == null), Level.BASIC.getValue());
+		basic.addContent(T_option_basic);
+		basic.addContent(T_option_basic_help, true);
+
+		Option intermediate = levelRadio.addOption((Level.INTERMEDIATE.getValue()).equals(level), Level.INTERMEDIATE.getValue());
+		intermediate.addContent(T_option_intermediate);
+		intermediate.addContent(T_option_intermediate_help, true);
+
+		Option advanced = levelRadio.addOption((Level.ADVANCED.getValue()).equals(level), Level.ADVANCED.getValue());
+		advanced.addContent(T_option_advanced);
+		advanced.addContent(T_option_advanced_help, true);
 
 		Button validateButton = (content.addItem()).addButton("validate");
 		validateButton.setValue(T_validate);
@@ -86,18 +92,21 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
 
-			// Check that the user has really submitted the validation form
-			if(level != null){
-				division.addPara(T_validation_success);
+			if(level == null){
+				division.addPara(T_status_init);
+			} else
+
+			{
+				division.addPara(T_status_success);
 			}
 		} else
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR){
-			division.addPara(T_qdb_error);
+			division.addPara(T_status_qdb_error);
 		} else
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR){
-			division.addPara(T_validation_error);
+			division.addPara(T_status_error);
 		}
 
 		List controls = division.addList("controls", List.TYPE_FORM);
@@ -112,19 +121,25 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 	private static final Message T_level = message("xmlui.Submission.submit.QdbValidateStep.level");
 
-	private static final Message T_level_help = message("xmlui.Submission.submit.QdbValidateStep.level_help");
-
 	private static final Message T_option_basic = message("xmlui.Submission.submit.QdbValidateStep.option_basic");
+
+	private static final Message T_option_basic_help = message("xmlui.Submission.submit.QdbValidateStep.option_basic_help");
 
 	private static final Message T_option_intermediate = message("xmlui.Submission.submit.QdbValidateStep.option_intermediate");
 
+	private static final Message T_option_intermediate_help = message("xmlui.Submission.submit.QdbValidateStep.option_intermediate_help");
+
 	private static final Message T_option_advanced = message("xmlui.Submission.submit.QdbValidateStep.option_advanced");
+
+	private static final Message T_option_advanced_help = message("xmlui.Submission.submit.QdbValidateStep.option_advanced_help");
 
 	private static final Message T_validate = message("xmlui.Submission.submit.QdbValidateStep.validate");
 
-	private static final Message T_qdb_error = message("xmlui.Submission.submit.QdbValidateStep.qdb_error");
+	private static final Message T_status_init = message("xmlui.Submission.submit.QdbValidateStep.status_init");
 
-	private static final Message T_validation_error = message("xmlui.Submission.submit.QdbValidateStep.validation_error");
+	private static final Message T_status_success = message("xmlui.Submission.submit.QdbValidateStep.status_success");
 
-	private static final Message T_validation_success = message("xmlui.Submission.submit.QdbValidateStep.validation_success");
+	private static final Message T_status_qdb_error = message("xmlui.Submission.submit.QdbValidateStep.status_qdb_error");
+
+	private static final Message T_status_error = message("xmlui.Submission.submit.QdbValidateStep.status_error");
 }

@@ -11,6 +11,7 @@ import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 
+import net.sf.blueobelisk.*;
 import net.sf.jniinchi.*;
 
 import org.dspace.content.*;
@@ -253,7 +254,9 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 					BODOCargo bodoCargo = descriptor.getCargo(BODOCargo.class);
 
-					IDescriptor cdkDescriptor = BODOUtil.parse(bodoCargo.loadBodoDescriptor());
+					BODODescriptor bodoDescriptor = bodoCargo.loadBodoDescriptor();
+
+					IDescriptor cdkDescriptor = BODOUtil.parse(bodoDescriptor);
 
 					values.put(descriptor.getId(), calculateCdkDescriptor((IMolecularDescriptor)cdkDescriptor, molecule));
 				}

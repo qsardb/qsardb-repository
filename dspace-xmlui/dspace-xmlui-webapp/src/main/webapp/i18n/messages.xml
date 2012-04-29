@@ -736,15 +736,18 @@
 
 	<!-- org.dspace.app.xmlui.Submission.submit.QdbValidateStep -->
 	<message key="xmlui.Submission.submit.QdbValidateStep.head">QsarDB validation</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.level">QDB level</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.level_help">Select the QDB conformance level</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic">Basic (local scope)</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (global scope)</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (executable)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.level">QDB conformance level</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic">Basic (one star)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic_help">All Container and Cargo instances are correctly defined. All Container instances are resolveable in local scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (two stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate_help">Additionally, all Compound, Property and Descriptor instances are resolveable in global scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (three stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced_help">Additionally, all Models are evaluateable, all training- and external validation Prediction results are reproducible.</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.validate">Validate</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.qdb_error">QDB error</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.validation_error">QDB validation failed</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.validation_success">QDB validation passed successfully</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_init">Not validated</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_success">QDB validation passed</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_qdb_error">QDB validation failed because of a low-level QDB error. The uploaded QDB file is unusable.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_error">QDB validation failed</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.ReviewStep -->
 	<message key="xmlui.Submission.submit.ReviewStep.head">Review Submission</message>
