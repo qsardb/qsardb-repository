@@ -1,9 +1,6 @@
 package org.dspace.gwt.client;
 
-import java.math.*;
 import java.util.*;
-
-import ca.nanometrics.gflot.client.options.*;
 
 import com.google.gwt.user.client.ui.*;
 
@@ -14,28 +11,21 @@ public class PropertyPlotPanel extends PlotPanel {
 	public PropertyPlotPanel(QdbTable table, PropertyColumn property){
 		Resolver resolver = new Resolver(table);
 
+		Set<String> ids = new LinkedHashSet<String>();
+
 		Map<String, Object> propertyValues = property.getValues();
 		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
 
+		ids.addAll(propertyValues.keySet());
+
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
-
-		QdbPlot.Bounds errorBounds = new QdbPlot.Bounds();
-
-		Map<String, BigDecimal> trainingErrors = null;
 
 		for(PredictionColumn prediction : predictions){
 			Map<String, Object> predictionValues = prediction.getValues();
-			Map<String, BigDecimal> predictionErrors = prediction.getErrors();
-
-			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
-				trainingErrors = predictionErrors;
-			}
-
 			propertyBounds = QdbPlot.bounds(propertyBounds, predictionValues);
-			errorBounds = QdbPlot.bounds(errorBounds, predictionErrors);
-		}
 
-		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
+			ids.addAll(predictionValues.keySet());
+		}
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
 		scatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
@@ -46,44 +36,21 @@ public class PropertyPlotPanel extends PlotPanel {
 		// XXX
 		add(new HTML("&nbsp;"));
 
-		ScatterPlot errorScatterPlot = new ScatterPlot(resolver);
-		errorScatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
-		errorScatterPlot.addYAxisOptions(errorBounds, "Prediction error");
+		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 
-		add(errorScatterPlot);
+		HistogramPlot histogramPlot = new HistogramPlot(propertyBounds.getMin(), propertyBounds.getMax(), size);
+		histogramPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
+		histogramPlot.addYAxisOptions("Frequency");
+
+		add(histogramPlot);
 
 		for(PredictionColumn prediction : predictions){
+			Set<String> keys = (prediction.getValues()).keySet();
+
+			Map<String, ?> predictionPropertyValues = ParameterUtil.subset(keys, propertyValues);
+
 			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getValues());
-			errorScatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getErrors());
+			histogramPlot.addSeries(new PredictionSeries(prediction), predictionPropertyValues);
 		}
-
-		Number sigma = MathUtil.standardDeviation(trainingErrors.values());
-
-		Markings markings = new Markings();
-		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(2), QdbPlot.COLOR_TWO_SIGMA));
-		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(3), QdbPlot.COLOR_THREE_SIGMA));
-
-		GridOptions gridOptions = errorScatterPlot.ensureGridOptions();
-		gridOptions.setMarkings(markings);
-	}
-
-	static
-	private Marking[] createStDevMarkings(Number sigma, Number multiplier, String color){
-		double value = (sigma.doubleValue() * multiplier.doubleValue());
-
-		return new Marking[]{
-			createLineMarking(Double.valueOf(-1 * value), color),
-			createLineMarking(Double.valueOf(value), color)
-		};
-	}
-
-	static
-	private Marking createLineMarking(Number value, String color){
-		Marking result = new Marking();
-		result.setY(new Range(value.doubleValue(), value.doubleValue()));
-		result.setColor(color);
-		result.setLineWidth(1);
-
-		return result;
 	}
 }

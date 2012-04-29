@@ -11,10 +11,12 @@ public class DescriptorPlotPanel extends PlotPanel {
 	public DescriptorPlotPanel(QdbTable table, PropertyColumn property, DescriptorColumn descriptor){
 		Resolver resolver = new Resolver(table);
 
+		Set<String> ids = new LinkedHashSet<String>();
+
 		Map<String, Object> propertyValues = property.getValues();
 		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
 
-		Set<String> ids = new LinkedHashSet<String>(propertyValues.keySet());
+		ids.addAll(propertyValues.keySet());
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
@@ -23,8 +25,6 @@ public class DescriptorPlotPanel extends PlotPanel {
 
 			ids.addAll(predictionValues.keySet());
 		}
-
-		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 
 		Map<String, Object> descriptorValues = descriptor.getValues();
 		QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
@@ -37,6 +37,8 @@ public class DescriptorPlotPanel extends PlotPanel {
 
 		// XXX
 		add(new HTML("&nbsp;"));
+
+		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 
 		HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds.getMin(), descriptorBounds.getMax(), size);
 		histogramPlot.addXAxisOptions(descriptorBounds, descriptor.getName());

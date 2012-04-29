@@ -24,6 +24,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		panel.add(createPropertyPanel(table, property));
+		panel.add(createResidualErrorPanel(table, property));
 
 		return panel;
 	}
@@ -58,6 +59,36 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 		if(!panel.isOpen()){
 			panel.setOpen(true);
 		}
+
+		return panel;
+	}
+
+	private Widget createResidualErrorPanel(final QdbTable table, final PropertyColumn property){
+		DisclosurePanel panel = new DisclosurePanel();
+
+		LazyHeader header = new LazyHeader(panel){
+
+			@Override
+			public Label createLeft(){
+				return new Label("Residual error");
+			}
+		};
+		panel.setHeader(header);
+
+		header.ensureWidget();
+
+		LazyContent content = new LazyContent(panel){
+
+			@Override
+			public Widget createWidget(){
+				PlotPanel plotPanel = new ResidualErrorPlotPanel(table, property);
+
+				getContext().addSeriesDisplayEventHandler(plotPanel, true);
+
+				return plotPanel;
+			}
+		};
+		panel.setContent(content);
 
 		return panel;
 	}
