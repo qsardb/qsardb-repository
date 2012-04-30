@@ -91,6 +91,16 @@
 				<hint>The name of the application</hint>
 				<required></required>
 			</field>
+			<field>
+				<dc-schema>qdb</dc-schema>
+				<dc-element>model</dc-element>
+				<dc-qualifier>type</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>Model type</label>
+				<input-type>onebox</input-type>
+				<hint>The type of the statistical or data mining model</hint>
+				<required></required>
+			</field>
 		</page>
 	</form>
 

@@ -170,6 +170,7 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_species.column_heading">Species</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.descriptor_application.column_heading">Descriptor calculation software</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.prediction_application.column_heading">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.model_type.column_heading">Model type</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.author">Browsing {0} by Author {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.author">Browsing {0} by Author</message>
@@ -188,6 +189,9 @@
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.prediction_application">Browsing {0} by Modeling software {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.prediction_application">Browsing {0} by Modeling software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.model_type">Browsing {0} by Model type {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.model_type">Browsing {0} by Model type</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.item.title">Browsing {0} by Title {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.item.title">Browsing {0} by Title</message>
@@ -304,6 +308,7 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_species">Species</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_descriptor_application">Descriptor calculation software</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_prediction_application">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_model_type">Model type</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_collection">This Collection</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_community">This Community</message>
 
@@ -742,7 +747,7 @@
 	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (two stars)</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate_help">Additionally, all Compound, Property and Descriptor instances are resolveable in global scope.</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (three stars)</message>
-	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced_help">Additionally, all Models are evaluateable, all training- and external validation Prediction results are reproducible.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced_help">Additionally, all Models are evaluateable and all Prediction results (training and external validation) are reproducible.</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.validate">Validate</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.status_init">Not validated</message>
 	<message key="xmlui.Submission.submit.QdbValidateStep.status_success">QDB validation passed</message>

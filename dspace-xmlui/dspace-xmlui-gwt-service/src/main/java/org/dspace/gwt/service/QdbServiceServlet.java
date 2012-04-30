@@ -6,7 +6,6 @@ import java.util.Collection;
 
 import org.qsardb.cargo.bodo.*;
 import org.qsardb.cargo.map.*;
-import org.qsardb.cargo.pmml.*;
 import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
@@ -140,7 +139,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		table.setKeys(keys);
 
-		Evaluator evaluator = getEvaluator(model);
+		Evaluator evaluator = QdbUtil.getEvaluator(model);
 
 		if(evaluator != null){
 			evaluator.init();
@@ -238,7 +237,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		IAtomContainer molecule = parseMolecule(string);
 
-		Evaluator evaluator = getEvaluator(model);
+		Evaluator evaluator = QdbUtil.getEvaluator(model);
+
 		if(evaluator != null){
 			evaluator.init();
 
@@ -268,7 +268,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		} else
 
 		{
-			throw new DSpaceException("Model \'" + modelId + "\' is not evaluatable");
+			throw new DSpaceException("Model \'" + modelId + "\' is not evaluateable");
 		}
 	}
 
@@ -278,7 +278,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			throw new DSpaceException("Model \'" + modelId + "\' not found");
 		}
 
-		Evaluator evaluator = getEvaluator(model);
+		Evaluator evaluator = QdbUtil.getEvaluator(model);
+
 		if(evaluator != null){
 			evaluator.init();
 
@@ -292,7 +293,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		} else
 
 		{
-			throw new DSpaceException("Model \'" + modelId + "\' is not evaluatable");
+			throw new DSpaceException("Model \'" + modelId + "\' is not evaluateable");
 		}
 	}
 
@@ -409,19 +410,6 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 
 		return values;
-	}
-
-	static
-	private Evaluator getEvaluator(Model model) throws Exception {
-		Qdb qdb = model.getQdb();
-
-		if(model.hasCargo(PMMLCargo.class)){
-			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
-
-			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
-		}
-
-		return null;
 	}
 
 	static

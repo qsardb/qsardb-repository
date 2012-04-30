@@ -44,7 +44,7 @@
 
   4.3 Update [dspace-src]/dspace-xmlui/dspace-xmlui-webapp/src/main/webapp/i18n/messages.xml
 
-    4.3.1 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.<entry>"
+    4.3.1 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.<entry>.column_heading"
 
     4.3.2 Add mapping for key "xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.<entry>"
 

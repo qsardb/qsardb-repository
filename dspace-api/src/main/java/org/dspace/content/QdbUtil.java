@@ -4,6 +4,8 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import org.qsardb.cargo.pmml.*;
+import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
 
@@ -211,6 +213,19 @@ public class QdbUtil {
 	}
 
 	static
+	public Evaluator getEvaluator(Model model) throws Exception {
+		Qdb qdb = model.getQdb();
+
+		if(model.hasCargo(PMMLCargo.class)){
+			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
+
+			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
+		}
+
+		return null;
+	}
+
+	static
 	private File createTempFile() throws IOException {
 		return File.createTempFile("bitstream", ".qdb");
 	}
@@ -232,6 +247,7 @@ public class QdbUtil {
 	public void collectQsarDBMetadata(Item item, Qdb qdb){
 		collectPropertyMetadata(item, qdb);
 		collectDescriptorMetadata(item, qdb);
+		collectModelMetadata(item, qdb);
 		collectPredictionMetadata(item, qdb);
 	}
 
@@ -270,6 +286,20 @@ public class QdbUtil {
 	}
 
 	static
+	private void collectModelMetadata(Item item, Qdb qdb){
+		ValueCollector modelTypes = new ValueCollector();
+
+		ModelRegistry models = qdb.getModelRegistry();
+		for(Model model : models){
+			modelTypes.add(loadType(model));
+		}
+
+		if(modelTypes.size() > 0){
+			item.addMetadata("qdb", "model", "type", null, modelTypes.toArray());
+		}
+	}
+
+	static
 	private void collectPredictionMetadata(Item item, Qdb qdb){
 		ValueCollector predictionApplications = new ValueCollector();
 
@@ -281,6 +311,28 @@ public class QdbUtil {
 		if(predictionApplications.size() > 0){
 			item.addMetadata("qdb", "prediction", "application", null, predictionApplications.toArray());
 		}
+	}
+
+	static
+	private String loadType(Model model){
+
+		try {
+			Evaluator evaluator = getEvaluator(model);
+
+			if(evaluator != null){
+				evaluator.init();
+
+				try {
+					return evaluator.getSummary();
+				} finally {
+					evaluator.destroy();
+				}
+			}
+		} catch(Exception e){
+			// Ignored
+		}
+
+		return null;
 	}
 
 	static
