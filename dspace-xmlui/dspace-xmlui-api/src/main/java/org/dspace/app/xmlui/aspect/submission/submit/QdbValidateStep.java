@@ -57,13 +57,13 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 		Button validateButton = (content.addItem()).addButton("validate");
 		validateButton.setValue(T_validate);
 
-		java.util.List<org.qsardb.validation.Message> messages = Collections.<org.qsardb.validation.Message>emptyList();
+		java.util.List<org.qsardb.validation.Message> messages = new ArrayList<org.qsardb.validation.Message>();
 
 		try {
 			ItemMessageCollector collector = ItemMessageCollector.load(item);
 
 			if(collector != null){
-				messages = collector.getMessages();
+				messages.addAll(collector.getMessages());
 			}
 		} catch(Exception e){
 			// Ignored
@@ -81,6 +81,15 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 				Cell contentCell = headerRow.addCell("header");
 				contentCell.addContent("Content");
 			}
+
+			Comparator<org.qsardb.validation.Message> comparator = new Comparator<org.qsardb.validation.Message>(){
+
+				@Override
+				public int compare(org.qsardb.validation.Message left, org.qsardb.validation.Message right){
+					return compareQdbPaths(left.getPath(), right.getPath());
+				}
+			};
+			Collections.sort(messages, comparator);
 
 			for(org.qsardb.validation.Message message : messages){
 				Row messageRow = messagesTable.addRow(null, "data", "message-" + (message.getLevel()).getValue());
@@ -118,6 +127,81 @@ public class QdbValidateStep extends AbstractSubmissionStep {
     public List addReviewSection(List reviewList){
     	return null;
     }
+
+	static
+	private int compareQdbPaths(String left, String right){
+
+		if((left).equals(right)){
+			return 0;
+		}
+
+		String[] leftParts = parseQdbPath(left);
+		String[] rightParts = parseQdbPath(right);
+
+		if(leftParts.length > 0 && rightParts.length > 0){
+			int diff = compareContainerRegistryPaths(leftParts[0], rightParts[0]);
+
+			if(diff != 0){
+				return diff;
+			}
+		}
+
+		if(leftParts.length > 1 && rightParts.length > 1){
+			int diff = compareContainerPaths(leftParts[1], rightParts[1]);
+
+			if(diff != 0){
+				return diff;
+			}
+		}
+
+
+		if(leftParts.length > 2 && rightParts.length > 2){
+			int diff = compareCargoPaths(leftParts[2], rightParts[2]);
+
+			if(diff != 0){
+				return diff;
+			}
+		}
+
+		return (leftParts.length - rightParts.length);
+	}
+
+	static
+	private String[] parseQdbPath(String path){
+		return path.split("/");
+	}
+
+	static
+	private int compareContainerRegistryPaths(String left, String right){
+		int leftIndex = containerRegistries.indexOf(left.toLowerCase());
+		int rightIndex = containerRegistries.indexOf(right.toLowerCase());
+
+		return (leftIndex - rightIndex);
+	}
+
+	static
+	private int compareContainerPaths(String left, String right){
+		int diff = (left.length() - right.length());
+
+		if(diff == 0){
+			return comparePaths(left, right);
+		}
+
+		return diff;
+	}
+
+	static
+	private int compareCargoPaths(String left, String right){
+		return comparePaths(left, right);
+	}
+
+
+	static
+	private int comparePaths(String left, String right){
+		return (left.toLowerCase()).compareTo(right.toLowerCase());
+	}
+
+	private static final java.util.List<String> containerRegistries = Arrays.asList("compounds", "properties", "descriptors", "models", "predictions", "workflows");
 
 	private static final Message T_level = message("xmlui.Submission.submit.QdbValidateStep.level");
 
