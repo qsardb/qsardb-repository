@@ -164,6 +164,10 @@
         <listener-class>org.dspace.app.util.DSpaceContextListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>org.dspace.app.util.RDSContextListener</listener-class>
+    </listener>
+
     <!--
         - Declare Spring context listener which sets up the Spring
         Application Context - containing all Cocoon components (and user

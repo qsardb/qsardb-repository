@@ -4,7 +4,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import org.qsardb.cargo.pmml.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
@@ -214,15 +213,10 @@ public class QdbUtil {
 
 	static
 	public Evaluator getEvaluator(Model model) throws Exception {
-		Qdb qdb = model.getQdb();
+		EvaluatorFactory evaluatorFactory = EvaluatorFactory.getInstance();
+		evaluatorFactory.setActivating(false);
 
-		if(model.hasCargo(PMMLCargo.class)){
-			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
-
-			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
-		}
-
-		return null;
+		return evaluatorFactory.getEvaluator(model);
 	}
 
 	static
