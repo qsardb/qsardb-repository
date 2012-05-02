@@ -2,7 +2,6 @@ package org.dspace.gwt.client;
 
 import java.util.*;
 
-import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 
@@ -50,13 +49,11 @@ public class ResolverTooltip extends PopupPanel {
 		final
 		String imageValue = getValue(values, Arrays.asList(Resolver.INCHI, Resolver.SMILES, Resolver.NAME));
 
-		UrlBuilder builder = new UrlBuilder();
-		builder.setProtocol("http");
-		builder.setHost("cactus.nci.nih.gov");
-		builder.setPath("chemical/structure/" + imageValue + "/image");
-		builder.setParameter("format", "png");
+		StringBuilder sb = new StringBuilder();
+		sb.append("http://cactus.nci.nih.gov");
+		sb.append("/chemical/structure/").append(imageValue.replace("#", "%23").replace("?", "%3f")).append("/image").append("?").append("format=png");
 
-		String url = builder.buildString();
+		String url = sb.toString();
 
 		ImageLoadHandler loadHandler = new ImageLoadHandler(){
 
