@@ -193,9 +193,9 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
-			<heading>submit.progressbar.license</heading>
-			<processing-class>org.dspace.submit.step.LicenseStep</processing-class>
-			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.LicenseStep</xmlui-binding>
+			<heading>submit.progressbar.CClicense</heading>
+			<processing-class>org.dspace.submit.step.CCLicenseStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.CCLicenseStep</xmlui-binding>
 			<workflow-editable>false</workflow-editable>
 		</step>
 	</submission-process>
