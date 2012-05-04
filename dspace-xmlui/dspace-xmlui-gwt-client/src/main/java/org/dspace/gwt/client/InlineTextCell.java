@@ -6,24 +6,39 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.text.shared.*;
 
-public class ResolverTextCell extends AbstractSafeHtmlCell<String> {
+public class InlineTextCell extends AbstractCell<String> {
 
 	private ResolverTooltip tooltip = null;
 
 
-	public ResolverTextCell(Resolver resolver){
-		this(resolver, SimpleSafeHtmlRenderer.getInstance());
+	public InlineTextCell(){
 	}
 
-	public ResolverTextCell(Resolver resolver, SafeHtmlRenderer<String> renderer){
-		super(renderer, (MouseMoveEvent.getType()).getName(), (MouseOverEvent.getType()).getName(), (MouseOutEvent.getType()).getName());
+	public InlineTextCell(Resolver resolver){
+		super((MouseMoveEvent.getType()).getName(), (MouseOverEvent.getType()).getName(), (MouseOutEvent.getType()).getName());
 
 		this.tooltip = new ResolverTooltip(resolver);
 	}
 
 	@Override
+	public void render(Context context, String value, SafeHtmlBuilder sb){
+
+		if(value != null){
+			sb.append(START_TAG);
+
+			InlineTextCell.renderer.render(value, sb);
+
+			sb.append(END_TAG);
+		}
+	}
+
+	@Override
 	public void onBrowserEvent(Context context, Element parent, String value, NativeEvent event, ValueUpdater<String> updater){
 		super.onBrowserEvent(context, parent, value, event, updater);
+
+		if(this.tooltip == null){
+			return;
+		}
 
 		String type = event.getType();
 
@@ -38,11 +53,9 @@ public class ResolverTextCell extends AbstractSafeHtmlCell<String> {
 		}
 	}
 
-	@Override
-	public void render(Context context, SafeHtml value, SafeHtmlBuilder sb){
+	private static final SafeHtml START_TAG = new SafeHtmlString("<span class=\"inlineTextCell\">");
 
-		if(value != null){
-			sb.append(value);
-		}
-	}
+	private static final SafeHtml END_TAG = new SafeHtmlString("</span>");
+
+	private static final SafeHtmlRenderer<String> renderer = SimpleSafeHtmlRenderer.getInstance();
 }

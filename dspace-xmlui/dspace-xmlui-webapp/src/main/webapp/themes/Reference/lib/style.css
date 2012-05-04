@@ -587,6 +587,10 @@ span.subscript {
 	vertical-align: sub;
 }
 
+span.inlineTextCell {
+	white-space: nowrap;
+}
+
 span.floatleft {
 	border:none;
 	float:right;

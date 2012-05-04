@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.user.cellview.client.*;
 
 import org.dspace.gwt.rpc.*;
@@ -14,9 +13,6 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	public CompoundDataGrid(QdbTable table){
 		super(50);
-
-		TableSectionElement body = getTableBodyElement();
-		(body.getStyle()).setProperty("white-space", "nowrap"); // XXX
 
 		Resolver resolver = new Resolver(table);
 
@@ -136,7 +132,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public IdentifierTextColumn(){
-			super(new TextCell());
+			super(new InlineTextCell());
 		}
 
 		@Override
@@ -224,7 +220,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class NameTextColumn extends AttributeTextColumn {
 
 		public NameTextColumn(Resolver resolver, NameColumn attribute){
-			super(new ResolverTextCell(resolver), attribute);
+			super(new InlineTextCell(resolver), attribute);
 		}
 
 		@Override
@@ -237,7 +233,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class CasTextColumn extends AttributeTextColumn {
 
 		public CasTextColumn(CasColumn attribute){
-			super(new TextCell(), attribute);
+			super(new InlineTextCell(), attribute);
 		}
 
 		@Override
@@ -346,7 +342,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PropertyTextColumn extends ParameterTextColumn {
 
 		public PropertyTextColumn(PropertyColumn property){
-			super(new TextCell(), property);
+			super(new InlineTextCell(), property);
 		}
 	}
 
@@ -354,7 +350,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PredictionTextColumn extends ParameterTextColumn {
 
 		public PredictionTextColumn(PredictionColumn prediction){
-			super(new TextCell(), prediction);
+			super(new InlineTextCell(), prediction);
 		}
 	}
 
@@ -365,7 +361,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public PredictionErrorTextColumn(PredictionColumn prediction){
-			super(new TextCell());
+			super(new InlineTextCell());
 
 			setPrediction(prediction);
 		}
@@ -412,7 +408,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class DescriptorTextColumn extends ParameterTextColumn {
 
 		public DescriptorTextColumn(DescriptorColumn descriptor){
-			super(new TextCell(), descriptor);
+			super(new InlineTextCell(), descriptor);
 		}
 	}
 }
