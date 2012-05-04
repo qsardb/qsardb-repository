@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.*;
 
 import com.reveregroup.gwt.imagepreloader.*;
 
-public class ResolverTooltip extends PopupPanel {
+public class ResolverTooltip extends Tooltip {
 
 	private Resolver resolver = null;
 
@@ -26,8 +26,6 @@ public class ResolverTooltip extends PopupPanel {
 
 
 	public ResolverTooltip(Resolver resolver){
-		super(true);
-
 		setResolver(resolver);
 
 		this.table = new FlexTable();
@@ -117,12 +115,12 @@ public class ResolverTooltip extends PopupPanel {
 		}
 	}
 
-	public void schedule(String id, final int x, final int y){
+	public void schedule(String id, final int left, final int top){
 		IdCallback callback = new IdCallback(id){
 
 			@Override
 			public void setPosition(int width, int height){
-				setPopupPosition(x, y);
+				setPopupPosition(left, top);
 			}
 		};
 
@@ -218,6 +216,4 @@ public class ResolverTooltip extends PopupPanel {
 			this.id = id;
 		}
 	}
-
-	private static final int TIMER_DELAY = 500;
 }

@@ -27,17 +27,17 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
-		addColumn(new PropertyTextColumn(property), property.getName());
+		addColumn(new PropertyTextColumn(property), new PropertyTextHeader(property));
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 		for(PredictionColumn prediction : predictions){
-			addColumn(new PredictionTextColumn(prediction), prediction.getName());
+			addColumn(new PredictionTextColumn(prediction), new PredictionTextHeader(prediction));
 			addColumn(new PredictionErrorTextColumn(prediction), "Error");
 		}
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-			addColumn(new DescriptorTextColumn(descriptor), descriptor.getName());
+			addColumn(new DescriptorTextColumn(descriptor), new DescriptorTextHeader(descriptor));
 		}
 
 		addEmptyColumn();
@@ -132,7 +132,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public IdentifierTextColumn(){
-			super(new CompoundTextCell());
+			super(new TextCell());
 		}
 
 		@Override
@@ -220,7 +220,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class NameTextColumn extends AttributeTextColumn {
 
 		public NameTextColumn(Resolver resolver, NameColumn attribute){
-			super(new CompoundTextCell(resolver), attribute);
+			super(new ResolverTooltipCell(resolver), attribute);
 		}
 
 		@Override
@@ -233,7 +233,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class CasTextColumn extends AttributeTextColumn {
 
 		public CasTextColumn(CasColumn attribute){
-			super(new CompoundTextCell(), attribute);
+			super(new TextCell(), attribute);
 		}
 
 		@Override
@@ -342,7 +342,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PropertyTextColumn extends ParameterTextColumn {
 
 		public PropertyTextColumn(PropertyColumn property){
-			super(new CompoundTextCell(), property);
+			super(new TextCell(), property);
 		}
 	}
 
@@ -350,7 +350,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PredictionTextColumn extends ParameterTextColumn {
 
 		public PredictionTextColumn(PredictionColumn prediction){
-			super(new CompoundTextCell(), prediction);
+			super(new TextCell(), prediction);
 		}
 	}
 
@@ -361,7 +361,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public PredictionErrorTextColumn(PredictionColumn prediction){
-			super(new CompoundTextCell());
+			super(new TextCell());
 
 			setPrediction(prediction);
 		}
@@ -408,7 +408,60 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class DescriptorTextColumn extends ParameterTextColumn {
 
 		public DescriptorTextColumn(DescriptorColumn descriptor){
-			super(new CompoundTextCell(), descriptor);
+			super(new TextCell(), descriptor);
+		}
+	}
+
+	static
+	abstract
+	public class ParameterTextHeader extends Header<String> {
+
+		private ParameterColumn parameter = null;
+
+
+		public ParameterTextHeader(ParameterColumn parameter){
+			super(new ParameterTooltipCell(parameter));
+
+			setParameter(parameter);
+		}
+
+		@Override
+		public String getValue(){
+			ParameterColumn parameter = getParameter();
+
+			return parameter.getName();
+		}
+
+		public ParameterColumn getParameter(){
+			return this.parameter;
+		}
+
+		private void setParameter(ParameterColumn parameter){
+			this.parameter = parameter;
+		}
+	}
+
+	static
+	public class PropertyTextHeader extends ParameterTextHeader {
+
+		public PropertyTextHeader(PropertyColumn property){
+			super(property);
+		}
+	}
+
+	static
+	public class PredictionTextHeader extends ParameterTextHeader {
+
+		public PredictionTextHeader(PredictionColumn prediction){
+			super(prediction);
+		}
+	}
+
+	static
+	public class DescriptorTextHeader extends ParameterTextHeader {
+
+		public DescriptorTextHeader(DescriptorColumn descriptor){
+			super(descriptor);
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class QdbExplorer extends QdbApplication {
 
 				return result;
 			}
-		};;
+		};
 
 		TableExplorerPanel tableExplorer = new TableExplorerPanel(context, table);
 		panel.add(tableExplorer);
