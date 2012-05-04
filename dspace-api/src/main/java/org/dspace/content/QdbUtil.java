@@ -235,6 +235,7 @@ public class QdbUtil {
 		Archive archive = qdb.getArchive();
 
 		item.addMetadata("dc", "title", null, null, archive.getName());
+		item.addMetadata("dc", "description", "abstract", null, archive.getDescription());
 	}
 
 	static

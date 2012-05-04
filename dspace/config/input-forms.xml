@@ -40,17 +40,80 @@
 		<page number="1">
 			<field>
 				<dc-schema>dc</dc-schema>
+				<dc-element>contributor</dc-element>
+				<dc-qualifier>author</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>Author(s)</label>
+				<input-type>name</input-type>
+				<hint>The name(s) of the author(s)</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>dc</dc-schema>
 				<dc-element>title</dc-element>
 				<dc-qualifier></dc-qualifier>
 				<repeatable>false</repeatable>
 				<label>Title</label>
 				<input-type>onebox</input-type>
-				<hint>Enter the main title of the item.</hint>
-				<required>You must enter a main title for this item.</required>
+				<hint>The main title of the item</hint>
+				<required>You must enter a main title for this item</required>
+			</field>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>description</dc-element>
+				<dc-qualifier>abstract</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Abstract</label>
+				<input-type>textarea</input-type>
+				<hint>A free-text summary of the item</hint>
+				<required></required>
 			</field>
 		</page>
 
 		<page number="2">
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>publisher</dc-element>
+				<dc-qualifier></dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Publisher</label>
+				<input-type>onebox</input-type>
+				<hint>The name of the publisher of the previously issued instance of this item</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>date</dc-element>
+				<dc-qualifier>issued</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Date of publication</label>
+				<input-type>date</input-type>
+				<hint>The date of previous publication or public distribution</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>identifier</dc-element>
+				<dc-qualifier>citation</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Citation</label>
+				<input-type>onebox</input-type>
+				<hint>The citation for the previously issued instance of this item</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>identifier</dc-element>
+				<dc-qualifier>other</dc-qualifier>
+				<repeatable>true</repeatable>
+				<label>DOI</label>
+				<input-type>onebox</input-type>
+				<hint>The Digital Object Identifier (DOI) for the previously issued instance of this item</hint>
+				<required></required>
+			</field>
+		</page>
+
+		<page number="3">
 			<field>
 				<dc-schema>qdb</dc-schema>
 				<dc-element>property</dc-element>
@@ -59,7 +122,7 @@
 				<label>QMRF endpoint</label>
 				<input-type>onebox</input-type>
 				<hint>QMRF endpoint</hint>
-				<required>You must enter QMRF endpoint</required>
+				<required>You must enter a QMRF endpoint</required>
 			</field>
 			<field>
 				<dc-schema>qdb</dc-schema>
