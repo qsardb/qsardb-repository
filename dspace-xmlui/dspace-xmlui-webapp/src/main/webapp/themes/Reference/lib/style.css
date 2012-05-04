@@ -587,7 +587,7 @@ span.subscript {
 	vertical-align: sub;
 }
 
-span.inlineTextCell {
+td div {
 	white-space: nowrap;
 }
 

@@ -6,15 +6,15 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.text.shared.*;
 
-public class InlineTextCell extends AbstractCell<String> {
+public class CompoundTextCell extends AbstractCell<String> {
 
 	private ResolverTooltip tooltip = null;
 
 
-	public InlineTextCell(){
+	public CompoundTextCell(){
 	}
 
-	public InlineTextCell(Resolver resolver){
+	public CompoundTextCell(Resolver resolver){
 		super((MouseMoveEvent.getType()).getName(), (MouseOverEvent.getType()).getName(), (MouseOutEvent.getType()).getName());
 
 		this.tooltip = new ResolverTooltip(resolver);
@@ -24,11 +24,7 @@ public class InlineTextCell extends AbstractCell<String> {
 	public void render(Context context, String value, SafeHtmlBuilder sb){
 
 		if(value != null){
-			sb.append(START_TAG);
-
-			InlineTextCell.renderer.render(value, sb);
-
-			sb.append(END_TAG);
+			CompoundTextCell.renderer.render(value, sb);
 		}
 	}
 
@@ -52,10 +48,6 @@ public class InlineTextCell extends AbstractCell<String> {
 			this.tooltip.cancel();
 		}
 	}
-
-	private static final SafeHtml START_TAG = new SafeHtmlString("<span class=\"inlineTextCell\">");
-
-	private static final SafeHtml END_TAG = new SafeHtmlString("</span>");
 
 	private static final SafeHtmlRenderer<String> renderer = SimpleSafeHtmlRenderer.getInstance();
 }

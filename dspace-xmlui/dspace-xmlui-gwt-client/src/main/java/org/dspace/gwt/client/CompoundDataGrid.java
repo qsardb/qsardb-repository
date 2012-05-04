@@ -132,7 +132,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public IdentifierTextColumn(){
-			super(new InlineTextCell());
+			super(new CompoundTextCell());
 		}
 
 		@Override
@@ -220,7 +220,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class NameTextColumn extends AttributeTextColumn {
 
 		public NameTextColumn(Resolver resolver, NameColumn attribute){
-			super(new InlineTextCell(resolver), attribute);
+			super(new CompoundTextCell(resolver), attribute);
 		}
 
 		@Override
@@ -233,7 +233,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class CasTextColumn extends AttributeTextColumn {
 
 		public CasTextColumn(CasColumn attribute){
-			super(new InlineTextCell(), attribute);
+			super(new CompoundTextCell(), attribute);
 		}
 
 		@Override
@@ -342,7 +342,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PropertyTextColumn extends ParameterTextColumn {
 
 		public PropertyTextColumn(PropertyColumn property){
-			super(new InlineTextCell(), property);
+			super(new CompoundTextCell(), property);
 		}
 	}
 
@@ -350,7 +350,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class PredictionTextColumn extends ParameterTextColumn {
 
 		public PredictionTextColumn(PredictionColumn prediction){
-			super(new InlineTextCell(), prediction);
+			super(new CompoundTextCell(), prediction);
 		}
 	}
 
@@ -361,7 +361,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 
 		public PredictionErrorTextColumn(PredictionColumn prediction){
-			super(new InlineTextCell());
+			super(new CompoundTextCell());
 
 			setPrediction(prediction);
 		}
@@ -408,7 +408,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class DescriptorTextColumn extends ParameterTextColumn {
 
 		public DescriptorTextColumn(DescriptorColumn descriptor){
-			super(new InlineTextCell(), descriptor);
+			super(new CompoundTextCell(), descriptor);
 		}
 	}
 }
