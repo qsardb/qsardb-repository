@@ -67,7 +67,7 @@ public class DCInputsReader
      * Reference to the forms definitions map, computed from the forms
      * definition file
      */
-    private Map<String, List<List<Map<String, String>>>> formDefns  = null;
+    private Map<String, List<DCInput.Page>> formDefns  = null;
 
     /**
      * Reference to the value-pairs map, computed from the forms definition file
@@ -106,7 +106,7 @@ public class DCInputsReader
          throws DCInputsReaderException
     {
         whichForms = new HashMap<String, String>();
-        formDefns  = new HashMap<String, List<List<Map<String, String>>>>();
+        formDefns  = new HashMap<String, List<DCInput.Page>>();
         valuePairs = new HashMap<String, List<String>>();
 
         String uri = "file:" + new File(fileName).getAbsolutePath();
@@ -171,12 +171,15 @@ public class DCInputsReader
                 return lastInputSet;
         }
         // cache miss - construct new DCInputSet
-        List<List<Map<String, String>>> pages = formDefns.get(formName);
+        List<DCInput.Page> pages = formDefns.get(formName);
         if ( pages == null )
         {
                 throw new DCInputsReaderException("Missing the " + formName  + " form");
         }
-        lastInputSet = new DCInputSet(formName, pages, valuePairs);
+        for(DCInput.Page page : pages){
+            page.initInputs(valuePairs);
+        }
+        lastInputSet = new DCInputSet(formName, pages);
         return lastInputSet;
     }
     
@@ -305,7 +308,7 @@ public class DCInputsReader
                         {
                                 throw new SAXException("form element has no name attribute");
                         }
-                        List<List<Map<String, String>>> pages = new ArrayList<List<Map<String, String>>>(); // the form contains pages
+                        List<DCInput.Page> pages = new ArrayList<DCInput.Page>(); // the form contains pages
                         formDefns.put(formName, pages);
                         NodeList pl = nd.getChildNodes();
                         int lenpg = pl.getLength();
@@ -320,7 +323,9 @@ public class DCInputsReader
                                         {
                                                 throw new SAXException("Form " + formName + " has no identified pages");
                                         }
-                                        List<Map<String, String>> page = new ArrayList<Map<String, String>>();
+                                        String pgTitle = getAttribute(npg, "title");
+                                        DCInput.Page page = new DCInput.Page();
+                                        page.setTitle(pgTitle);
                                         pages.add(page);
                                         NodeList flds = npg.getChildNodes();
                                         int lenflds = flds.getLength();
@@ -437,7 +442,7 @@ public class DCInputsReader
      * Check that this is the only field with the name dc-element.dc-qualifier
      * If there is a duplicate, return an error message, else return null;
      */
-    private String checkForDups(String formName, Map<String, String> field, List<List<Map<String, String>>> pages)
+    private String checkForDups(String formName, Map<String, String> field, List<DCInput.Page> pages)
     {
         int matches = 0;
         String err = null;
@@ -584,7 +589,7 @@ public class DCInputsReader
         while (ki.hasNext())
         {
                 String idName = ki.next();
-                List<List<Map<String, String>>> pages = formDefns.get(idName);
+                List<DCInput.Page> pages = formDefns.get(idName);
                 for (int i = 0; i < pages.size(); i++)
                 {
                         List<Map<String, String>> page = pages.get(i);

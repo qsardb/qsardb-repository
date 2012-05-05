@@ -37,7 +37,7 @@
  <form-definitions>
 
 	<form name="QsarDB">
-		<page number="1">
+		<page number="1" title="Dublin Core metadata">
 			<field>
 				<dc-schema>dc</dc-schema>
 				<dc-element>contributor</dc-element>
@@ -70,7 +70,7 @@
 			</field>
 		</page>
 
-		<page number="2">
+		<page number="2" title="Dublin Core metadata (previous publication)">
 			<field>
 				<dc-schema>dc</dc-schema>
 				<dc-element>publisher</dc-element>
@@ -113,7 +113,7 @@
 			</field>
 		</page>
 
-		<page number="3">
+		<page number="3" title="QsarDB metadata">
 			<field>
 				<dc-schema>qdb</dc-schema>
 				<dc-element>property</dc-element>

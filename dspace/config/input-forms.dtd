@@ -14,6 +14,7 @@
  <!ATTLIST form name NMTOKEN #REQUIRED>
  <!ELEMENT page (field)+ >
  <!ATTLIST page number NMTOKEN #REQUIRED>
+ <!ATTLIST page title CDATA #IMPLIED>
  <!ELEMENT field (dc-schema, dc-element, dc-qualifier?, repeatable?, label, input-type, hint, required?, vocabulary?) >
  <!ELEMENT dc-schema (#PCDATA) >
  <!ELEMENT dc-element (#PCDATA) >
