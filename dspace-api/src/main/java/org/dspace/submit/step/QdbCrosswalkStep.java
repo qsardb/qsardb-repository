@@ -23,10 +23,15 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 
 	@Override
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, IOException, SQLException {
-		final
-		Item item = submissionInfo.getSubmissionItem().getItem();
+
+		if(SubmissionUtil.isComplete(this, submissionInfo)){
+			return STATUS_COMPLETE;
+		}
 
 		InProgressSubmission submission = submissionInfo.getSubmissionItem();
+
+		final
+		Item item = submission.getItem();
 
 		// XXX
 		if(!submission.isPublishedBefore()){
