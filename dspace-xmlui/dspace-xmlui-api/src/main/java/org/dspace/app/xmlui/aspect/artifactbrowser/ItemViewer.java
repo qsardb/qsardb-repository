@@ -65,7 +65,11 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
         message("xmlui.ArtifactBrowser.ItemViewer.trail");
 
     private static final Message T_withdrawn = message("xmlui.ArtifactBrowser.ItemViewer.withdrawn");
-    
+
+    private static final Message T_item_metadata_head = message("xmlui.ArtifactBrowser.ItemViewer.metadata_head");
+
+    private static final Message T_item_content_head = message("xmlui.ArtifactBrowser.ItemViewer.content_head");
+
 	/** Cached validity object */
 	private SourceValidity validity = null;
 
@@ -259,15 +263,17 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
             p.addContent(T_withdrawn);
             //Set proper response. Return "404 Not Found"
             HttpServletResponse response = (HttpServletResponse)objectModel
-                    .get(HttpEnvironment.HTTP_RESPONSE_OBJECT);   
+                    .get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
         Division metadataPanel = division.addDivision("item-metadata", "primary");
+        metadataPanel.setHead(T_item_metadata_head);
         ItemMetadataPanel.generate(this, item, metadataPanel);
 
         Division contentPanel = division.addDivision("item-content", "primary");
+        contentPanel.setHead(T_item_content_head);
         ItemContentPanel.generate(this, item, contentPanel);
     }
 

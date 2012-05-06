@@ -95,47 +95,50 @@ class ItemContentPanel {
 
 		if(true){
 			Division summaryDivision = propertyDivision.addDivision("property-summary-" + property.getId(), "secondary");
-			summaryDivision.setHead(T_property_summary_head);
+			summaryDivision.setHead(T_property_summary);
 
 			Para valuesPara = summaryDivision.addPara("property-values", null);
 			valuesPara.addContent(T_property_values.parameterize(propertyValues.size()));
 		} // End if
 
 		if(propertyModels.size() > 0 && propertyPredictions.size() > 0){
-			int rows = (propertyModels.size() + propertyPredictions.size());
-			int columns = 5;
-
-			Table modelsTable = propertyDivision.addTable("property-models", rows, columns);
-			modelsTable.setHead(T_property_table_head.parameterize(propertyModels.size(), propertyPredictions.size()));
-
-			if(true){
-				Row headerRow = modelsTable.addRow("header");
-
-				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
-				nameCell.addContent("Name"); // XXX
-
-				Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				typeCell.addContent("Type"); // XXX
-
-				Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				sizeCell.addContent("n"); // XXX
-
-				Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
-
-				Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-				stdevCell.addHtmlContent("<p>&#x3c3;</p>");
-			}
+			Division propertyModelsDivision = propertyDivision.addDivision("property-models-summary-" + property.getId(), "secondary");
+			propertyModelsDivision.setHead(T_property_models_summary.parameterize(propertyModels.size(), propertyPredictions.size())); // XXX
 
 			for(Model propertyModel : propertyModels){
-				Row modelRow = modelsTable.addRow("model-" + propertyModel.getId(), "header", "subheader");
+				Division modelDivision = propertyModelsDivision.addDivision("model-" + propertyModel.getId(), "secondary");
+				modelDivision.setHead(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
 
-				Cell modelSummary = modelRow.addCell(null, null, 1, columns, null);
-				modelSummary.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName(), loadSummary(propertyModel)));
-				modelSummary.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_explorer, "application-link");
-				modelSummary.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), T_model_link_predictor, "application-link");
+				Para summaryPara = modelDivision.addPara("model-summary", "side-left");
+				summaryPara.addContent(loadSummary(propertyModel));
+
+				Para applicationPara = modelDivision.addPara("model-application", "side-right");
+				applicationPara.addContent("Open in:");
+				applicationPara.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), "QDB Explorer", "application-link");
+				applicationPara.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), "QDB Predictor", "application-link");
 
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
+
+				Table modelTable = modelDivision.addTable("model-summary-" + propertyModel.getId(), modelPredictions.size(), 5);
+
+				if(true){
+					Row headerRow = modelTable.addRow("header");
+
+					Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
+					nameCell.addContent("Name");
+
+					Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					typeCell.addContent("Type");
+
+					Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					sizeCell.addContent("n");
+
+					Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
+
+					Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					stdevCell.addHtmlContent("<p>&#x3c3;</p>");
+				}
 
 				Values<?> trainingValues = null;
 
@@ -146,20 +149,20 @@ class ItemContentPanel {
 						trainingValues = predictionValues;
 					}
 
-					Row predictionRow = modelsTable.addRow("data");
+					Row predictionRow = modelTable.addRow("data");
 
-					predictionRow.addCellContent(T_prediction_name.parameterize(modelPrediction.getName()));
-					predictionRow.addCellContent(T_prediction_type.parameterize(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues)));
-					predictionRow.addCellContent(T_prediction_values.parameterize(predictionValues.size()));
-					predictionRow.addCellContent(T_prediction_rsq.parameterize(predictionValues.rsq(propertyValues)));
-					predictionRow.addCellContent(T_prediction_stdev.parameterize(predictionValues.stdev(propertyValues)));
+					predictionRow.addCellContent(modelPrediction.getName());
+					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));
+					predictionRow.addCellContent(String.valueOf(predictionValues.size()));
+					predictionRow.addCellContent(String.valueOf(predictionValues.rsq(propertyValues)));
+					predictionRow.addCellContent(String.valueOf(predictionValues.stdev(propertyValues)));
 				}
 			}
 		} // End if
 
 		if(bibliography.size() > 0){
 			List bibliographyList = propertyDivision.addList("property-bibliography-" + property.getId(), null);
-			bibliographyList.setHead(T_property_bibliography_head);
+			bibliographyList.setHead(T_property_bibliography);
 
 			java.util.List<Key> keys = new ArrayList<Key>(bibliography.keySet());
 
@@ -445,27 +448,13 @@ class ItemContentPanel {
 
 	private static final Message T_property_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property");
 
-	private static final Message T_property_summary_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_summary");
+	private static final Message T_property_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_summary");
 
 	private static final Message T_property_values = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_values");
 
-	private static final Message T_property_table_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_table");
+	private static final Message T_property_models_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_models_summary");
 
 	private static final Message T_model_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_summary");
 
-	private static final Message T_model_link_explorer = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_link_explorer");
-
-	private static final Message T_model_link_predictor = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_link_predictor");
-
-	private static final Message T_prediction_name = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_name");
-
-	private static final Message T_prediction_type = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_type");
-
-	private static final Message T_prediction_values = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_values");
-
-	private static final Message T_prediction_rsq = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_rsq");
-
-	private static final Message T_prediction_stdev = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.prediction_stdev");
-
-	private static final Message T_property_bibliography_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property_bibliography");
+	private static final Message T_property_bibliography = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_bibliography");
 }

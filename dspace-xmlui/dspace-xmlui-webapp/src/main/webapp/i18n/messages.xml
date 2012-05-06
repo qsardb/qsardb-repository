@@ -266,6 +266,8 @@
 	<!-- org.dspace.app.xmlui.artifactbrowser.ItemViewer.java -->
 	<message key="xmlui.ArtifactBrowser.ItemViewer.trail">View Item</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.metadata_head">Metadata</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.content_head">QsarDB content</message>
 
 	<message key="xmlui.ArtifactBrowser.ItemViewer.head_parent_collections">This item appears in the following Collection(s)</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_simple">Show simple item record</message>
@@ -273,20 +275,13 @@
 
 	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property">{0} - &quot;{1}&quot;</message>
 
-	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property_summary">Summary</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_summary">Summary</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.property_values">{0} Compounds</message>
 
-	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property_table">{0} Model(s) with {1} Prediction(s)</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot; ({2})</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.model_link_explorer">Explorer</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.model_link_predictor">Predictor</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_name">{0}</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_type">{0}</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_values">{0}</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_rsq">{0}</message>
-	<message key="xmlui.ArtifactBrowser.ItemViewer.prediction_stdev">{0}</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_models_summary">{0} Model(s) with {1} Prediction(s)</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
 
-	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property_bibliography">Bibliography</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_bibliography">Bibliography</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
 	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>

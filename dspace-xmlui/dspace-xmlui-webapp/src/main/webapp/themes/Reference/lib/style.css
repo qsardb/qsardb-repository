@@ -403,6 +403,14 @@ p.copyright-text {
         text-align: center;
 }
 
+p.side-left {
+	float: left;
+}
+
+p.side-right {
+	float: right;
+}
+
 div.primary {
         overflow: auto;
         margin-bottom: 20px;
