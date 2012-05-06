@@ -120,7 +120,7 @@
 				<dc-qualifier>endpoint</dc-qualifier>
 				<repeatable>true</repeatable>
 				<label>QMRF endpoint</label>
-				<input-type>onebox</input-type>
+				<input-type value-pairs-name="qmrf_endpoints">dropdown</input-type>
 				<hint>QMRF endpoint</hint>
 				<required>You must enter a QMRF endpoint</required>
 			</field>
@@ -527,6 +527,261 @@ it, please enter the types and the actual numbers or codes below.</hint>
        <stored-value>other</stored-value>
      </pair>
    </value-pairs>
+
+	<value-pairs value-pairs-name="qmrf_endpoints" dc-term="qdb.property.endpoint">
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.1. Melting point</displayed-value>
+			<stored-value>1. Physicochemical effects 1.1. Melting point</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.2. Boiling point</displayed-value>
+			<stored-value>1. Physicochemical effects 1.2. Boiling point</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.3. Water solubility</displayed-value>
+			<stored-value>1. Physicochemical effects 1.3. Water solubility</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.4. Vapour pressure</displayed-value>
+			<stored-value>1. Physicochemical effects 1.4. Vapour pressure</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.5. Surface tension</displayed-value>
+			<stored-value>1. Physicochemical effects 1.5. Surface tension</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.6. Octanol-water partition coefficient (Kow)</displayed-value>
+			<stored-value>1. Physicochemical effects 1.6. Octanol-water partition coefficient (Kow)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.7. Octanol-water distribution coefficient (D)</displayed-value>
+			<stored-value>1. Physicochemical effects 1.7. Octanol-water distribution coefficient (D)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.8. Octanol-air partition coefficient (Koa)</displayed-value>
+			<stored-value>1. Physicochemical effects 1.8. Octanol-air partition coefficient (Koa)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.9. Air-water partition coefficient (Henry's law constant, H)</displayed-value>
+			<stored-value>1. Physicochemical effects 1.9. Air-water partition coefficient (Henry's law constant, H)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physicochemical effects 1.10. Dissociation constant (pKa)</displayed-value>
+			<stored-value>1. Physicochemical effects 1.10. Dissociation constant (pKa)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.1. Abiotic degradation in water</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.1. Abiotic degradation in water</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.2. Abiotic degradation in air</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.2. Abiotic degradation in air</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.3. Biodegradation</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.3. Biodegradation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.4. Bioconcentration</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.4. Bioconcentration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.5. Bioaccumulation</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.5. Bioaccumulation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.8. Adsorption/Desorption in sediment</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.8. Adsorption/Desorption in sediment</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.9. Vegetation-water partition coefficient</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.9. Vegetation-water partition coefficient</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.10. Vegetation-air partition coefficient</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.10. Vegetation-air partition coefficient</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.11. Vegetation-soil partition coefficient</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.11. Vegetation-soil partition coefficient</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.1. Short-term toxicity to Daphnia</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.1. Short-term toxicity to Daphnia</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.2. Short-term toxicity to algae</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.2. Short-term toxicity to algae</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.3. Acute toxicity to fish</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.3. Acute toxicity to fish</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.4. Long-term toxicity to Daphnia</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.4. Long-term toxicity to Daphnia</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.5. Long-term toxicity to fish</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.5. Long-term toxicity to fish</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.6. Microbial inhibition</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.6. Microbial inhibition</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.7. Toxicity to soil microorganisms</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.7. Toxicity to soil microorganisms</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.8. Toxicity to earthworms</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.8. Toxicity to earthworms</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.9. Toxicity to plants</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.9. Toxicity to plants</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.10. Toxicity to soil invertebrates</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.10. Toxicity to soil invertebrates</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.11. Toxicity to sediment organisms</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.11. Toxicity to sediment organisms</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.12. Short-term toxicity to birds</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.12. Short-term toxicity to birds</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.13. Long-term toxicity to birds</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.13. Long-term toxicity to birds</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.1. Acute inhalation toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.1. Acute inhalation toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.2. Acute oral toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.2. Acute oral toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.3. Acute dermal toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.3. Acute dermal toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.4. Skin irritation/corrosion</displayed-value>
+			<stored-value>4. Human health effects 4.4. Skin irritation/corrosion</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.5. Acute photoirritation</displayed-value>
+			<stored-value>4. Human health effects 4.5. Acute photoirritation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.6. Skin sensitisation</displayed-value>
+			<stored-value>4. Human health effects 4.6. Skin sensitisation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.7. Respiratory sensitisation</displayed-value>
+			<stored-value>4. Human health effects 4.7. Respiratory sensitisation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.8. Photosensitisation</displayed-value>
+			<stored-value>4. Human health effects 4.8. Photosensitisation</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.9. Eye irritation/corrosion</displayed-value>
+			<stored-value>4. Human health effects 4.9. Eye irritation/corrosion</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.10. Mutagenicity</displayed-value>
+			<stored-value>4. Human health effects 4.10. Mutagenicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.11. Photomutagenicity</displayed-value>
+			<stored-value>4. Human health effects 4.11. Photomutagenicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.12. Carcinogenicity</displayed-value>
+			<stored-value>4. Human health effects 4.12. Carcinogenicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.13. Photocarcinogenicity</displayed-value>
+			<stored-value>4. Human health effects 4.13. Photocarcinogenicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.14. Repeated dose toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.14. Repeated dose toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.15. In vitro reproductive toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.15. In vitro reproductive toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.16. In vivo developmental toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.16. In vivo developmental toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.17. In vivo developmental toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.17. In vivo developmental toxicity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>4. Human health effects 4.18. Endocrine activity</displayed-value>
+			<stored-value>4. Human health effects 4.18. Endocrine activity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.1. Skin penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.1. Skin penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.2. Ocular membrane penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.2. Ocular membrane penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.3. Gastrointestinal absorption</displayed-value>
+			<stored-value>5. Toxicokinetics 5.3. Gastrointestinal absorption</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.4. Blood-brain barrier penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.4. Blood-brain barrier penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.5. Placental barrier penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.5. Placental barrier penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.6. Blood-testis barrier penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.6. Blood-testis barrier penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.7. Blood-lung barrier penetration</displayed-value>
+			<stored-value>5. Toxicokinetics 5.7. Blood-lung barrier penetration</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.8. Metabolism</displayed-value>
+			<stored-value>5. Toxicokinetics 5.8. Metabolism</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.9. Protein-binding</displayed-value>
+			<stored-value>5. Toxicokinetics 5.9. Protein-binding</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>5. Toxicokinetics 5.10. DNA-binding</displayed-value>
+			<stored-value>5. Toxicokinetics 5.10. DNA-binding</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other 6.1. Other</displayed-value>
+			<stored-value>6. Other 6.1. Other</stored-value>
+		</pair>
+	</value-pairs>
 
     </form-value-pairs>
 
