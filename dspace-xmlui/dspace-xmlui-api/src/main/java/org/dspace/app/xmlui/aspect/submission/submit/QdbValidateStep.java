@@ -42,6 +42,23 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		String level = (String)request.get("level");
 
+		java.util.List<org.qsardb.validation.Message> messages = new ArrayList<org.qsardb.validation.Message>();
+
+		try {
+			ItemMessageCollector collector = ItemMessageCollector.load(item);
+
+			if(collector != null){
+
+				if(level == null){
+					level = collector.getLevel();
+				}
+
+				messages.addAll(collector.getMessages());
+			}
+		} catch(Exception e){
+			// Ignored
+		}
+
 		Option basic = levelRadio.addOption((Level.BASIC.getValue()).equals(level) || (level == null), Level.BASIC.getValue());
 		basic.addContent(T_option_basic);
 		basic.addContent(T_option_basic_help, true);
@@ -56,18 +73,6 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		Button validateButton = (content.addItem()).addButton("validate");
 		validateButton.setValue(T_validate);
-
-		java.util.List<org.qsardb.validation.Message> messages = new ArrayList<org.qsardb.validation.Message>();
-
-		try {
-			ItemMessageCollector collector = ItemMessageCollector.load(item);
-
-			if(collector != null){
-				messages.addAll(collector.getMessages());
-			}
-		} catch(Exception e){
-			// Ignored
-		}
 
 		if(messages.size() > 0){
 			Table messagesTable = division.addTable("messages", messages.size(), 3);

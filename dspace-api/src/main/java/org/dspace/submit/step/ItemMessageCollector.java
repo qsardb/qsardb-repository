@@ -10,8 +10,14 @@ import org.dspace.core.*;
 
 public class ItemMessageCollector implements MessageCollector, Serializable {
 
+	private String level = null;
+
 	private List<Message> messages = new ArrayList<Message>();
 
+
+	public ItemMessageCollector(String level){
+		setLevel(level);
+	}
 
 	@Override
 	public void add(Message message){
@@ -29,6 +35,14 @@ public class ItemMessageCollector implements MessageCollector, Serializable {
 		}
 
 		return false;
+	}
+
+	public String getLevel(){
+		return this.level;
+	}
+
+	private void setLevel(String level){
+		this.level = level;
 	}
 
 	public List<Message> getMessages(){

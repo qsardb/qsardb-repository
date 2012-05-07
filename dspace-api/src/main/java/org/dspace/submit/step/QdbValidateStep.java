@@ -30,7 +30,7 @@ public class QdbValidateStep extends AbstractProcessingStep {
 		Level level = getLevel(request.getParameter("level"));
 
 		final
-		ItemMessageCollector collector = new ItemMessageCollector();
+		ItemMessageCollector collector = new ItemMessageCollector(level.getValue());
 
 		QdbCallable<Object> callable = new QdbCallable<Object>(){
 
