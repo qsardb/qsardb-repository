@@ -70,16 +70,19 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 		}
 
 		if(messages.size() > 0){
-			Table messagesTable = division.addTable("messages", messages.size(), 2);
+			Table messagesTable = division.addTable("messages", messages.size(), 3);
 
 			if(true){
 				Row headerRow = messagesTable.addRow("header");
+
+				Cell imageCell = headerRow.addCell();
+				imageCell.addContent("");
 
 				Cell pathCell = headerRow.addCell("header");
 				pathCell.addContent("Archive path");
 
 				Cell contentCell = headerRow.addCell("header");
-				contentCell.addContent("Content");
+				contentCell.addContent("Message");
 			}
 
 			Comparator<org.qsardb.validation.Message> comparator = new Comparator<org.qsardb.validation.Message>(){
@@ -92,7 +95,17 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			Collections.sort(messages, comparator);
 
 			for(org.qsardb.validation.Message message : messages){
-				Row messageRow = messagesTable.addRow(null, "data", "message-" + (message.getLevel()).getValue());
+				Row messageRow = messagesTable.addRow(null, "data", null);
+
+				Cell imageCell = messageRow.addCell();
+				switch(message.getLevel()){
+					case ERROR:
+						imageCell.addFigure(super.contextPath + "/static/icons/error.png", null, "icon"); // XXX
+						break;
+					case WARNING:
+						imageCell.addFigure(super.contextPath + "/static/icons/warning.png", null, "icon"); // XXX
+						break;
+				}
 
 				messageRow.addCellContent(message.getPath());
 				messageRow.addCellContent(message.getContent());
