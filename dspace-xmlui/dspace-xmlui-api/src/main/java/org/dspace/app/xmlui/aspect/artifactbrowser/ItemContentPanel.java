@@ -6,7 +6,6 @@ import java.util.*;
 
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
-import org.qsardb.cargo.pmml.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.model.Container;
@@ -211,7 +210,7 @@ class ItemContentPanel {
 	}
 
 	static
-	private Map<Key, BibTeXEntry> loadBibliography(Container<?, ?> container) throws IOException {
+	private Map<Key, BibTeXEntry> loadBibliography(Container<?, ?> container){
 
 		if(container.hasCargo(BibTeXCargo.class)){
 			BibTeXCargo bibtexCargo = container.getCargo(BibTeXCargo.class);
@@ -259,7 +258,7 @@ class ItemContentPanel {
 	private String loadSummary(Model model){
 
 		try {
-			Evaluator evaluator = getEvaluator(model);
+			Evaluator evaluator = QdbUtil.getEvaluator(model);
 
 			if(evaluator != null){
 				evaluator.init();
@@ -277,20 +276,7 @@ class ItemContentPanel {
 			// Ignored
 		}
 
-		return "Unknown";
-	}
-
-	static
-	private Evaluator getEvaluator(Model model) throws Exception {
-		Qdb qdb = model.getQdb();
-
-		if(model.hasCargo(PMMLCargo.class)){
-			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
-
-			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
-		}
-
-		return null;
+		return "(Unknown model type)";
 	}
 
 	static
@@ -322,10 +308,6 @@ class ItemContentPanel {
 
 		public Set<String> keySet(){
 			return this.values.keySet();
-		}
-
-		public java.util.Collection<X> values(){
-			return this.values.values();
 		}
 	}
 
