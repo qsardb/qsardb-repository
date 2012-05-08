@@ -493,6 +493,10 @@ th.doubleIndent {
     padding-right: 0;
 }
 
+th.icon {
+	width: 22px;
+}
+
 th.short {
 	width: 50px;
 }

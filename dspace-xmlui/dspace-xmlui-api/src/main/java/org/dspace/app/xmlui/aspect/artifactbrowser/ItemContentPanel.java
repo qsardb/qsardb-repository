@@ -122,7 +122,7 @@ class ItemContentPanel {
 				Table modelTable = modelDivision.addTable("model-summary-" + propertyModel.getId(), modelPredictions.size(), 5);
 
 				if(true){
-					Row headerRow = modelTable.addRow("header");
+					Row headerRow = modelTable.addRow(Row.ROLE_HEADER);
 
 					Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
 					nameCell.addContent("Name");
@@ -149,7 +149,7 @@ class ItemContentPanel {
 						trainingValues = predictionValues;
 					}
 
-					Row predictionRow = modelTable.addRow("data");
+					Row predictionRow = modelTable.addRow(Row.ROLE_DATA);
 
 					predictionRow.addCellContent(modelPrediction.getName());
 					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));

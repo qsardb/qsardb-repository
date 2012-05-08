@@ -78,15 +78,15 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			Table messagesTable = division.addTable("messages", messages.size(), 3);
 
 			if(true){
-				Row headerRow = messagesTable.addRow("header");
+				Row headerRow = messagesTable.addRow(Row.ROLE_HEADER);
 
-				Cell imageCell = headerRow.addCell();
+				Cell imageCell = headerRow.addCell(null, Cell.ROLE_HEADER, "icon");
 				imageCell.addContent("");
 
-				Cell pathCell = headerRow.addCell("header");
-				pathCell.addContent("Archive path");
+				Cell pathCell = headerRow.addCell(null, Cell.ROLE_HEADER, "long");
+				pathCell.addContent("QDB archive path");
 
-				Cell contentCell = headerRow.addCell("header");
+				Cell contentCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
 				contentCell.addContent("Message");
 			}
 
@@ -100,7 +100,7 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			Collections.sort(messages, comparator);
 
 			for(org.qsardb.validation.Message message : messages){
-				Row messageRow = messagesTable.addRow(null, "data", null);
+				Row messageRow = messagesTable.addRow(null, Row.ROLE_DATA, null);
 
 				Cell imageCell = messageRow.addCell();
 				switch(message.getLevel()){
