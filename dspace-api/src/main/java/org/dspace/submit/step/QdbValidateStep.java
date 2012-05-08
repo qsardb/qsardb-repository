@@ -47,11 +47,7 @@ public class QdbValidateStep extends AbstractProcessingStep {
 
 			ItemMessageCollector.store(item, collector);
 
-			if(collector.hasErrors()){
-				return STATUS_VALIDATION_ERROR;
-			}
-
-			return STATUS_COMPLETE;
+			return getStatus(collector);
 		} catch(Exception e){
 			logger.error("Validation failed", e);
 
@@ -71,6 +67,16 @@ public class QdbValidateStep extends AbstractProcessingStep {
 				validator.setCollector(null);
 			}
 		}
+	}
+
+	static
+	public int getStatus(ItemMessageCollector collector){
+
+		if(collector.hasErrors()){
+			return STATUS_VALIDATION_ERROR;
+		}
+
+		return STATUS_COMPLETE;
 	}
 
 	static

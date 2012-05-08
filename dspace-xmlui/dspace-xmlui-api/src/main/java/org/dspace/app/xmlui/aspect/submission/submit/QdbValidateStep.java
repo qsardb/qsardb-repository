@@ -51,6 +51,8 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 				if(level == null){
 					level = collector.getLevel();
+
+					super.errorFlag = org.dspace.submit.step.QdbValidateStep.getStatus(collector);
 				}
 
 				messages.addAll(collector.getMessages());
