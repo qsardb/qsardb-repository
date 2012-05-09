@@ -57,7 +57,7 @@ public class SendFeedbackAction extends AbstractAction
         String[] allowedReferrersSplit = null;
         boolean validReferral = false;
 
-        if((allowedReferrersString != null) && (allowedReferrersString.length() > 0))
+        if(fromPage != null && (allowedReferrersString != null) && (allowedReferrersString.length() > 0))
         {
             allowedReferrersSplit = allowedReferrersString.trim().split("\\s*,\\s*");
             for(int i = 0; i < allowedReferrersSplit.length; i++)
