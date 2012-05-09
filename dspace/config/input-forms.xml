@@ -104,7 +104,7 @@
 			<field>
 				<dc-schema>dc</dc-schema>
 				<dc-element>identifier</dc-element>
-				<dc-qualifier>other</dc-qualifier>
+				<dc-qualifier>doi</dc-qualifier>
 				<repeatable>true</repeatable>
 				<label>DOI</label>
 				<input-type>onebox</input-type>
