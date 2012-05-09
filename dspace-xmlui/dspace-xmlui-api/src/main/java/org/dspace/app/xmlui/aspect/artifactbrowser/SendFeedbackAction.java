@@ -82,9 +82,12 @@ public class SendFeedbackAction extends AbstractAction
             // arrives at the installation; e.g. presence or absence of "www"
             int lastDot = host.lastIndexOf('.');
             lastDot = host.substring(0, lastDot).lastIndexOf('.');
-            if (lastdot < 0){
+            if (lastDot < 0)
+            {
                 basicHost = host;
-            } else{
+            }
+            else
+            {
                 basicHost = host.substring(lastDot);
             }
         }
