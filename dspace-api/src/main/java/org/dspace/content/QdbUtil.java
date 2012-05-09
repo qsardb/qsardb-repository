@@ -4,9 +4,14 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import org.qsardb.cargo.bibtex.*;
+import org.qsardb.cargo.map.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
+
+import org.jbibtex.*;
+import org.jbibtex.citation.*;
 
 import org.dspace.authorize.*;
 import org.dspace.core.*;
@@ -232,10 +237,23 @@ public class QdbUtil {
 
 	static
 	public void collectDublinCoreMetadata(Item item, Qdb qdb){
-		Archive archive = qdb.getArchive();
+		BibTeXEntry entry = getPopularEntry(qdb);
 
-		item.addMetadata("dc", "title", null, null, archive.getName());
-		item.addMetadata("dc", "description", "abstract", null, archive.getDescription());
+		if(entry != null){
+			addMetadata(item, "dc", "contributor", "author", null, parseAuthors(entry.getField(BibTeXEntry.KEY_AUTHOR)));
+			addMetadata(item, "dc", "title", null, null, entry.getField(BibTeXEntry.KEY_TITLE));
+
+			addMetadata(item, "dc", "publisher", null, null, entry.getField(BibTeXEntry.KEY_PUBLISHER));
+			addMetadata(item, "dc", "date", "issued", null, entry.getField(BibTeXEntry.KEY_YEAR));
+
+			addMetadata(item, "dc", "identifier", "citation", null, formatReference(entry));
+			addMetadata(item, "dc", "identifier", "doi", null, entry.getField(BibTeXEntry.KEY_DOI));
+		} else {
+			Archive archive = qdb.getArchive();
+
+			addMetadata(item, "dc", "title", null, null, archive.getName());
+			addMetadata(item, "dc", "description", "abstract", null, archive.getDescription());
+		}
 	}
 
 	static
@@ -258,11 +276,11 @@ public class QdbUtil {
 		}
 
 		if(propertyEndpoints.size() > 0){
-			item.addMetadata("qdb", "property", "endpoint", null, propertyEndpoints.toArray());
+			addMetadata(item, "qdb", "property", "endpoint", null, propertyEndpoints.toArray());
 		} // End if
 
 		if(propertySpecies.size() > 0){
-			item.addMetadata("qdb", "property", "species", null, propertySpecies.toArray());
+			addMetadata(item, "qdb", "property", "species", null, propertySpecies.toArray());
 		}
 	}
 
@@ -276,7 +294,7 @@ public class QdbUtil {
 		}
 
 		if(descriptorApplications.size() > 0){
-			item.addMetadata("qdb", "descriptor", "application", null, descriptorApplications.toArray());
+			addMetadata(item, "qdb", "descriptor", "application", null, descriptorApplications.toArray());
 		}
 	}
 
@@ -290,7 +308,7 @@ public class QdbUtil {
 		}
 
 		if(modelTypes.size() > 0){
-			item.addMetadata("qdb", "model", "type", null, modelTypes.toArray());
+			addMetadata(item, "qdb", "model", "type", null, modelTypes.toArray());
 		}
 	}
 
@@ -304,8 +322,95 @@ public class QdbUtil {
 		}
 
 		if(predictionApplications.size() > 0){
-			item.addMetadata("qdb", "prediction", "application", null, predictionApplications.toArray());
+			addMetadata(item, "qdb", "prediction", "application", null, predictionApplications.toArray());
 		}
+	}
+
+	static
+	public BibTeXEntry getPopularEntry(Qdb qdb){
+		FrequencyMap<BibTeXEntryHandle> map = new FrequencyMap<BibTeXEntryHandle>();
+
+		collectEntries(map, qdb.getPropertyRegistry());
+		collectEntries(map, qdb.getModelRegistry());
+
+		int maxCount = 0;
+
+		Set<BibTeXEntryHandle> maxHandles = new LinkedHashSet<BibTeXEntryHandle>();
+
+		java.util.Collection<BibTeXEntryHandle> handles = map.getKeys();
+		for(BibTeXEntryHandle handle : handles){
+			int count = map.getCount(handle);
+
+			if(count < maxCount){
+				continue;
+			} else
+
+			if(count == maxCount){
+				maxHandles.add(handle);
+			} else
+
+			if(count > maxCount){
+				maxCount = count;
+
+				maxHandles.clear();
+				maxHandles.add(handle);
+			}
+		}
+
+		if(maxHandles.size() == 1){
+			BibTeXEntryHandle maxHandle = (maxHandles.iterator()).next();
+
+			return maxHandle.getEntry();
+		}
+
+		return null;
+	}
+
+	static
+	private void collectEntries(FrequencyMap<BibTeXEntryHandle> map, java.util.Collection<? extends Container<?, ?>> containers){
+
+		for(Container<?, ?> container : containers){
+
+			if(!container.hasCargo(BibTeXCargo.class)){
+				continue;
+			}
+
+			BibTeXCargo cargo = container.getCargo(BibTeXCargo.class);
+
+			try {
+				BibTeXDatabase database = cargo.loadBibTeX();
+
+				java.util.Collection<BibTeXEntry> entries = (database.getEntries()).values();
+				for(BibTeXEntry entry : entries){
+					map.add(new BibTeXEntryHandle(entry));
+
+					// Keep the first entry only
+					break;
+				}
+			} catch(Exception e){
+				continue;
+			}
+		}
+	}
+
+	static
+	private void addMetadata(Item item, String schema, String element, String qualifier, String language, Value value){
+		addMetadata(item, schema, element, qualifier, language, toString(value));
+	}
+
+	static
+	private void addMetadata(Item item, String schema, String element, String qualifier, String language, String value){
+
+		if(value == null || (value.trim()).equals("")){
+			return;
+		}
+
+		item.addMetadata(schema, element, qualifier, language, value);
+	}
+
+	static
+	private void addMetadata(Item item, String schema, String element, String qualifier, String language, String[] values){
+		item.addMetadata(schema, element, qualifier, language, values);
 	}
 
 	static
@@ -336,6 +441,64 @@ public class QdbUtil {
 	}
 
 	static
+	private String formatReference(BibTeXEntry entry){
+		ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
+
+		try {
+			return formatter.format(entry, false);
+		} catch(Exception e){
+			// Ignored
+		}
+
+		return null;
+	}
+
+	static
+	private String[] parseAuthors(Value value){
+		String string = toString(value);
+
+		if(string != null){
+			return string.split(" and ");
+		}
+
+		return null;
+	}
+
+	static
+	private List<LaTeXObject> parseLaTeX(String string) throws IOException, ParseException {
+		Reader reader = new StringReader(string);
+
+		try {
+			LaTeXParser parser = new LaTeXParser();
+
+			return parser.parse(reader);
+		} finally {
+			reader.close();
+		}
+	}
+
+	static
+	private String printLaTeX(List<LaTeXObject> objects){
+		LaTeXPrinter printer = new LaTeXPrinter();
+
+		return printer.print(objects);
+	}
+
+	static
+	private String toString(Value value){
+
+		try {
+			if(value != null){
+				return printLaTeX(parseLaTeX(value.toUserString()));
+			}
+		} catch(Exception e){
+			// Ignored
+		}
+
+		return null;
+	}
+
+	static
 	public class ValueCollector {
 
 		private Set<String> values = new LinkedHashSet<String>();
@@ -356,6 +519,46 @@ public class QdbUtil {
 
 		public String[] toArray(){
 			return this.values.toArray(new String[this.values.size()]);
+		}
+	}
+
+	static
+	private class BibTeXEntryHandle {
+
+		private BibTeXEntry entry = null;
+
+
+		private BibTeXEntryHandle(BibTeXEntry entry){
+			setEntry(entry);
+		}
+
+		public Key getKey(){
+			return getEntry().getKey();
+		}
+
+		@Override
+		public int hashCode(){
+			return getKey().hashCode();
+		}
+
+		@Override
+		public boolean equals(Object object){
+
+			if(object instanceof BibTeXEntryHandle){
+				BibTeXEntryHandle that = (BibTeXEntryHandle)object;
+
+				return (this.getKey()).equals(that.getKey());
+			}
+
+			return false;
+		}
+
+		public BibTeXEntry getEntry(){
+			return this.entry;
+		}
+
+		private void setEntry(BibTeXEntry entry){
+			this.entry = entry;
 		}
 	}
 
