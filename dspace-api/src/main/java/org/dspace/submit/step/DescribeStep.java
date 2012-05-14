@@ -163,6 +163,8 @@ public class DescribeStep extends AbstractProcessingStep
         // values can add them too.
         clearErrorFields(request);
 
+        inputs = filterInputs(context, request, response, subInfo, inputs);
+
         // Step 2:
         // now update the item metadata.
         String fieldName;
@@ -317,7 +319,10 @@ public class DescribeStep extends AbstractProcessingStep
         return STATUS_COMPLETE;
     }
 
-    
+    public DCInput[] filterInputs(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo, DCInput[] inputs)
+    {
+        return inputs;
+    }
 
     /**
      * Retrieves the number of pages that this "step" extends over. This method

@@ -11,7 +11,6 @@ import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
 
 import org.jbibtex.*;
-import org.jbibtex.citation.*;
 
 import org.dspace.authorize.*;
 import org.dspace.core.*;
@@ -231,33 +230,53 @@ public class QdbUtil {
 
 	static
 	public void collectMetadata(Item item, Qdb qdb){
-		collectDublinCoreMetadata(item, qdb);
-		collectQsarDBMetadata(item, qdb);
+		collectBibTeXMetadata(item, qdb);
+		collectQDBMetadata(item, qdb);
 	}
 
 	static
-	public void collectDublinCoreMetadata(Item item, Qdb qdb){
+	public void collectBibTeXMetadata(Item item, Qdb qdb){
 		BibTeXEntry entry = getPopularEntry(qdb);
 
-		if(entry != null){
-			addMetadata(item, "dc", "contributor", "author", null, parseAuthors(entry.getField(BibTeXEntry.KEY_AUTHOR)));
-			addMetadata(item, "dc", "title", null, null, entry.getField(BibTeXEntry.KEY_TITLE));
+		if(entry == null){
+			return;
+		}
 
-			addMetadata(item, "dc", "publisher", null, null, entry.getField(BibTeXEntry.KEY_PUBLISHER));
-			addMetadata(item, "dc", "date", "issued", null, entry.getField(BibTeXEntry.KEY_YEAR));
+		Key type = entry.getType();
 
-			addMetadata(item, "dc", "identifier", "citation", null, formatReference(entry));
-			addMetadata(item, "dc", "identifier", "doi", null, entry.getField(BibTeXEntry.KEY_DOI));
-		} else {
-			Archive archive = qdb.getArchive();
+		Set<Key> types = ENTRY_TYPES;
+		if(!types.contains(type)){
+			return;
+		}
 
-			addMetadata(item, "dc", "title", null, null, archive.getName());
-			addMetadata(item, "dc", "description", "abstract", null, archive.getDescription());
+		item.addMetadata("bibtex", "entry", null, null, (type.getValue()).toLowerCase());
+
+		Set<Key> fields = ENTRY_FIELDS;
+		for(Key field : fields){
+			Value value = entry.getField(field);
+
+			if(value == null){
+				continue;
+			}
+
+			String string = toString(value);
+
+			if(string == null){
+				continue;
+			} // End if
+
+			if((BibTeXEntry.KEY_AUTHOR).equals(field) || (BibTeXEntry.KEY_EDITOR).equals(field)){
+				item.addMetadata("bibtex", "entry", (field.getValue()).toLowerCase(), null, string.split(" and "));
+			} else
+
+			{
+				item.addMetadata("bibtex", "entry", (field.getValue()).toLowerCase(), null, string);
+			}
 		}
 	}
 
 	static
-	public void collectQsarDBMetadata(Item item, Qdb qdb){
+	public void collectQDBMetadata(Item item, Qdb qdb){
 		collectPropertyMetadata(item, qdb);
 		collectDescriptorMetadata(item, qdb);
 		collectModelMetadata(item, qdb);
@@ -276,11 +295,11 @@ public class QdbUtil {
 		}
 
 		if(propertyEndpoints.size() > 0){
-			addMetadata(item, "qdb", "property", "endpoint", null, propertyEndpoints.toArray());
+			item.addMetadata("qdb", "property", "endpoint", null, propertyEndpoints.toArray());
 		} // End if
 
 		if(propertySpecies.size() > 0){
-			addMetadata(item, "qdb", "property", "species", null, propertySpecies.toArray());
+			item.addMetadata("qdb", "property", "species", null, propertySpecies.toArray());
 		}
 	}
 
@@ -294,7 +313,7 @@ public class QdbUtil {
 		}
 
 		if(descriptorApplications.size() > 0){
-			addMetadata(item, "qdb", "descriptor", "application", null, descriptorApplications.toArray());
+			item.addMetadata("qdb", "descriptor", "application", null, descriptorApplications.toArray());
 		}
 	}
 
@@ -308,7 +327,7 @@ public class QdbUtil {
 		}
 
 		if(modelTypes.size() > 0){
-			addMetadata(item, "qdb", "model", "type", null, modelTypes.toArray());
+			item.addMetadata("qdb", "model", "type", null, modelTypes.toArray());
 		}
 	}
 
@@ -322,7 +341,7 @@ public class QdbUtil {
 		}
 
 		if(predictionApplications.size() > 0){
-			addMetadata(item, "qdb", "prediction", "application", null, predictionApplications.toArray());
+			item.addMetadata("qdb", "prediction", "application", null, predictionApplications.toArray());
 		}
 	}
 
@@ -394,26 +413,6 @@ public class QdbUtil {
 	}
 
 	static
-	private void addMetadata(Item item, String schema, String element, String qualifier, String language, Value value){
-		addMetadata(item, schema, element, qualifier, language, toString(value));
-	}
-
-	static
-	private void addMetadata(Item item, String schema, String element, String qualifier, String language, String value){
-
-		if(value == null || (value.trim()).equals("")){
-			return;
-		}
-
-		item.addMetadata(schema, element, qualifier, language, value);
-	}
-
-	static
-	private void addMetadata(Item item, String schema, String element, String qualifier, String language, String[] values){
-		item.addMetadata(schema, element, qualifier, language, values);
-	}
-
-	static
 	private String loadType(Model model){
 
 		try {
@@ -438,30 +437,6 @@ public class QdbUtil {
 	static
 	private String formatApplication(Application application){
 		return (application != null ? application.getName() : null);
-	}
-
-	static
-	private String formatReference(BibTeXEntry entry){
-		ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
-
-		try {
-			return formatter.format(entry, false);
-		} catch(Exception e){
-			// Ignored
-		}
-
-		return null;
-	}
-
-	static
-	private String[] parseAuthors(Value value){
-		String string = toString(value);
-
-		if(string != null){
-			return string.split(" and ");
-		}
-
-		return null;
 	}
 
 	static
@@ -560,6 +535,48 @@ public class QdbUtil {
 		private void setEntry(BibTeXEntry entry){
 			this.entry = entry;
 		}
+	}
+
+	private static final Set<Key> ENTRY_TYPES = new LinkedHashSet<Key>();
+
+	static {
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_ARTICLE);
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_BOOK);
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_INCOLLECTION);
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_INPROCEEDINGS);
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_MISC);
+		ENTRY_TYPES.add(BibTeXEntry.TYPE_UNPUBLISHED);
+	}
+
+	private static final Set<Key> ENTRY_FIELDS = new LinkedHashSet<Key>();
+
+	static {
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_ADDRESS);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_ANNOTE);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_AUTHOR);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_BOOKTITLE);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_CHAPTER);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_DOI);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_EDITION);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_EDITOR);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_EPRINT);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_HOWPUBLISHED);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_INSTITUTION);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_JOURNAL);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_KEY);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_MONTH);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_NOTE);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_NUMBER);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_ORGANIZATION);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_PAGES);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_PUBLISHER);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_SCHOOL);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_SERIES);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_TITLE);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_TYPE);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_URL);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_VOLUME);
+		ENTRY_FIELDS.add(BibTeXEntry.KEY_YEAR);
 	}
 
 	static

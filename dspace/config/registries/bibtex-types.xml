@@ -1,0 +1,203 @@
+<?xml version="1.0" ?>
+<dspace-dc-types>
+	<dc-schema>
+		<name>bibtex</name>
+		<namespace>http://www.jbibtex.org</namespace>
+	</dc-schema>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier></qualifier>
+		<scope_note>The BibTeX entry type</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>address</qualifier>
+		<scope_note>Publisher's address</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>annote</qualifier>
+		<scope_note>An annotation for annotated bibliography styles</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>author</qualifier>
+		<scope_note>The name(s) of the author(s)</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>booktitle</qualifier>
+		<scope_note>The title of the book</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>chapter</qualifier>
+		<scope_note>The chapter number</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>crossref</qualifier>
+		<scope_note>The key of the cross-referenced entry</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>doi</qualifier>
+		<scope_note>The Digital Object Identifier (DOI)</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>edition</qualifier>
+		<scope_note>The edition of a book, long form</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>editor</qualifier>
+		<scope_note>The name(s) of the editor(s)</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>eprint</qualifier>
+		<scope_note>A specification of an electronic publication, often a preprint or a technical report</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>howpublished</qualifier>
+		<scope_note>How it was published, if the publishing method is nonstandard</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>institution</qualifier>
+		<scope_note>The institution that was involved in the publishing, but not necessarily the publisher</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>journal</qualifier>
+		<scope_note>The journal or magazine</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>key</qualifier>
+		<scope_note>The alphabetical order of entries</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>month</qualifier>
+		<scope_note>The month of publication</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>note</qualifier>
+		<scope_note>Miscellaneous extra information</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>number</qualifier>
+		<scope_note>The "(issue) number" of a journal, magazine, or tech-report, if applicable.</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>organization</qualifier>
+		<scope_note>The conference sponsor</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>pages</qualifier>
+		<scope_note>Page numbers, separated either by commas or double-hyphens</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>publisher</qualifier>
+		<scope_note>The publisher's name</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>school</qualifier>
+		<scope_note>The school where the thesis was written</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>series</qualifier>
+		<scope_note>The series of books the book was published in</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>title</qualifier>
+		<scope_note>The title of the work</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>type</qualifier>
+		<scope_note>The field overriding the default type of publication</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>url</qualifier>
+		<scope_note>The WWW address</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>volume</qualifier>
+		<scope_note>The volume of a journal or multi-volume book</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>bibtex</schema>
+		<element>entry</element>
+		<qualifier>year</qualifier>
+		<scope_note>The year of publication</scope_note>
+	</dc-type>
+</dspace-dc-types>

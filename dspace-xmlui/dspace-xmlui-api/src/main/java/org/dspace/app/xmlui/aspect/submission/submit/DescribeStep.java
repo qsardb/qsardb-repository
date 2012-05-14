@@ -187,6 +187,8 @@ public class DescribeStep extends AbstractSubmissionStep
                     form.setHead(T_head);
                 }
 
+                inputs = filterInputs(inputs);
+
                 // Iterate over all inputs and add it to the form.
                 for(DCInput dcInput : inputs)
                 {
@@ -279,6 +281,11 @@ public class DescribeStep extends AbstractSubmissionStep
                 // add standard control/paging buttons
         addControlButtons(form);
         }
+
+    public DCInput[] filterInputs(DCInput[] inputs)
+    {
+        return inputs;
+    }
 
     /**
      * Each submission step must define its own information to be reviewed

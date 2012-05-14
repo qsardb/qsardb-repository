@@ -28,15 +28,8 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 			return STATUS_COMPLETE;
 		}
 
-		InProgressSubmission submission = submissionInfo.getSubmissionItem();
-
 		final
-		Item item = submission.getItem();
-
-		// XXX
-		if(!submission.isPublishedBefore()){
-			submission.setPublishedBefore(true);
-		}
+		Item item = submissionInfo.getSubmissionItem().getItem();
 
 		QdbCallable<Object> callable = new QdbCallable<Object>(){
 

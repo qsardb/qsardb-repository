@@ -188,9 +188,12 @@
 		</step>
 		<step>
 			<heading>submit.progressbar.describe</heading>
-			<processing-class>org.dspace.submit.step.DescribeStep</processing-class>
-			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.DescribeStep</xmlui-binding>
+			<processing-class>org.dspace.submit.step.QdbDescribeStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.QdbDescribeStep</xmlui-binding>
 			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
 		</step>
 		<step>
 			<heading>submit.progressbar.CClicense</heading>

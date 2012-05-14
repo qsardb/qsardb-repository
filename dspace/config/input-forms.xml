@@ -37,78 +37,178 @@
  <form-definitions>
 
 	<form name="QsarDB">
-		<page number="1" title="Dublin Core metadata">
+		<page number="1" title="BibTeX metadata (1/2)">
 			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>contributor</dc-element>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier></dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Publication type</label>
+				<input-type value-pairs-name="bibtex_entries">list</input-type>
+				<hint>The type of publication</hint>
+				<required>You must choose the type of publication</required>
+			</field>
+		</page>
+
+		<page number="2" title="BibTeX metadata (2/2)">
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>address</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Publisher's address</label>
+				<input-type>onebox</input-type>
+				<hint></hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
 				<dc-qualifier>author</dc-qualifier>
 				<repeatable>true</repeatable>
 				<label>Author(s)</label>
 				<input-type>name</input-type>
 				<hint>The name(s) of the author(s)</hint>
-				<required></required>
+				<required>You must enter at least one author</required>
 			</field>
 			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>title</dc-element>
-				<dc-qualifier></dc-qualifier>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>booktitle</dc-qualifier>
 				<repeatable>false</repeatable>
-				<label>Title</label>
+				<label>Book title</label>
 				<input-type>onebox</input-type>
-				<hint>The main title of the item</hint>
-				<required>You must enter a main title for this item</required>
-			</field>
-			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>description</dc-element>
-				<dc-qualifier>abstract</dc-qualifier>
-				<repeatable>false</repeatable>
-				<label>Abstract</label>
-				<input-type>textarea</input-type>
-				<hint>A free-text summary of the item</hint>
+				<hint>The title of the book</hint>
 				<required></required>
 			</field>
-		</page>
-
-		<page number="2" title="Dublin Core metadata (previous publication)">
 			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>publisher</dc-element>
-				<dc-qualifier></dc-qualifier>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>chapter</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Chapter</label>
+				<input-type>onebox</input-type>
+				<hint>The chapter number</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>doi</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>DOI</label>
+				<input-type>onebox</input-type>
+				<hint>The Digital Object Identifier</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>edition</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Edition</label>
+				<input-type>onebox</input-type>
+				<hint>The edition of the book</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>editor</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Editor(s)</label>
+				<input-type>name</input-type>
+				<hint>The name(s) of the editor(s)</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>journal</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Journal</label>
+				<input-type>onebox</input-type>
+				<hint>The name of the journal or magazine</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>number</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Number</label>
+				<input-type>onebox</input-type>
+				<hint>The issue number</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>pages</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Pages</label>
+				<input-type>onebox</input-type>
+				<hint>Page number(s) or range(s)</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>publisher</dc-qualifier>
 				<repeatable>false</repeatable>
 				<label>Publisher</label>
 				<input-type>onebox</input-type>
-				<hint>The name of the publisher of the previously issued instance of this item</hint>
+				<hint>The name of the publisher</hint>
 				<required></required>
 			</field>
 			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>date</dc-element>
-				<dc-qualifier>issued</dc-qualifier>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>series</dc-qualifier>
 				<repeatable>false</repeatable>
-				<label>Date of publication</label>
+				<label>Series</label>
+				<input-type>onebox</input-type>
+				<hint>The series of books the book was published in</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>title</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Title</label>
+				<input-type>onebox</input-type>
+				<hint>The main title of the work</hint>
+				<required>You must enter a main title</required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>url</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>URL</label>
+				<input-type>onebox</input-type>
+				<hint>The WWW address</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>volume</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Volume</label>
+				<input-type>onebox</input-type>
+				<hint>The volume number</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
+				<dc-qualifier>year</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Year</label>
 				<input-type>date</input-type>
-				<hint>The date of previous publication or public distribution</hint>
-				<required></required>
-			</field>
-			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>identifier</dc-element>
-				<dc-qualifier>citation</dc-qualifier>
-				<repeatable>false</repeatable>
-				<label>Citation</label>
-				<input-type>onebox</input-type>
-				<hint>The citation for the previously issued instance of this item</hint>
-				<required></required>
-			</field>
-			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>identifier</dc-element>
-				<dc-qualifier>doi</dc-qualifier>
-				<repeatable>true</repeatable>
-				<label>DOI</label>
-				<input-type>onebox</input-type>
-				<hint>The Digital Object Identifier (DOI) for the previously issued instance of this item</hint>
+				<hint>The date of publication</hint>
 				<required></required>
 			</field>
 		</page>
@@ -120,7 +220,7 @@
 				<dc-qualifier>endpoint</dc-qualifier>
 				<repeatable>true</repeatable>
 				<label>QMRF endpoint</label>
-				<input-type value-pairs-name="qmrf_endpoints">dropdown</input-type>
+				<input-type value-pairs-name="qdb_endpoints">dropdown</input-type>
 				<hint>QMRF endpoint</hint>
 				<required>You must enter a QMRF endpoint</required>
 			</field>
@@ -528,7 +628,30 @@ it, please enter the types and the actual numbers or codes below.</hint>
      </pair>
    </value-pairs>
 
-	<value-pairs value-pairs-name="qmrf_endpoints" dc-term="qdb.property.endpoint">
+	<value-pairs value-pairs-name="bibtex_entries" dc-term="bibtex.entry">
+		<pair>
+			<displayed-value>Article</displayed-value>
+			<stored-value>article</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Conference article</displayed-value>
+			<stored-value>inproceedings</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Book</displayed-value>
+			<stored-value>book</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Book chapter</displayed-value>
+			<stored-value>incollection</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>(Unpublished work)</displayed-value>
+			<stored-value>unpublished</stored-value>
+		</pair>
+	</value-pairs>
+
+	<value-pairs value-pairs-name="qdb_endpoints" dc-term="qdb.property.endpoint">
 		<pair>
 			<displayed-value>1. Physicochemical effects 1.1. Melting point</displayed-value>
 			<stored-value>1. Physicochemical effects 1.1. Melting point</stored-value>
