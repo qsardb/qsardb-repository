@@ -14,6 +14,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.embargo.EmbargoManager;
+import org.dspace.eperson.EPerson;
 import org.dspace.event.Event;
 import org.dspace.handle.HandleManager;
 
@@ -208,6 +209,10 @@ public class InstallItem
 
         // Add provenance description
         item.addDC("description", "provenance", "en", provDescription);
+
+        EPerson submitter = item.getSubmitter();
+
+        item.addDC("publisher", null, null, submitter.getFullName());
     }
 
     // final housekeeping when adding new Item to archive
