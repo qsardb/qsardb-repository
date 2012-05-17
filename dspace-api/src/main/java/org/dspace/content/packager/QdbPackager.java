@@ -37,6 +37,8 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester, Pac
 				qdb.close();
 			}
 
+			QdbUtil.setTitle(item);
+
 			QdbUtil.BitstreamData data = new QdbUtil.FileBitstreamData(file);
 
 			QdbUtil.addOriginalBitstream(context, item, data);
