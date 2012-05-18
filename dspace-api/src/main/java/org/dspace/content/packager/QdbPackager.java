@@ -26,6 +26,8 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 
 		Item item = workspaceItem.getItem();
 
+		Collection collection = item.getOwningCollection();
+
 		boolean success = false;
 
 		try {
@@ -57,6 +59,10 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 				QdbUtil.addInternalBitstream(context, item, internalData);
 			} finally {
 				internalFile.delete();
+			}
+
+			if(PackageUtils.findDepositLicense(context, item) == null){
+				PackageUtils.addDepositLicense(context, license, item, collection);
 			}
 
 			item.update();
