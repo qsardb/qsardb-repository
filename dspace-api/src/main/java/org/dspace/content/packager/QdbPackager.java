@@ -22,11 +22,11 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 
 	@Override
 	public DSpaceObject ingest(Context context, DSpaceObject parent, File file, PackageParameters parameters, String license) throws AuthorizeException, IOException, SQLException, PackageException {
-		WorkspaceItem workspaceItem = WorkspaceItem.create(context, (Collection)parent, false);
+		Collection collection = (Collection)parent;
+
+		WorkspaceItem workspaceItem = WorkspaceItem.create(context, collection, false);
 
 		Item item = workspaceItem.getItem();
-
-		Collection collection = item.getOwningCollection();
 
 		boolean success = false;
 
