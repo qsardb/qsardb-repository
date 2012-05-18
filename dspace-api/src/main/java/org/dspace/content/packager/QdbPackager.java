@@ -13,7 +13,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 
-public class QdbPackager extends SelfNamedPlugin implements PackageIngester, PackageDisseminator {
+public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 
 	@Override
 	public String getParameterHelp(){
@@ -90,21 +90,6 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester, Pac
 
 	@Override
 	public List<DSpaceObject> replaceAll(Context context, DSpaceObject parent, File file, PackageParameters parameters){
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getMIMEType(PackageParameters parameters){
-		return "application/x-zip";
-	}
-
-	@Override
-	public void disseminate(Context context, DSpaceObject object, PackageParameters parameters, File file){
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<File> disseminateAll(Context context, DSpaceObject object, PackageParameters parameters, File file){
 		throw new UnsupportedOperationException();
 	}
 
