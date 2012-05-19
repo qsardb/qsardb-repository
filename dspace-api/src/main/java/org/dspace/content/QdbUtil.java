@@ -91,7 +91,7 @@ public class QdbUtil {
 	}
 
 	static
-	public BitstreamFormat getBitstreamFormat(Context context) throws SQLException {
+	private BitstreamFormat getBitstreamFormat(Context context) throws SQLException {
 		BitstreamFormat format = BitstreamFormat.findByShortDescription(context, "QsarDB");
 		if(format == null){
 			throw new QdbConfigurationException("No QsarDB bitstream format");
@@ -102,17 +102,19 @@ public class QdbUtil {
 
 	static
 	public Bitstream getOriginalBitstream(Context context, Item item) throws SQLException {
-		return getBitstream(context, item, ORIGINAL_BUNDLE_NAME);
+		return getQdbBitstream(context, item, ORIGINAL_BUNDLE_NAME);
 	}
 
 	static
 	public Bitstream getInternalBitstream(Context context, Item item) throws SQLException {
-		return getBitstream(context, item, INTERNAL_BUNDLE_NAME);
+		return getQdbBitstream(context, item, INTERNAL_BUNDLE_NAME);
 	}
 
 	static
-	private Bitstream getBitstream(Context context, Item item, String name) throws SQLException {
-		List<Bitstream> bitstreams = getAllBitstreams(context, item, name);
+	private Bitstream getQdbBitstream(Context context, Item item, String name) throws SQLException {
+		BitstreamFormat format = getBitstreamFormat(context);
+
+		List<Bitstream> bitstreams = getAllBitstreams(item, name, format);
 
 		if(bitstreams.size() < 1){
 			throw new QdbConfigurationException("No QsarDB bitstreams");
@@ -126,10 +128,8 @@ public class QdbUtil {
 	}
 
 	static
-	private List<Bitstream> getAllBitstreams(Context context, Item item, String name) throws SQLException {
+	private List<Bitstream> getAllBitstreams(Item item, String name, BitstreamFormat format) throws SQLException {
 		List<Bitstream> result = new ArrayList<Bitstream>();
-
-		BitstreamFormat format = getBitstreamFormat(context);
 
 		Bundle[] bundles = item.getBundles(name);
 		for(Bundle bundle : bundles){
@@ -147,23 +147,32 @@ public class QdbUtil {
 	}
 
 	static
-	public Bitstream addOriginalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
-		return addBitstream(context, item, ORIGINAL_BUNDLE_NAME, data);
+	public Bitstream setOriginalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+		return setQdbBitstream(context, item, ORIGINAL_BUNDLE_NAME, data);
 	}
 
 	static
-	public Bitstream addInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
-		return addBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
+	public Bitstream setInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+		return setQdbBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
 	}
 
 	static
-	private Bitstream addBitstream(Context context, Item item, String name, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+	private Bitstream setQdbBitstream(Context context, Item item, String name, BitstreamData data) throws AuthorizeException, SQLException, IOException {
 		BitstreamFormat format = getBitstreamFormat(context);
+
+		List<Bitstream> bitstreams = getAllBitstreams(item, name, format);
+		for(Bitstream bitstream : bitstreams){
+			Bundle[] bundles = bitstream.getBundles();
+
+			for(Bundle bundle : bundles){
+				bundle.removeBitstream(bitstream);
+			}
+		}
 
 		Bundle bundle;
 
 		Bundle[] bundles = item.getBundles(name);
-		if(bundles != null && bundles.length > 1){
+		if(bundles.length > 0){
 			bundle = bundles[0];
 		} else
 
@@ -175,12 +184,14 @@ public class QdbUtil {
 
 		try {
 			Bitstream bitstream = bundle.createBitstream(is);
+			bitstream.setFormat(format);
 			bitstream.setName(data.getName());
 			bitstream.setDescription(data.getDescription());
 			bitstream.setSource(data.getSource());
-			bitstream.setFormat(format);
 
 			bitstream.update();
+
+			bundle.setPrimaryBitstreamID(bitstream.getID());
 
 			bundle.update();
 
@@ -232,13 +243,31 @@ public class QdbUtil {
 	}
 
 	static
-	public void collectMetadata(Item item, Qdb qdb){
+	public void resetMetadata(Item item, Qdb qdb){
+		clearMetadata(item);
+		collectMetadata(item, qdb);
+	}
+
+	static
+	private void clearMetadata(Item item){
+		clearBibTeXMetadata(item);
+		clearQDBMetadata(item);
+	}
+
+	static
+	private void collectMetadata(Item item, Qdb qdb){
 		collectBibTeXMetadata(item, qdb);
 		collectQDBMetadata(item, qdb);
 	}
 
 	static
-	public void collectBibTeXMetadata(Item item, Qdb qdb){
+	private void clearBibTeXMetadata(Item item){
+		item.clearMetadata("bibtex", "entry", null, null);
+		item.clearMetadata("bibtex", "entry", Item.ANY, null);
+	}
+
+	static
+	private void collectBibTeXMetadata(Item item, Qdb qdb){
 		BibTeXEntry entry = getPopularEntry(qdb);
 
 		if(entry == null){
@@ -279,7 +308,12 @@ public class QdbUtil {
 	}
 
 	static
-	public void collectQDBMetadata(Item item, Qdb qdb){
+	private void clearQDBMetadata(Item item){
+		item.clearMetadata("qdb", Item.ANY, Item.ANY, null);
+	}
+
+	static
+	private void collectQDBMetadata(Item item, Qdb qdb){
 		collectPropertyMetadata(item, qdb);
 		collectDescriptorMetadata(item, qdb);
 		collectModelMetadata(item, qdb);
@@ -349,9 +383,18 @@ public class QdbUtil {
 	}
 
 	static
-	public void setTitle(Item item){
-		item.clearMetadata("dc", "title", null, null);
+	public void resetTitle(Item item){
+		clearTitle(item);
+		addTitle(item);
+	}
 
+	static
+	private void clearTitle(Item item){
+		item.clearMetadata("dc", "title", null, null);
+	}
+
+	static
+	private void addTitle(Item item){
 		String reference = null;
 
 		BibTeXEntry entry = BibTeXUtil.toEntry(item);

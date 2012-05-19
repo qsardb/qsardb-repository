@@ -12,6 +12,7 @@ import org.dspace.content.*;
 import org.dspace.content.Collection;
 import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
+import org.dspace.event.*;
 
 public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 
@@ -31,19 +32,73 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 		boolean success = false;
 
 		try {
+			deposit(context, collection, item, file, parameters, license);
+
+			workspaceItem.update();
+
+			InstallItem.installItem(context, workspaceItem);
+
+			success = true;
+		} finally {
+
+			if(!success){
+				workspaceItem.deleteAll();
+			}
+
+			context.commit();
+		}
+
+		return item;
+	}
+
+	@Override
+	public List<DSpaceObject> ingestAll(Context context, DSpaceObject parent, File file, PackageParameters parameters, String license){
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public DSpaceObject replace(Context context, DSpaceObject object, File file, PackageParameters parameters) throws AuthorizeException, IOException, SQLException, PackageException {
+		Item item = (Item)object;
+
+		Collection collection = item.getOwningCollection();
+
+		try {
+			deposit(context, collection, item, file, parameters, null);
+
+			item.update();
+
+			// XXX
+			item.inheritCollectionDefaultPolicies(collection);
+
+			context.addEvent(new Event(Event.MODIFY | Event.MODIFY_METADATA, Constants.ITEM, item.getID(), item.getHandle()));
+		} finally {
+			context.commit();
+		}
+
+		return item;
+	}
+
+	@Override
+	public List<DSpaceObject> replaceAll(Context context, DSpaceObject object, File file, PackageParameters parameters){
+		throw new UnsupportedOperationException();
+	}
+
+	private void deposit(Context context, Collection collection, Item item, File file, PackageParameters parameters, String license) throws AuthorizeException, IOException, SQLException, PackageException {
+
+		try {
 			Qdb qdb = new Qdb(new ZipFileInput(file));
 
 			try {
-				QdbUtil.collectMetadata(item, qdb);
+				QdbUtil.resetMetadata(item, qdb);
 			} finally {
 				qdb.close();
 			}
 
-			QdbUtil.setTitle(item);
+			QdbUtil.resetTitle(item);
 
 			QdbUtil.BitstreamData data = new QdbUtil.FileBitstreamData(file);
 
-			QdbUtil.addOriginalBitstream(context, item, data);
+			QdbUtil.setOriginalBitstream(context, item, data);
 
 			File internalFile = QdbUtil.optimize(file);
 
@@ -56,7 +111,7 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 					}
 				};
 
-				QdbUtil.addInternalBitstream(context, item, internalData);
+				QdbUtil.setInternalBitstream(context, item, internalData);
 			} finally {
 				internalFile.delete();
 			}
@@ -64,39 +119,9 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester {
 			if(PackageUtils.findDepositLicense(context, item) == null){
 				PackageUtils.addDepositLicense(context, license, item, collection);
 			}
-
-			item.update();
-
-			workspaceItem.update();
-
-			success = true;
 		} catch(QdbException qe){
 			throw new PackageException(qe);
-		} finally {
-
-			if(!success){
-				workspaceItem.deleteAll();
-			}
-
-			context.commit();
 		}
-
-		return PackageUtils.finishCreateItem(context, workspaceItem, null, parameters);
-	}
-
-	@Override
-	public List<DSpaceObject> ingestAll(Context context, DSpaceObject parent, File file, PackageParameters parameters, String license){
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DSpaceObject replace(Context context, DSpaceObject parent, File file, PackageParameters parameters){
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<DSpaceObject> replaceAll(Context context, DSpaceObject parent, File file, PackageParameters parameters){
-		throw new UnsupportedOperationException();
 	}
 
 	static

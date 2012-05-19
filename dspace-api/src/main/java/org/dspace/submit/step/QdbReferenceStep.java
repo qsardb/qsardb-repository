@@ -21,7 +21,7 @@ public class QdbReferenceStep extends AbstractProcessingStep {
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, SQLException {
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
-		QdbUtil.setTitle(item);
+		QdbUtil.resetTitle(item);
 
 		item.update();
 

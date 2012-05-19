@@ -51,7 +51,7 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 					}
 				};
 
-				QdbUtil.addInternalBitstream(context, item, internalData);
+				QdbUtil.setInternalBitstream(context, item, internalData);
 			} finally {
 				internalFile.delete();
 			}

@@ -35,7 +35,7 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 
 			@Override
 			public Object call(Qdb qdb){
-				QdbUtil.collectMetadata(item, qdb);
+				QdbUtil.resetMetadata(item, qdb);
 
 				return null;
 			}
