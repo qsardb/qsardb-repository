@@ -56,6 +56,11 @@ public class MathUtil {
 
 	static
 	public MathContext getContext(Collection<?> values){
+		return getContext(values, -1);
+	}
+
+	static
+	public MathContext getContext(Collection<?> values, int maxPrecision){
 		int precision = 0;
 
 		for(Object value : values){
@@ -65,6 +70,10 @@ public class MathUtil {
 
 				precision = Math.max(decimal.precision(), precision);
 			}
+		}
+
+		if(maxPrecision > -1){
+			precision = Math.min(maxPrecision, precision);
 		}
 
 		return new MathContext(precision, RoundingMode.HALF_UP);

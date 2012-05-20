@@ -32,7 +32,7 @@ public class DescriptorInputPanel extends Composite {
 
 		final
 		Map<String, ?> trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
-		setContext(MathUtil.getContext(trainingDescriptorValues.values()));
+		setContext(MathUtil.getContext(trainingDescriptorValues.values(), 8));
 
 		final
 		BigDecimal mean = formatValue(MathUtil.mean(trainingDescriptorValues.values()));
