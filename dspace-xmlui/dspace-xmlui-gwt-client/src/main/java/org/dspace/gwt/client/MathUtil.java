@@ -55,6 +55,17 @@ public class MathUtil {
 	}
 
 	static
+	public int getScale(String format){
+		int dot = format.lastIndexOf('.');
+
+		if(dot > -1){
+			return (format.length() - (dot + 1));
+		}
+
+		return 0;
+	}
+
+	static
 	public MathContext getContext(Collection<?> values){
 		return getContext(values, -1);
 	}

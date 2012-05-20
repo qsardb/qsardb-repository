@@ -18,7 +18,11 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 
 
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds){
-		setMaxValue(QdbPlot.SIZE);
+		this(bounds, QdbPlot.SIZE);
+	}
+
+	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds, int maxValue){
+		setBounds(bounds);
 
 		Image less = new Image(images.less());
 		(less.getElement()).getStyle().setZIndex(100);
@@ -33,9 +37,9 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 		Image drag = new Image(images.drag());
 		setDragWidget(drag);
 
-		setWidth((20 + QdbPlot.SIZE + 20) + "px");
+		setMaxValue(maxValue);
 
-		setBounds(bounds);
+		setWidth((20 + QdbPlot.SIZE + 20) + "px");
 	}
 
 	@Override

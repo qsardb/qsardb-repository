@@ -32,6 +32,7 @@ public class DescriptorInputPanel extends Composite {
 
 		final
 		Map<String, ?> trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
+
 		setContext(MathUtil.getContext(trainingDescriptorValues.values(), 8));
 
 		final
@@ -83,10 +84,33 @@ public class DescriptorInputPanel extends Composite {
 
 		QdbPlot.Bounds xBounds = QdbPlot.bounds(trainingDescriptorValues);
 
-		this.slider = new DescriptorValueSliderBarHorizontal(xBounds);
-		this.slider.setUserValue(getValue());
+		BigDecimal range = xBounds.getRange();
 
-		this.slider.addMarkings(mean, sigma);
+		// XXX
+		if((range).compareTo(BigDecimal.ZERO) == 0){
+			return new Label("(Not adjustable)");
+		}
+
+		int categories = 0;
+
+		int scale = MathUtil.getScale(getFormat());
+		if(scale == 0){
+
+			if(range.intValue() <= 10){
+				categories = range.intValue();
+			}
+		} // End if
+
+		if(categories > 0){
+			this.slider = new DescriptorValueSliderBarHorizontal(xBounds, categories);
+		} else
+
+		{
+			this.slider = new DescriptorValueSliderBarHorizontal(xBounds);
+			this.slider.addMarkings(mean, sigma);
+		}
+
+		this.slider.setUserValue(getValue());
 
 		panel.add(this.slider);
 
@@ -106,7 +130,19 @@ public class DescriptorInputPanel extends Composite {
 		};
 		this.slider.addBarValueChangedHandler(valueHandler);
 
-		HistogramPlot histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
+		HistogramPlot histogramPlot;
+
+		if(categories > 0){
+			Double min = Double.valueOf((xBounds.getMin()).intValue() - 0.5);
+			Double max = Double.valueOf((xBounds.getMax()).intValue() + 0.5);
+
+			histogramPlot = new HistogramPlot(min, max, categories + 1);
+		} else
+
+		{
+			histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
+		}
+
 		histogramPlot.addXAxisOptions(xBounds);
 		histogramPlot.addYAxisOptions((String)null);
 
@@ -172,23 +208,13 @@ public class DescriptorInputPanel extends Composite {
 	private BigDecimal formatValue(Number value){
 		BigDecimal result = new BigDecimal(value.doubleValue(), getContext());
 
-		int scale = getScale();
+		int scale = MathUtil.getScale(getFormat());
+
 		if(result.scale() > scale){
 			result = result.setScale(scale, RoundingMode.HALF_UP);
 		}
 
 		return result;
-	}
-
-	private int getScale(){
-		String format = getFormat();
-
-		int dot = format.lastIndexOf('.');
-		if(dot > -1){
-			return (format.length() - (dot + 1));
-		}
-
-		return 0;
 	}
 
 	public String getId(){

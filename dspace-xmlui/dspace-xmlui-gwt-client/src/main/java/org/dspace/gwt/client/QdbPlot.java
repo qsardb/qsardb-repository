@@ -255,6 +255,10 @@ public class QdbPlot extends SimplePlot {
 			}
 		}
 
+		public BigDecimal getRange(){
+			return (getMax()).subtract(getMin());
+		}
+
 		public BigDecimal getMin(){
 			return this.min;
 		}
