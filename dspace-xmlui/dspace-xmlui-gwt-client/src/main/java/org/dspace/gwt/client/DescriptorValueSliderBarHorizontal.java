@@ -59,8 +59,8 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 	}
 
 	private void addStDevMarkings(BigDecimal mean, BigDecimal sigma, BigDecimal multiplier, String color){
-		addMarking(mean.add(sigma.multiply(multiplier)), color, ("+" + multiplier.intValue() + "\u03C3"));
-		addMarking(mean.subtract(sigma.multiply(multiplier)), color, ("-" + multiplier.intValue() + "\u03C3"));
+		addMarking(mean.add(sigma.multiply(multiplier)), color, ("+" + multiplier.intValue() + SIGMA));
+		addMarking(mean.subtract(sigma.multiply(multiplier)), color, ("-" + multiplier.intValue() + SIGMA));
 	}
 
 	private void addMarking(Number value, String color, String title){
@@ -162,6 +162,8 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 			this.value = value;
 		}
 	}
+
+	private static final String SIGMA = "\u03C3";
 
 	interface Images extends ClientBundle {
 

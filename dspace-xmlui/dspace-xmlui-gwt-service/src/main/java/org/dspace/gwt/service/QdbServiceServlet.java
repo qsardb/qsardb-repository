@@ -1,6 +1,7 @@
 package org.dspace.gwt.service;
 
 import java.io.*;
+import java.math.*;
 import java.util.*;
 import java.util.Collection;
 
@@ -320,7 +321,10 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		PropertyColumn column = new PropertyColumn();
 		column.setId(property.getId());
 		column.setName(property.getName());
-		column.setValues(loadValues(property, keys));
+
+		Map<String, Object> values = loadValues(property, keys);
+		column.setValues(values);
+		column.setFormat(parseFormat(values));
 
 		return column;
 	}
@@ -329,7 +333,10 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		DescriptorColumn column = new DescriptorColumn();
 		column.setId(descriptor.getId());
 		column.setName(descriptor.getName());
-		column.setValues(loadValues(descriptor, keys));
+
+		Map<String, Object> values = loadValues(descriptor, keys);
+		column.setValues(values);
+		column.setFormat(parseFormat(values));
 
 		column.setCalculable(descriptor.hasCargo(BODOCargo.class));
 
@@ -352,6 +359,26 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 
 		return values;
+	}
+
+	private String parseFormat(Map<String, ?> values){
+		ScaleFrequencyMap map = new ScaleFrequencyMap();
+
+		Collection<? extends Map.Entry<String, ?>> entries = values.entrySet();
+		for(Map.Entry<String, ?> entry : entries){
+
+			try {
+				BigDecimal value = BigDecimalFormat.toBigDecimal(entry.getValue());
+
+				map.add(value);
+			} catch(Exception e){
+				// Ignored
+			}
+		}
+
+		int minCount = Math.max(5, map.getCountSum() / 10);
+
+		return map.getPattern(minCount);
 	}
 
 	private IAtomContainer parseMolecule(String string) throws Exception {

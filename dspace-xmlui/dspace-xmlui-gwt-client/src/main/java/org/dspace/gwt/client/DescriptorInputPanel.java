@@ -35,11 +35,11 @@ public class DescriptorInputPanel extends Composite {
 		setContext(MathUtil.getContext(trainingDescriptorValues.values()));
 
 		final
-		BigDecimal mean = new BigDecimal(MathUtil.mean(trainingDescriptorValues.values()).toString(), getContext());
+		BigDecimal mean = formatValue(MathUtil.mean(trainingDescriptorValues.values()));
 		setValue(mean);
 
 		final
-		BigDecimal sigma = new BigDecimal(MathUtil.standardDeviation(trainingDescriptorValues.values()).toString(), getContext());
+		BigDecimal sigma = formatValue(MathUtil.standardDeviation(trainingDescriptorValues.values()));
 
 		DisclosurePanel panel = new DisclosurePanel();
 
@@ -140,7 +140,7 @@ public class DescriptorInputPanel extends Composite {
 	}
 
 	public void setValue(String value){
-		setValue(new BigDecimal(value, getContext()));
+		setValue(formatValue(Double.valueOf(value)));
 	}
 
 	public void setValue(BigDecimal value){
@@ -158,7 +158,7 @@ public class DescriptorInputPanel extends Composite {
 	private void updateValue(){
 		Number value = this.slider.getUserValue();
 
-		updateValue(new BigDecimal(String.valueOf(value), getContext()));
+		updateValue(formatValue(value));
 	}
 
 	private void updateValue(BigDecimal value){
@@ -169,8 +169,34 @@ public class DescriptorInputPanel extends Composite {
 		}
 	}
 
+	private BigDecimal formatValue(Number value){
+		BigDecimal result = new BigDecimal(value.doubleValue(), getContext());
+
+		int scale = getScale();
+		if(result.scale() > scale){
+			result = result.setScale(scale, RoundingMode.HALF_UP);
+		}
+
+		return result;
+	}
+
+	private int getScale(){
+		String format = getFormat();
+
+		int dot = format.lastIndexOf('.');
+		if(dot > -1){
+			return (format.length() - (dot + 1));
+		}
+
+		return 0;
+	}
+
 	public String getId(){
 		return getDescriptor().getId();
+	}
+
+	public String getFormat(){
+		return getDescriptor().getFormat();
 	}
 
 	public DescriptorColumn getDescriptor(){

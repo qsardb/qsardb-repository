@@ -56,17 +56,17 @@ public class MathUtil {
 
 	static
 	public MathContext getContext(Collection<?> values){
-		BigDecimal sum = new BigDecimal(0);
+		int precision = 0;
 
 		for(Object value : values){
 
 			if(value instanceof BigDecimal){
 				BigDecimal decimal = (BigDecimal)value;
 
-				sum = sum.add(decimal);
+				precision = Math.max(decimal.precision(), precision);
 			}
 		}
 
-		return new MathContext(sum.scale(), RoundingMode.HALF_UP);
+		return new MathContext(precision, RoundingMode.HALF_UP);
 	}
 }
