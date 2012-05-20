@@ -16,7 +16,8 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		Resolver resolver = new Resolver(table);
 
-		addColumn(new IdentifierTextColumn(), "Id");
+		IdColumn id = table.getColumn(IdColumn.class);
+		addColumn(new IdTextColumn(id), "Id");
 
 		NameColumn name = table.getColumn(NameColumn.class);
 		addColumn(new NameTextColumn(resolver, name), "Name");
@@ -53,7 +54,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		};
 		addColumn(column, (String)null);
 
-		setColumnWidth(column, 20, Unit.PT);
+		setColumnWidth(column, 20, Unit.PX);
 	}
 
 	@Override
@@ -64,7 +65,10 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			int length = ((CompoundTextColumn)column).getLength();
 
 			if(length > 0){
-				setColumnWidth(column, Math.min(Math.max(length, 2), 60) * 8, Unit.PT);
+				length = Math.min(Math.max(length, 2), 60);
+
+				// XXX: Cut the horizontal padding from 15 px to 5 px
+				setColumnWidth(column, 15 + (length * 6) + 15, Unit.PX);
 			}
 		}
 	}
@@ -128,32 +132,11 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
-	public class IdentifierTextColumn extends CompoundTextColumn {
+	public class IdTextColumn extends AttributeTextColumn {
 
 
-		public IdentifierTextColumn(){
-			super(new TextCell());
-		}
-
-		@Override
-		public String getValue(Compound compound){
-			return compound.getId();
-		}
-
-		@Override
-		public int getLength(){
-			return 4; // XXX
-		}
-
-		@Override
-		public Comparator<Compound> getComparator(){
-			return new Comparator<Compound>(){
-
-				@Override
-				public int compare(Compound left, Compound right){
-					return IdentifierTextColumn.this.compare(left.getId(), right.getId());
-				}
-			};
+		public IdTextColumn(IdColumn attribute){
+			super(new TextCell(), attribute);
 		}
 
 		@Override
@@ -221,11 +204,6 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		public NameTextColumn(Resolver resolver, NameColumn attribute){
 			super(new ResolverTooltipCell(resolver), attribute);
-		}
-
-		@Override
-		public int getLength(){
-			return (super.getLength() * 2) / 3;
 		}
 	}
 

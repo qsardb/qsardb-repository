@@ -163,6 +163,14 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 			columns.add(loadPropertyColumn(property, keys));
 		}
 
+		AttributeCollector idValues = new AttributeCollector(){
+
+			@Override
+			public String getValue(Compound compound){
+				return compound.getId();
+			}
+		};
+
 		AttributeCollector nameValues = new AttributeCollector(){
 
 			@Override
@@ -190,12 +198,20 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		for(String key : keys){
 			Compound compound = qdb.getCompound(key);
 
+			idValues.put(compound);
 			nameValues.put(compound);
 			casValues.put(compound);
 			inChIValues.put(compound);
 
 			smilesValues.put(compound);
 		}
+
+		if(idValues.size() > 0){
+			IdColumn column = new IdColumn();
+			column.setValues(idValues.getValues());
+
+			columns.add(column);
+		} // End if
 
 		if(nameValues.size() > 0){
 			NameColumn column = new NameColumn();
