@@ -2,7 +2,7 @@
 <dspace-dc-types>
 	<dc-schema>
 		<name>bibtex</name>
-		<namespace>http://www.jbibtex.org</namespace>
+		<namespace>http://ctan.org/tex-archive/biblio/bibtex</namespace>
 	</dc-schema>
 
 	<dc-type>
