@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
+import org.qsardb.cargo.pmml.*;
 import org.qsardb.cargo.rds.*;
 import org.qsardb.model.*;
 import org.qsardb.validation.*;
@@ -110,15 +111,16 @@ public class QdbValidateStep extends AbstractProcessingStep {
 
 				@Override
 				@SuppressWarnings (
-					value = {"rawtypes", "unchecked"}
+					value = {"rawtypes"}
 				)
 				public int getLimit(Cargo<?> cargo){
 					Container container = cargo.getContainer();
 
 					if(container instanceof Model){
+						String id = cargo.getId();
 
-						if((RDSCargo.ID).equals(cargo.getId())){
-							return 10 * 1024 * 1024;
+						if((RDSCargo.ID).equals(id) || (PMMLCargo.ID).equals(id)){
+							return 5 * 1024 * 1024;
 						}
 					}
 
