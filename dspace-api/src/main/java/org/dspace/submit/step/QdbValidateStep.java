@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
+import org.qsardb.cargo.rds.*;
 import org.qsardb.model.*;
 import org.qsardb.validation.*;
 
@@ -12,7 +13,7 @@ import org.apache.log4j.*;
 import org.dspace.app.util.*;
 import org.dspace.content.*;
 import org.dspace.content.QdbUtil;
-import org.dspace.core.*;
+import org.dspace.core.Context;
 import org.dspace.submit.*;
 
 public class QdbValidateStep extends AbstractProcessingStep {
@@ -105,7 +106,25 @@ public class QdbValidateStep extends AbstractProcessingStep {
 			result.add(new ModelValidator(Scope.LOCAL));
 			result.add(new PredictionValidator(Scope.LOCAL));
 			result.add(new PredictionRegistryValidator());
-			result.add(new BasicCargoValidator());
+			result.add(new BasicCargoValidator(1024 * 1024){
+
+				@Override
+				@SuppressWarnings (
+					value = {"rawtypes", "unchecked"}
+				)
+				public int getLimit(Cargo<?> cargo){
+					Container container = cargo.getContainer();
+
+					if(container instanceof Model){
+
+						if((RDSCargo.ID).equals(cargo.getId())){
+							return 10 * 1024 * 1024;
+						}
+					}
+
+					return super.getLimit(cargo);
+				}
+			});
 			result.add(new ValuesValidator());
 			result.add(new UCUMValidator());
 			result.add(new ReferencesValidator());
