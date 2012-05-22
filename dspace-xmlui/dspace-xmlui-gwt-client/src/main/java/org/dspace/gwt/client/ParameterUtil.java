@@ -49,7 +49,17 @@ public class ParameterUtil {
 				if(value instanceof String){
 					String string = (String)value;
 
-					entry.setValue(new BigDecimal(string));
+					if("0".equals(string)){
+						entry.setValue(BigDecimal.ZERO);
+					} else
+
+					if("1".equals(string)){
+						entry.setValue(BigDecimal.ONE);
+					} else
+
+					{
+						entry.setValue(new BigDecimal(string));
+					}
 				}
 			} catch(NumberFormatException nfe){
 				// Ignored
