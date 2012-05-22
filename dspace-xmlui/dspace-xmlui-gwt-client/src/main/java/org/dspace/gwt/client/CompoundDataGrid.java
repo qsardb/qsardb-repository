@@ -62,7 +62,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		super.insertColumn(index, column, header, footer);
 
 		if(column instanceof CompoundTextColumn){
-			int length = ((CompoundTextColumn)column).getLength();
+			CompoundTextColumn<?, ?> sortableColumn = (CompoundTextColumn<?, ?>)column;
+
+			int length = sortableColumn.getLength();
 
 			if(length > 0){
 				length = Math.min(Math.max(length, 2), 60);
@@ -76,7 +78,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public Comparator<Compound> getComparator(Column<?, ?> column){
 
 		if(column instanceof CompoundTextColumn){
-			CompoundTextColumn sortableColumn = (CompoundTextColumn)column;
+			CompoundTextColumn<?, ?> sortableColumn = (CompoundTextColumn<?, ?>)column;
 
 			return sortableColumn.getComparator();
 		}
@@ -86,16 +88,22 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	static
 	abstract
-	public class CompoundTextColumn extends Column<Compound, String> {
+	public class CompoundTextColumn <C extends QdbColumn<V>, V> extends Column<Compound, String> {
 
-		protected CompoundTextColumn(Cell<String> cell){
+		private C column = null;
+
+
+		protected CompoundTextColumn(Cell<String> cell, C column){
 			super(cell);
+
+			setColumn(column);
 
 			setSortable(true);
 		}
 
-		abstract
-		public int getLength();
+		public int getLength(){
+			return getColumn().getLength();
+		}
 
 		abstract
 		public Comparator<Compound> getComparator();
@@ -116,27 +124,21 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			return ((Comparable)left).compareTo((Comparable)right);
 		}
 
-		static
-		protected int getLength(Collection<?> values){
-			int length = 0;
+		public C getColumn(){
+			return this.column;
+		}
 
-			for(Object value : values){
-
-				if(value != null){
-					length = Math.max((value.toString()).length(), length);
-				}
-			}
-
-			return length;
+		private void setColumn(C column){
+			this.column = column;
 		}
 	}
 
 	static
-	public class IdTextColumn extends AttributeTextColumn {
+	public class IdTextColumn extends AttributeTextColumn<IdColumn> {
 
 
-		public IdTextColumn(IdColumn attribute){
-			super(new TextCell(), attribute);
+		public IdTextColumn(IdColumn column){
+			super(new TextCell(), column);
 		}
 
 		@Override
@@ -156,20 +158,15 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	static
 	abstract
-	public class AttributeTextColumn extends CompoundTextColumn {
+	public class AttributeTextColumn <C extends AttributeColumn> extends CompoundTextColumn<C, String> {
 
-		private AttributeColumn attribute = null;
-
-
-		public AttributeTextColumn(Cell<String> cell, AttributeColumn attribute){
-			super(cell);
-
-			setAttribute(attribute);
+		public AttributeTextColumn(Cell<String> cell, C column){
+			super(cell, column);
 		}
 
 		@Override
 		public String getValue(Compound compound){
-			return getAttribute().getValue(compound.getId());
+			return getColumn().getValue(compound.getId());
 		}
 
 		@Override
@@ -182,36 +179,21 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 				}
 			};
 		}
+	}
 
-		@Override
-		public int getLength(){
-			Map<String, String> values = getAttribute().getValues();
+	static
+	public class NameTextColumn extends AttributeTextColumn<NameColumn> {
 
-			return CompoundTextColumn.getLength(values.values());
-		}
-
-		public AttributeColumn getAttribute(){
-			return this.attribute;
-		}
-
-		private void setAttribute(AttributeColumn attribute){
-			this.attribute = attribute;
+		public NameTextColumn(Resolver resolver, NameColumn column){
+			super(new ResolverTooltipCell(resolver), column);
 		}
 	}
 
 	static
-	public class NameTextColumn extends AttributeTextColumn {
+	public class CasTextColumn extends AttributeTextColumn<CasColumn> {
 
-		public NameTextColumn(Resolver resolver, NameColumn attribute){
-			super(new ResolverTooltipCell(resolver), attribute);
-		}
-	}
-
-	static
-	public class CasTextColumn extends AttributeTextColumn {
-
-		public CasTextColumn(CasColumn attribute){
-			super(new TextCell(), attribute);
+		public CasTextColumn(CasColumn column){
+			super(new TextCell(), column);
 		}
 
 		@Override
@@ -253,15 +235,10 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	static
 	abstract
-	public class ParameterTextColumn extends CompoundTextColumn {
+	public class ParameterTextColumn <C extends ParameterColumn> extends CompoundTextColumn<C, Object> {
 
-		private ParameterColumn parameter = null;
-
-
-		public ParameterTextColumn(Cell<String> cell, ParameterColumn parameter){
-			super(cell);
-
-			setParameter(parameter);
+		public ParameterTextColumn(Cell<String> cell, C column){
+			super(cell, column);
 		}
 
 		@Override
@@ -272,14 +249,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		public Object getObject(Compound compound){
-			return getParameter().getValue(compound.getId());
-		}
-
-		@Override
-		public int getLength(){
-			Map<String, Object> values = getParameter().getValues();
-
-			return ParameterTextColumn.getLength(values.values());
+			return getColumn().getValue(compound.getId());
 		}
 
 		@Override
@@ -306,42 +276,29 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 			return super.compare(left, right);
 		}
+	}
 
-		public ParameterColumn getParameter(){
-			return this.parameter;
-		}
+	static
+	public class PropertyTextColumn extends ParameterTextColumn<PropertyColumn> {
 
-		private void setParameter(ParameterColumn parameter){
-			this.parameter = parameter;
+		public PropertyTextColumn(PropertyColumn column){
+			super(new TextCell(), column);
 		}
 	}
 
 	static
-	public class PropertyTextColumn extends ParameterTextColumn {
+	public class PredictionTextColumn extends ParameterTextColumn<PredictionColumn> {
 
-		public PropertyTextColumn(PropertyColumn property){
-			super(new TextCell(), property);
+		public PredictionTextColumn(PredictionColumn column){
+			super(new TextCell(), column);
 		}
 	}
 
 	static
-	public class PredictionTextColumn extends ParameterTextColumn {
+	public class PredictionErrorTextColumn extends CompoundTextColumn<PredictionColumn, Object> {
 
-		public PredictionTextColumn(PredictionColumn prediction){
-			super(new TextCell(), prediction);
-		}
-	}
-
-	static
-	public class PredictionErrorTextColumn extends CompoundTextColumn {
-
-		private PredictionColumn prediction = null;
-
-
-		public PredictionErrorTextColumn(PredictionColumn prediction){
-			super(new TextCell());
-
-			setPrediction(prediction);
+		public PredictionErrorTextColumn(PredictionColumn column){
+			super(new TextCell(), column);
 		}
 
 		@Override
@@ -352,14 +309,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		}
 
 		public BigDecimal getError(Compound compound){
-			return getPrediction().getError(compound.getId());
-		}
-
-		@Override
-		public int getLength(){
-			Map<String, BigDecimal> values = getPrediction().getErrors();
-
-			return ParameterTextColumn.getLength(values.values());
+			return getColumn().getError(compound.getId());
 		}
 
 		@Override
@@ -372,21 +322,13 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 				}
 			};
 		}
-
-		public PredictionColumn getPrediction(){
-			return this.prediction;
-		}
-
-		private void setPrediction(PredictionColumn prediction){
-			this.prediction = prediction;
-		}
 	}
 
 	static
-	public class DescriptorTextColumn extends ParameterTextColumn {
+	public class DescriptorTextColumn extends ParameterTextColumn<DescriptorColumn> {
 
-		public DescriptorTextColumn(DescriptorColumn descriptor){
-			super(new TextCell(), descriptor);
+		public DescriptorTextColumn(DescriptorColumn column){
+			super(new TextCell(), column);
 		}
 	}
 

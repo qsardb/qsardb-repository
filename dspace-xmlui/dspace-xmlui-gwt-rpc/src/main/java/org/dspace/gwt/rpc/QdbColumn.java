@@ -6,6 +6,8 @@ import java.util.*;
 abstract
 public class QdbColumn<V> implements Serializable {
 
+	private int length = 0;
+
 	private Map<String, V> values = null;
 
 
@@ -15,6 +17,14 @@ public class QdbColumn<V> implements Serializable {
 
 	public void setValue(String key, V value){
 		this.values.put(key, value);
+	}
+
+	public int getLength(){
+		return this.length;
+	}
+
+	public void setLength(int length){
+		this.length = length;
 	}
 
 	public Map<String, V> getValues(){

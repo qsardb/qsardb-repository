@@ -166,7 +166,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		AttributeCollector idValues = new AttributeCollector(){
 
 			@Override
-			public String getValue(Compound compound){
+			public String collect(Compound compound){
 				return compound.getId();
 			}
 		};
@@ -174,21 +174,21 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		AttributeCollector nameValues = new AttributeCollector(){
 
 			@Override
-			public String getValue(Compound compound){
+			public String collect(Compound compound){
 				return compound.getName();
 			}
 		};
 		AttributeCollector casValues = new AttributeCollector(){
 
 			@Override
-			public String getValue(Compound compound){
+			public String collect(Compound compound){
 				return compound.getCas();
 			}
 		};
 		AttributeCollector inChIValues = new AttributeCollector(){
 
 			@Override
-			public String getValue(Compound compound){
+			public String collect(Compound compound){
 				return compound.getInChI();
 			}
 		};
@@ -198,45 +198,45 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		for(String key : keys){
 			Compound compound = qdb.getCompound(key);
 
-			idValues.put(compound);
-			nameValues.put(compound);
-			casValues.put(compound);
-			inChIValues.put(compound);
+			idValues.add(compound);
+			nameValues.add(compound);
+			casValues.add(compound);
+			inChIValues.add(compound);
 
-			smilesValues.put(compound);
+			smilesValues.add(compound);
 		}
 
 		if(idValues.size() > 0){
 			IdColumn column = new IdColumn();
-			column.setValues(idValues.getValues());
+			idValues.init(column);
 
 			columns.add(column);
 		} // End if
 
 		if(nameValues.size() > 0){
 			NameColumn column = new NameColumn();
-			column.setValues(nameValues.getValues());
+			nameValues.init(column);
 
 			columns.add(column);
 		} // End if
 
 		if(casValues.size() > 0){
 			CasColumn column = new CasColumn();
-			column.setValues(casValues.getValues());
+			casValues.init(column);
 
 			columns.add(column);
 		} // End if
 
 		if(inChIValues.size() > 0){
 			InChIColumn column = new InChIColumn();
-			column.setValues(inChIValues.getValues());
+			inChIValues.init(column);
 
 			columns.add(column);
 		} // End if
 
 		if(smilesValues.size() > 0){
 			SmilesColumn column = new SmilesColumn();
-			column.setValues(smilesValues.getValues());
+			smilesValues.init(column);
 
 			columns.add(column);
 		}
@@ -328,7 +328,10 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		PredictionColumn column = new PredictionColumn();
 		column.setId(prediction.getId());
 		column.setName(prediction.getName());
-		column.setValues(loadValues(prediction));
+
+		Map<String, Object> values = loadValues(prediction);
+		column.setValues(values);
+		column.setLength(parseLength(values));
 
 		return column;
 	}
@@ -340,6 +343,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		Map<String, Object> values = loadValues(property, keys);
 		column.setValues(values);
+		column.setLength(parseLength(values));
 		column.setFormat(parseFormat(values));
 
 		return column;
@@ -352,6 +356,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 
 		Map<String, Object> values = loadValues(descriptor, keys);
 		column.setValues(values);
+		column.setLength(parseLength(values));
 		column.setFormat(parseFormat(values));
 
 		column.setCalculable(descriptor.hasCargo(BODOCargo.class));
@@ -375,6 +380,23 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 
 		return values;
+	}
+
+	private int parseLength(Map<String, ?> values){
+		int length = 0;
+
+		Collection<? extends Map.Entry<String, ?>> entries = values.entrySet();
+		for(Map.Entry<String, ?> entry : entries){
+			Object value = entry.getValue();
+
+			if(value != null){
+				String string = String.valueOf(value);
+
+				length = Math.max(string.length(), length);
+			}
+		}
+
+		return length;
 	}
 
 	private String parseFormat(Map<String, ?> values){
@@ -459,31 +481,42 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 	abstract
 	private class ValueCollector {
 
+		private int length = 0;
+
 		private Map<String, String> values = new LinkedHashMap<String, String>();
 
 
 		abstract
-		public String getValue(Compound compound) throws Exception;
+		public String collect(Compound compound) throws Exception;
 
 		public int size(){
 			return this.values.size();
 		}
 
-		public String get(String key){
-			return this.values.get(key);
+		public void add(Compound compound) throws Exception {
+			add(compound.getId(), collect(compound));
 		}
 
-		public void put(Compound compound) throws Exception {
-			put(compound.getId(), getValue(compound));
-		}
-
-		public void put(String key, String value){
+		public void add(String key, String value){
 
 			if(value == null){
 				return;
 			}
 
+			this.length = Math.max(value.length(), this.length);
+
 			this.values.put(key, value);
+		}
+
+		public <C extends QdbColumn<String>> C init(C column){
+			column.setLength(getLength());
+			column.setValues(getValues());
+
+			return column;
+		}
+
+		public int getLength(){
+			return this.length;
 		}
 
 		public Map<String, String> getValues(){
@@ -507,7 +540,7 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 		}
 
 		@Override
-		public String getValue(Compound compound) throws IOException {
+		public String collect(Compound compound) throws IOException {
 			String id = getId();
 
 			if(compound.hasCargo(id)){
