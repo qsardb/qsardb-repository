@@ -18,7 +18,7 @@ public class QdbIngester implements PackageIngester {
 
 	@Override
 	public String getParameterHelp(){
-		return null;
+		return "* addDepositLicense=[boolean]";
 	}
 
 	@Override
@@ -116,8 +116,12 @@ public class QdbIngester implements PackageIngester {
 				internalFile.delete();
 			}
 
-			if(PackageUtils.findDepositLicense(context, item) == null){
-				PackageUtils.addDepositLicense(context, license, item, collection);
+			boolean addDepositLicense = parameters.getBooleanProperty("addDepositLicense", false);
+			if(addDepositLicense){
+
+				if(PackageUtils.findDepositLicense(context, item) == null){
+					PackageUtils.addDepositLicense(context, license, item, collection);
+				}
 			}
 		} catch(QdbException qe){
 			throw new PackageException(qe);
