@@ -14,7 +14,7 @@ import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
 import org.dspace.event.*;
 
-public class QdbPackager extends SelfNamedPlugin implements PackageIngester, PackageDisseminator {
+public class QdbIngester implements PackageIngester {
 
 	@Override
 	public String getParameterHelp(){
@@ -123,46 +123,4 @@ public class QdbPackager extends SelfNamedPlugin implements PackageIngester, Pac
 			throw new PackageException(qe);
 		}
 	}
-
-	@Override
-	public void disseminate(Context context, DSpaceObject object, PackageParameters parameters, File file) throws AuthorizeException, SQLException, IOException {
-		Item item = (Item)object;
-
-		Bitstream bitstream = QdbUtil.getOriginalBitstream(context, item);
-
-		if(!file.exists()){
-			PackageUtils.createFile(file);
-		}
-
-		InputStream is = bitstream.retrieve();
-
-		try {
-			OutputStream os = new FileOutputStream(file);
-
-			try {
-				Utils.copy(is, os);
-			} finally {
-				os.close();
-			}
-		} finally {
-			is.close();
-		}
-	}
-
-	@Override
-	public List<File> disseminateAll(Context context, DSpaceObject object, PackageParameters parameters, File file){
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getMIMEType(PackageParameters parameters){
-		return "application/x-zip"; // XXX
-	}
-
-	static
-	public String[] getPluginNames(){
-		return QdbPackager.names;
-	}
-
-	private static final String[] names = {"QsarDB", "QDB"};
 }
