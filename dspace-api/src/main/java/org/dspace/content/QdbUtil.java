@@ -251,13 +251,13 @@ public class QdbUtil {
 	static
 	private void clearMetadata(Item item){
 		clearBibTeXMetadata(item);
-		clearQDBMetadata(item);
+		clearQdbMetadata(item);
 	}
 
 	static
 	private void collectMetadata(Item item, Qdb qdb){
 		collectBibTeXMetadata(item, qdb);
-		collectQDBMetadata(item, qdb);
+		collectQdbMetadata(item, qdb);
 	}
 
 	static
@@ -308,12 +308,12 @@ public class QdbUtil {
 	}
 
 	static
-	private void clearQDBMetadata(Item item){
+	private void clearQdbMetadata(Item item){
 		item.clearMetadata("qdb", Item.ANY, Item.ANY, null);
 	}
 
 	static
-	private void collectQDBMetadata(Item item, Qdb qdb){
+	private void collectQdbMetadata(Item item, Qdb qdb){
 		collectPropertyMetadata(item, qdb);
 		collectDescriptorMetadata(item, qdb);
 		collectModelMetadata(item, qdb);

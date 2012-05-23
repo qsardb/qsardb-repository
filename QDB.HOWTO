@@ -7,6 +7,7 @@
 
     [dspace-src] Refers to the DSpace source checkout directory
 
+
 1. INSTALLATION
 
   1.1 Install DSpace according to manual file [dspace-src]/dspace/docs/DSpace-Manual.pdf
@@ -41,7 +42,7 @@
 
   3.3 Open DSpace metadata registry admin UI and verify that the new field has been created under the QsarDB schema.
 
-  3.4 Update [dspace-src]/dspace-api/src/main/java/org/dspace/content/QdbUtil.java (method QdbUtil#collectQsarDBMetadata(Item, Qdb))
+  3.4 Update [dspace-src]/dspace-api/src/main/java/org/dspace/content/QdbUtil.java (method QdbUtil#collectQdbMetadata(Item, Qdb))
 
   3.5 Add a new <field> element to input form file [dspace-src]/dspace/config/input-forms.xml
 
@@ -81,20 +82,16 @@
 7. HoW TO UPLOAD ("INGEST") QDB ARCHIVES USING THE COMMAND-LINE PACKAGER APPLICATION
 
   7.1 Installing a new Item:
-
     [dspace]/bin/dspace packager -u -s -t QDB -p <Collection Handle> -e <Submitter's e-mail> <Absolute path to QDB archive file>
 
   7.2 Replacing the contents of an existing Item:
-
     [dspace]/bin/dspace.bat packager -u -r -f -t QDB -i <Item handle> -e <Submitter's e-mail> <Absolute path to QDB archive file>
 
 
 8. HOW TO DOWNLOAD ("DISSEMINATE") QDB ARCHIVES USING THE COMMAND-LINE PACKAGER APPLICATION
 
   8.1 Retrieving a single Item:
-
     [dspace]/bin/dspace packager -u -d -t QDB -i <Item handle> -e <Submitter's e-mail> <Absolute path to destination directory or QDB archive file>
 
   8.2 Retrieving all Items in a Collection:
-
     [dspace]/bin/dspace packager -u -d -t QDB -a -i <Collection handle> -e <Submitter's e-mail> <Absolute path to target directory>
