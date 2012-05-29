@@ -27,7 +27,7 @@ import org.openscience.cdk.qsar.*;
 import org.openscience.cdk.qsar.result.*;
 import org.openscience.cdk.smiles.*;
 
-public class QdbServiceServlet extends ItemServiceServlet implements QdbService {
+public class QdbServiceServlet extends DSpaceServiceServlet implements QdbService {
 
 	@Override
 	public ModelTable loadModelTable(final String handle, final String modelId) throws DSpaceException {
@@ -93,7 +93,8 @@ public class QdbServiceServlet extends ItemServiceServlet implements QdbService 
 	}
 
 	private Item obtainValidItem(Context context, String handle) throws Exception {
-		Item item = obtainItem(context, handle);
+		Item item = ItemUtil.obtainItem(context, handle);
+
 		if(item == null || item.isWithdrawn()){
 			throw new DSpaceException("Handle \'" + handle + "\' not found or not valid");
 		}
