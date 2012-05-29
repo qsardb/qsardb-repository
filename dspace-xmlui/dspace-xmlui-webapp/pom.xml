@@ -42,14 +42,14 @@
 							todir="${basedir}/target/dspace-xmlui-webapp-${pom.version}/static/org.dspace.client.Explorer"
 						>
 							<fileset
-								dir="${basedir}/../dspace-xmlui-gwt-client/target/dspace-xmlui-gwt-client-${pom.version}/org.dspace.client.Explorer"
+								dir="${basedir}/../dspace-xmlui-client-gwt/target/dspace-xmlui-client-gwt-${pom.version}/org.dspace.client.Explorer"
 							/>
 						</copy>
 						<copy
 							todir="${basedir}/target/dspace-xmlui-webapp-${pom.version}/static/org.dspace.client.Predictor"
 						>
 							<fileset
-								dir="${basedir}/../dspace-xmlui-gwt-client/target/dspace-xmlui-gwt-client-${pom.version}/org.dspace.client.Predictor"
+								dir="${basedir}/../dspace-xmlui-client-gwt/target/dspace-xmlui-client-gwt-${pom.version}/org.dspace.client.Predictor"
 							/>
 						</copy>
 					</tasks>
@@ -162,16 +162,16 @@
 
 		<dependency>
 			<groupId>org.dspace</groupId>
-			<artifactId>dspace-xmlui-gwt-client</artifactId>
+			<artifactId>dspace-xmlui-client-gwt</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.dspace</groupId>
-			<artifactId>dspace-xmlui-gwt-service</artifactId>
+			<artifactId>dspace-xmlui-service-gwt</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.dspace</groupId>
-			<artifactId>dspace-xmlui-http-service</artifactId>
+			<artifactId>dspace-xmlui-service-http</artifactId>
 		</dependency>
 
     </dependencies>

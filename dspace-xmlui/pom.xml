@@ -29,11 +29,11 @@
    
    <modules>
       <module>dspace-xmlui-api</module>
-      <module>dspace-xmlui-gwt-client</module>
-      <module>dspace-xmlui-gwt-rpc</module>
-      <module>dspace-xmlui-gwt-service</module>
-      <module>dspace-xmlui-http-service</module>
+      <module>dspace-xmlui-client-gwt</module>
+      <module>dspace-xmlui-rpc-gwt</module>
       <module>dspace-xmlui-service</module>
+      <module>dspace-xmlui-service-gwt</module>
+      <module>dspace-xmlui-service-http</module>
       <module>dspace-xmlui-webapp</module>
       <module>dspace-xmlui-wing</module>
    </modules>

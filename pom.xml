@@ -412,27 +412,27 @@
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
-            <artifactId>dspace-xmlui-gwt-client</artifactId>
+            <artifactId>dspace-xmlui-client-gwt</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
-            <artifactId>dspace-xmlui-gwt-rpc</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.dspace</groupId>
-            <artifactId>dspace-xmlui-gwt-service</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.dspace</groupId>
-            <artifactId>dspace-xmlui-http-service</artifactId>
+            <artifactId>dspace-xmlui-rpc-gwt</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-xmlui-service</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-xmlui-service-gwt</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-xmlui-service-http</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>

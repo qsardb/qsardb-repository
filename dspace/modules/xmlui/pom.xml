@@ -195,12 +195,12 @@
 
 		<dependency>
 			<groupId>org.dspace</groupId>
-			<artifactId>dspace-xmlui-gwt-service</artifactId>
+			<artifactId>dspace-xmlui-service-gwt</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.dspace</groupId>
-			<artifactId>dspace-xmlui-http-service</artifactId>
+			<artifactId>dspace-xmlui-service-http</artifactId>
 		</dependency>
 
    </dependencies>
