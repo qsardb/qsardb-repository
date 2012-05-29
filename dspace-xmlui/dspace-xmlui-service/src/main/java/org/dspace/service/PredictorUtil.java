@@ -1,0 +1,173 @@
+package org.dspace.service;
+
+import java.io.*;
+import java.util.*;
+
+import org.qsardb.cargo.bodo.*;
+import org.qsardb.evaluation.*;
+import org.qsardb.model.*;
+
+import net.sf.blueobelisk.*;
+import net.sf.jniinchi.*;
+
+import org.dspace.content.QdbUtil;
+
+import org.openscience.cdk.*;
+import org.openscience.cdk.exception.*;
+import org.openscience.cdk.graph.*;
+import org.openscience.cdk.inchi.*;
+import org.openscience.cdk.interfaces.*;
+import org.openscience.cdk.qsar.*;
+import org.openscience.cdk.qsar.result.*;
+import org.openscience.cdk.smiles.*;
+
+public class PredictorUtil {
+
+	private PredictorUtil(){
+	}
+
+	static
+	public Map<String, String> calculateDescriptors(Model model, String string) throws Exception {
+		IAtomContainer molecule = parseMolecule(string);
+
+		Evaluator evaluator = ensureEvaluator(model);
+		evaluator.init();
+
+		try {
+			return calculateDescriptors(evaluator, molecule);
+		} finally {
+			evaluator.destroy();
+		}
+	}
+
+	static
+	public String evaluate(Model model, String string) throws Exception {
+		IAtomContainer molecule = parseMolecule(string);
+
+		Evaluator evaluator = ensureEvaluator(model);
+		evaluator.init();
+
+		try {
+			Map<String, String> parameters = calculateDescriptors(evaluator, molecule);
+
+			return evaluate(evaluator, parameters);
+		} finally {
+			evaluator.destroy();
+		}
+	}
+
+	static
+	public String evaluate(Model model, Map<String, String> parameters) throws Exception {
+		Evaluator evaluator = ensureEvaluator(model);
+		evaluator.init();
+
+		try {
+			return evaluate(evaluator, parameters);
+		} finally {
+			evaluator.destroy();
+		}
+	}
+
+	static
+	private Map<String, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
+		Map<String, String> result = new LinkedHashMap<String, String>();
+
+		List<Descriptor> descriptors = evaluator.getDescriptors();
+		for(Descriptor descriptor : descriptors){
+
+			if(!descriptor.hasCargo(BODOCargo.class)){
+				continue;
+			}
+
+			BODOCargo bodoCargo = descriptor.getCargo(BODOCargo.class);
+
+			BODODescriptor bodoDescriptor = bodoCargo.loadBodoDescriptor();
+
+			IDescriptor cdkDescriptor = BODOUtil.parse(bodoDescriptor);
+
+			result.put(descriptor.getId(), calculateCdkDescriptor((IMolecularDescriptor)cdkDescriptor, molecule));
+		}
+
+		return result;
+	}
+
+	static
+	private String evaluate(Evaluator evaluator, Map<String, String> parameters) throws Exception {
+		List<Descriptor> descriptors = evaluator.getDescriptors();
+
+		return (String)evaluator.evaluateAndFormat(mapValues(descriptors, parameters), null);
+	}
+
+	static
+	private Evaluator ensureEvaluator(Model model) throws Exception {
+		Evaluator evaluator = QdbUtil.getEvaluator(model);
+		if(evaluator == null){
+			throw new IllegalArgumentException("Model \'" + model.getId() + "\' is not evaluateable");
+		}
+
+		return evaluator;
+	}
+
+	static
+	private IAtomContainer parseMolecule(String string) throws Exception {
+
+		if(string.startsWith("InChI=")){
+			return parseInChIMolecule(string);
+		}
+
+		return parseSmilesMolecule(string);
+	}
+
+	static
+	private IAtomContainer parseInChIMolecule(String string) throws CDKException, IOException {
+		InChIGeneratorFactory factory = InChIGeneratorFactory.getInstance();
+
+		InChIToStructure converter = factory.getInChIToStructure(string, DefaultChemObjectBuilder.getInstance());
+
+		INCHI_RET status = converter.getReturnStatus();
+		switch(status){
+			case OKAY:
+				break;
+			default:
+				throw new IOException();
+		}
+
+		IAtomContainer atomContainer = converter.getAtomContainer();
+		if(!ConnectivityChecker.isConnected(atomContainer)){
+			throw new IOException();
+		}
+
+		return new Molecule(atomContainer);
+	}
+
+	static
+	private IAtomContainer parseSmilesMolecule(String string) throws InvalidSmilesException {
+		SmilesParser parser = new SmilesParser(DefaultChemObjectBuilder.getInstance());
+
+		return parser.parseSmiles(string);
+	}
+
+	static
+	private String calculateCdkDescriptor(IMolecularDescriptor descriptor, IAtomContainer molecule){
+		DescriptorValue value = descriptor.calculate(molecule);
+
+		IDescriptorResult result = value.getValue();
+
+		if((result instanceof BooleanResult) || (result instanceof DoubleResult) || (result instanceof IntegerResult)){
+			return result.toString();
+		}
+
+		throw new IllegalArgumentException(result.toString());
+	}
+
+	static
+	private <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){
+		Map<Descriptor, V> values = new LinkedHashMap<Descriptor, V>();
+
+		for(Descriptor descriptor : descriptors){
+			values.put(descriptor, parameters.get(descriptor.getId()));
+		}
+
+		return values;
+	}
+}

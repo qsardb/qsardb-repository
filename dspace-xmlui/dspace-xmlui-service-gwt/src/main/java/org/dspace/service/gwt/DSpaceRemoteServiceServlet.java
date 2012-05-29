@@ -9,6 +9,7 @@ import com.google.gwt.user.server.rpc.*;
 
 import org.dspace.app.xmlui.utils.*;
 import org.dspace.core.*;
+import org.dspace.rpc.gwt.*;
 
 abstract
 public class DSpaceRemoteServiceServlet extends RemoteServiceServlet {
@@ -52,5 +53,15 @@ public class DSpaceRemoteServiceServlet extends RemoteServiceServlet {
 	final
 	protected Context getThreadLocalContext(){
 		return this.perThreadContext.get();
+	}
+
+	public DSpaceException formatException(Exception e){
+		log(e.getMessage(), e);
+
+		if(e instanceof DSpaceException){
+			return (DSpaceException)e;
+		}
+
+		return new DSpaceException(e.getMessage());
 	}
 }
