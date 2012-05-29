@@ -2,6 +2,7 @@ package org.dspace.service.http;
 
 import java.io.*;
 import java.sql.*;
+import java.util.regex.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -48,5 +49,12 @@ public class DSpaceHttpServlet extends HttpServlet {
 	final
 	protected Context getThreadLocalContext(){
 		return this.perThreadContext.get();
+	}
+
+	static
+	protected Matcher createMatcher(HttpServletRequest request){
+		Pattern pattern = Pattern.compile(request.getContextPath() + request.getServletPath() + "/(\\d+/\\d+)/(.*)");
+
+		return pattern.matcher(request.getRequestURI());
 	}
 }

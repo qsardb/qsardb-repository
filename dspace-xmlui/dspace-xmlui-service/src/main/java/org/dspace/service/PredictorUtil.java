@@ -1,6 +1,5 @@
 package org.dspace.service;
 
-import java.io.*;
 import java.util.*;
 
 import org.qsardb.cargo.bodo.*;
@@ -11,7 +10,6 @@ import net.sf.blueobelisk.*;
 import net.sf.jniinchi.*;
 
 import org.dspace.content.QdbUtil;
-
 import org.openscience.cdk.*;
 import org.openscience.cdk.exception.*;
 import org.openscience.cdk.graph.*;
@@ -101,6 +99,7 @@ public class PredictorUtil {
 	static
 	private Evaluator ensureEvaluator(Model model) throws Exception {
 		Evaluator evaluator = QdbUtil.getEvaluator(model);
+
 		if(evaluator == null){
 			throw new IllegalArgumentException("Model \'" + model.getId() + "\' is not evaluateable");
 		}
@@ -109,7 +108,7 @@ public class PredictorUtil {
 	}
 
 	static
-	private IAtomContainer parseMolecule(String string) throws Exception {
+	private IAtomContainer parseMolecule(String string) throws CDKException {
 
 		if(string.startsWith("InChI=")){
 			return parseInChIMolecule(string);
@@ -119,7 +118,7 @@ public class PredictorUtil {
 	}
 
 	static
-	private IAtomContainer parseInChIMolecule(String string) throws CDKException, IOException {
+	private IAtomContainer parseInChIMolecule(String string) throws CDKException {
 		InChIGeneratorFactory factory = InChIGeneratorFactory.getInstance();
 
 		InChIToStructure converter = factory.getInChIToStructure(string, DefaultChemObjectBuilder.getInstance());
@@ -129,12 +128,12 @@ public class PredictorUtil {
 			case OKAY:
 				break;
 			default:
-				throw new IOException();
+				throw new CDKException("Invalid InChI");
 		}
 
 		IAtomContainer atomContainer = converter.getAtomContainer();
 		if(!ConnectivityChecker.isConnected(atomContainer)){
-			throw new IOException();
+			throw new CDKException("The structure is not fully connected");
 		}
 
 		return new Molecule(atomContainer);
