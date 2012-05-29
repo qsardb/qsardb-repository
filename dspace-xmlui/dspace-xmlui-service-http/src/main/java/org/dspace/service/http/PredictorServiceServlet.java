@@ -70,7 +70,7 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		try {
 			result = QdbUtil.invokeInternal(context, item, callable);
 		} catch(Exception e){
-			log("Prediction failed", e);
+			log("Evaluation failed", e);
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 

@@ -26,7 +26,7 @@ public class PredictorUtil {
 
 	static
 	public Map<String, String> calculateDescriptors(Model model, String string) throws Exception {
-		IAtomContainer molecule = parseMolecule(string);
+		IAtomContainer molecule = ensureMolecule(string);
 
 		Evaluator evaluator = ensureEvaluator(model);
 		evaluator.init();
@@ -40,7 +40,7 @@ public class PredictorUtil {
 
 	static
 	public String evaluate(Model model, String string) throws Exception {
-		IAtomContainer molecule = parseMolecule(string);
+		IAtomContainer molecule = ensureMolecule(string);
 
 		Evaluator evaluator = ensureEvaluator(model);
 		evaluator.init();
@@ -97,6 +97,17 @@ public class PredictorUtil {
 	}
 
 	static
+	private IAtomContainer ensureMolecule(String string) throws CDKException {
+		IAtomContainer molecule = parseMolecule(string);
+
+		if(!ConnectivityChecker.isConnected(molecule)){
+			throw new CDKException("The structure is not fully connected");
+		}
+
+		return molecule;
+	}
+
+	static
 	private Evaluator ensureEvaluator(Model model) throws Exception {
 		Evaluator evaluator = QdbUtil.getEvaluator(model);
 
@@ -131,12 +142,7 @@ public class PredictorUtil {
 				throw new CDKException("Invalid InChI");
 		}
 
-		IAtomContainer atomContainer = converter.getAtomContainer();
-		if(!ConnectivityChecker.isConnected(atomContainer)){
-			throw new CDKException("The structure is not fully connected");
-		}
-
-		return new Molecule(atomContainer);
+		return converter.getAtomContainer();
 	}
 
 	static

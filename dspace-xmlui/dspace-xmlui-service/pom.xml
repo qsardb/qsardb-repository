@@ -29,37 +29,37 @@
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-data</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-inchi</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-interfaces</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-qsar</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-qsarmolecular</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-smiles</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-standard</artifactId>
-			<version>1.4.8</version>
+			<version>1.4.9</version>
 		</dependency>
 	</dependencies>
 
