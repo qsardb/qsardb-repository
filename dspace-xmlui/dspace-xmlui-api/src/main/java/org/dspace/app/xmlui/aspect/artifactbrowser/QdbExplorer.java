@@ -23,7 +23,7 @@ public class QdbExplorer extends ApplicationTransformer {
 		super.addPageMeta(pageMeta);
 
 		Metadata script = pageMeta.addMetadata("javascript", "static");
-		script.addContent("static/org.dspace.gwt.Explorer/org.dspace.gwt.Explorer.nocache.js");
+		script.addContent("static/org.dspace.client.Explorer/org.dspace.client.Explorer.nocache.js");
 	}
 
 	private static final Message T_trail = message("xmlui.ArtifactBrowser.QdbExplorer.trail");

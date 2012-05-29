@@ -194,7 +194,7 @@
 
 	<servlet>
 		<servlet-name>QdbServiceServlet</servlet-name>
-		<servlet-class>org.dspace.gwt.service.QdbServiceServlet</servlet-class>
+		<servlet-class>org.dspace.service.gwt.QdbServiceServlet</servlet-class>
 	</servlet>
 
     <servlet>

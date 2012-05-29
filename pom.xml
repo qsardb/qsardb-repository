@@ -427,6 +427,16 @@
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
+            <artifactId>dspace-xmlui-http-service</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-xmlui-service</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
             <artifactId>dspace-xmlui-webapp</artifactId>
             <version>${project.version}</version>
             <type>war</type>

@@ -198,6 +198,11 @@
 			<artifactId>dspace-xmlui-gwt-service</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-xmlui-http-service</artifactId>
+		</dependency>
+
    </dependencies>
 
 </project>

@@ -23,7 +23,7 @@ public class QdbPredictor extends ApplicationTransformer {
 		super.addPageMeta(pageMeta);
 
 		Metadata script = pageMeta.addMetadata("javascript", "static");
-		script.addContent("static/org.dspace.gwt.Predictor/org.dspace.gwt.Predictor.nocache.js");
+		script.addContent("static/org.dspace.client.Predictor/org.dspace.client.Predictor.nocache.js");
 	}
 
 	private static final Message T_trail = message("xmlui.ArtifactBrowser.QdbPredictor.trail");
