@@ -213,7 +213,7 @@
 
 	<servlet-mapping>
 		<servlet-name>QdbServiceServlet</servlet-name>
-		<url-pattern>/rpc/service</url-pattern>
+		<url-pattern>/service/gwt</url-pattern>
 	</servlet-mapping>
 
     <!--

@@ -15,7 +15,7 @@ public interface QdbServiceAsync {
 
 	void evaluateModel(String handle, String modelId, Map<String, String> parameters, AsyncCallback<String> callback) throws DSpaceException;
 
-	public static final ServiceManager<QdbServiceAsync> MANAGER = new ServiceManager<QdbServiceAsync>("/repository/rpc/service"){
+	public static final ServiceManager<QdbServiceAsync> MANAGER = new ServiceManager<QdbServiceAsync>("/repository/service/gwt"){
 
 		@Override
 		protected Object createObject(){
