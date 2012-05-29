@@ -158,7 +158,21 @@ public class PredictorUtil {
 
 		IDescriptorResult result = value.getValue();
 
-		if((result instanceof BooleanResult) || (result instanceof DoubleResult) || (result instanceof IntegerResult)){
+		if(result instanceof BooleanResult){
+			return result.toString();
+		} else
+
+		if(result instanceof DoubleResult){
+			DoubleResult doubleResult = (DoubleResult)result;
+
+			if(Double.isNaN(doubleResult.doubleValue()) || Double.isInfinite(doubleResult.doubleValue())){
+				throw new IllegalArgumentException(result.toString());
+			}
+
+			return result.toString();
+		} else
+
+		if(result instanceof IntegerResult){
 			return result.toString();
 		}
 
