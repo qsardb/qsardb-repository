@@ -12,11 +12,9 @@ import net.sf.jniinchi.*;
 import org.dspace.content.QdbUtil;
 import org.openscience.cdk.*;
 import org.openscience.cdk.exception.*;
-import org.openscience.cdk.graph.*;
 import org.openscience.cdk.inchi.*;
 import org.openscience.cdk.interfaces.*;
 import org.openscience.cdk.qsar.*;
-import org.openscience.cdk.qsar.result.*;
 import org.openscience.cdk.smiles.*;
 
 public class PredictorUtil {
@@ -26,9 +24,9 @@ public class PredictorUtil {
 
 	static
 	public Map<String, String> calculateDescriptors(Model model, String string) throws Exception {
-		IAtomContainer molecule = ensureMolecule(string);
+		IAtomContainer molecule = prepareMolecule(string);
 
-		Evaluator evaluator = ensureEvaluator(model);
+		Evaluator evaluator = prepareEvaluator(model);
 		evaluator.init();
 
 		try {
@@ -40,9 +38,10 @@ public class PredictorUtil {
 
 	static
 	public String evaluate(Model model, String string) throws Exception {
-		IAtomContainer molecule = ensureMolecule(string);
+		IAtomContainer molecule = prepareMolecule(string);
 
-		Evaluator evaluator = ensureEvaluator(model);
+		Evaluator evaluator = prepareEvaluator(model);
+
 		evaluator.init();
 
 		try {
@@ -56,7 +55,8 @@ public class PredictorUtil {
 
 	static
 	public String evaluate(Model model, Map<String, String> parameters) throws Exception {
-		Evaluator evaluator = ensureEvaluator(model);
+		Evaluator evaluator = prepareEvaluator(model);
+
 		evaluator.init();
 
 		try {
@@ -70,6 +70,8 @@ public class PredictorUtil {
 	private Map<String, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
 		Map<String, String> result = new LinkedHashMap<String, String>();
 
+		DescriptorValueCache cache = new DescriptorValueCache();
+
 		List<Descriptor> descriptors = evaluator.getDescriptors();
 		for(Descriptor descriptor : descriptors){
 
@@ -81,9 +83,11 @@ public class PredictorUtil {
 
 			BODODescriptor bodoDescriptor = bodoCargo.loadBodoDescriptor();
 
-			IDescriptor cdkDescriptor = BODOUtil.parse(bodoDescriptor);
+			IMolecularDescriptor cdkDescriptor = (IMolecularDescriptor)BODOUtil.parse(bodoDescriptor);
 
-			result.put(descriptor.getId(), calculateCdkDescriptor((IMolecularDescriptor)cdkDescriptor, molecule));
+			Object value = cache.calculate(cdkDescriptor, molecule);
+
+			result.put(descriptor.getId(), String.valueOf(value));
 		}
 
 		return result;
@@ -97,18 +101,16 @@ public class PredictorUtil {
 	}
 
 	static
-	private IAtomContainer ensureMolecule(String string) throws CDKException {
+	private IAtomContainer prepareMolecule(String string) throws CDKException {
 		IAtomContainer molecule = parseMolecule(string);
 
-		if(!ConnectivityChecker.isConnected(molecule)){
-			throw new CDKException("The structure is not fully connected");
-		}
+		molecule = DescriptorUtil.prepareMolecule(molecule);
 
 		return molecule;
 	}
 
 	static
-	private Evaluator ensureEvaluator(Model model) throws Exception {
+	private Evaluator prepareEvaluator(Model model) throws Exception {
 		Evaluator evaluator = QdbUtil.getEvaluator(model);
 
 		if(evaluator == null){
@@ -150,33 +152,6 @@ public class PredictorUtil {
 		SmilesParser parser = new SmilesParser(DefaultChemObjectBuilder.getInstance());
 
 		return parser.parseSmiles(string);
-	}
-
-	static
-	private String calculateCdkDescriptor(IMolecularDescriptor descriptor, IAtomContainer molecule){
-		DescriptorValue value = descriptor.calculate(molecule);
-
-		IDescriptorResult result = value.getValue();
-
-		if(result instanceof BooleanResult){
-			return result.toString();
-		} else
-
-		if(result instanceof DoubleResult){
-			DoubleResult doubleResult = (DoubleResult)result;
-
-			if(Double.isNaN(doubleResult.doubleValue()) || Double.isInfinite(doubleResult.doubleValue())){
-				throw new IllegalArgumentException(result.toString());
-			}
-
-			return result.toString();
-		} else
-
-		if(result instanceof IntegerResult){
-			return result.toString();
-		}
-
-		throw new IllegalArgumentException(result.toString());
 	}
 
 	static
