@@ -120,7 +120,7 @@ public class QdbValidateStep extends AbstractProcessingStep {
 						String id = cargo.getId();
 
 						if((RDSCargo.ID).equals(id) || (PMMLCargo.ID).equals(id)){
-							return 5 * 1024 * 1024;
+							return 10 * 1024 * 1024;
 						}
 					}
 
