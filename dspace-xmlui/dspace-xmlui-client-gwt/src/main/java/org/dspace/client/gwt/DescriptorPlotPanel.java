@@ -11,6 +11,9 @@ public class DescriptorPlotPanel extends PlotPanel {
 	public DescriptorPlotPanel(QdbTable table, PropertyColumn property, DescriptorColumn descriptor){
 		Resolver resolver = new Resolver(table);
 
+		// XXX
+		ParameterUtil.ensureConverted(descriptor);
+
 		Set<String> ids = new LinkedHashSet<String>();
 
 		Map<String, Object> propertyValues = property.getValues();

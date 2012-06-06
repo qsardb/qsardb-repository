@@ -7,6 +7,8 @@ public class ParameterColumn extends QdbColumn<Object> {
 
 	private String name = null;
 
+	private boolean converted = false;
+
 
 	public String getId(){
 		return this.id;
@@ -22,5 +24,13 @@ public class ParameterColumn extends QdbColumn<Object> {
 
 	public void setName(String name){
 		this.name = name;
+	}
+
+	public boolean isConverted(){
+		return this.converted;
+	}
+
+	public void setConverted(boolean converted){
+		this.converted = converted;
 	}
 }

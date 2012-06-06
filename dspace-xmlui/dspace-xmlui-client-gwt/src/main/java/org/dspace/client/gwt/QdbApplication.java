@@ -23,7 +23,7 @@ public class QdbApplication extends Application {
 
 			@Override
 			public void onSuccess(ModelTable table){
-				ParameterUtil.convertTable(table);
+				ParameterUtil.prepareTable(table);
 
 				setWidget(createWidget(table));
 			}

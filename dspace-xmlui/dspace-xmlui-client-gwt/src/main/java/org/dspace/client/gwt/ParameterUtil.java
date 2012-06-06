@@ -19,13 +19,17 @@ public class ParameterUtil {
 	}
 
 	static
-	public void convertTable(QdbTable table){
+	public void prepareTable(QdbTable table){
 		List<QdbColumn<?>> columns = table.getColumns();
 
 		for(QdbColumn<?> column : columns){
 
-			if(column instanceof ParameterColumn){
-				convertParameterColumn((ParameterColumn)column);
+			if(column instanceof PropertyColumn){
+				ensureConverted((PropertyColumn)column);
+			} else
+
+			if(column instanceof PredictionColumn){
+				ensureConverted((PredictionColumn)column);
 			}
 		}
 
@@ -35,6 +39,16 @@ public class ParameterUtil {
 		for(PredictionColumn prediction : predictions){
 			prediction.setErrors(calculateErrors(prediction, property));
 		}
+	}
+
+	static
+	public void ensureConverted(ParameterColumn column){
+
+		if(column.isConverted()){
+			return;
+		}
+
+		convertParameterColumn(column);
 	}
 
 	static
@@ -65,6 +79,8 @@ public class ParameterUtil {
 				// Ignored
 			}
 		}
+
+		column.setConverted(true);
 	}
 
 	static

@@ -13,6 +13,8 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 	public ModelInputPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
 
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
 		PredictionColumn training = null;
@@ -36,7 +38,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(descriptor, training);
+			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(property, descriptor, training);
 			panel.add(descriptorPanel);
 
 			// Receive notifications about subsequent value changes

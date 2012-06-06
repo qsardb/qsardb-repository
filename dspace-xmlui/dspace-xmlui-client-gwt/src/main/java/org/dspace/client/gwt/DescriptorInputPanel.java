@@ -24,8 +24,11 @@ public class DescriptorInputPanel extends Composite {
 	private DescriptorValueSliderBarHorizontal slider = null;
 
 
-	public DescriptorInputPanel(final DescriptorColumn descriptor, final PredictionColumn training){
+	public DescriptorInputPanel(final PropertyColumn property, final DescriptorColumn descriptor, final PredictionColumn training){
 		setDescriptor(descriptor);
+
+		// XXX
+		ParameterUtil.ensureConverted(descriptor);
 
 		final
 		Map<String, ?> trainingValues = training.getValues();

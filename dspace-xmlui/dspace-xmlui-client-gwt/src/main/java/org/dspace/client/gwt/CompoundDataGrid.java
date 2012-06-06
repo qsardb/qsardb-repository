@@ -330,6 +330,13 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		public DescriptorTextColumn(DescriptorColumn column){
 			super(new TextCell(), column);
 		}
+
+		@Override
+		public Comparator<Compound> getComparator(){
+			ParameterUtil.ensureConverted(getColumn());
+
+			return super.getComparator();
+		}
 	}
 
 	static
