@@ -285,7 +285,8 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		column.setId(descriptor.getId());
 		column.setName(descriptor.getName());
 
-		Map<String, Object> values = truncate(loadValues(descriptor, keys));
+		Map<String, Object> values = truncateValues(loadValues(descriptor, keys));
+		column.setValues(values);
 		column.setLength(parseLength(values));
 		column.setFormat(parseFormat(values));
 
@@ -312,7 +313,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return values;
 	}
 
-	private Map<String, Object> truncate(Map<String, Object> values){
+	private Map<String, Object> truncateValues(Map<String, Object> values){
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();
 
 		for(Map.Entry<String, Object> entry : entries){
