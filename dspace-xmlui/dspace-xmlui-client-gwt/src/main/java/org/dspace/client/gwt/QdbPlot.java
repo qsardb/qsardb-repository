@@ -3,6 +3,10 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.ui.*;
+
 import ca.nanometrics.gflot.client.*;
 import ca.nanometrics.gflot.client.options.*;
 
@@ -17,8 +21,7 @@ public class QdbPlot extends SimplePlot {
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
 
-		setWidth(SIZE + 20);
-		setHeight(SIZE + 20);
+		setSize(SIZE + 20);
 	}
 
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
@@ -36,6 +39,53 @@ public class QdbPlot extends SimplePlot {
 		if(isAttached()){
 			redraw();
 		}
+	}
+
+	public void enableDetach(final HasOneWidget parent){
+		DoubleClickHandler clickHandler = new DoubleClickHandler(){
+
+			private PopupPanel popup = new PopupPanel(false, true);
+
+			{
+				this.popup.setGlassEnabled(true);
+			}
+
+			@Override
+			public void onDoubleClick(DoubleClickEvent event){
+				QdbPlot widget = QdbPlot.this;
+
+				boolean attached = (widget.getParent()).equals(parent);
+
+				if(attached){
+					this.popup.setWidget(widget);
+
+					this.popup.center();
+
+					// XXX
+					int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 40;
+
+					widget.setSize(size + 20);
+
+					this.popup.center();
+				} else
+
+				{
+					// Resize before attach
+					widget.setSize(SIZE + 20);
+
+					parent.setWidget(widget);
+
+					this.popup.hide();
+				}
+			}
+		};
+
+		addDomHandler(clickHandler, DoubleClickEvent.getType());
+	}
+
+	public void setSize(int size){
+		setWidth(size);
+		setHeight(size);
 	}
 
 	public void addXAxisOptions(Bounds bounds){
