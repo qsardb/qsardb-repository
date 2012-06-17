@@ -23,17 +23,15 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 	private Widget createDescriptorListPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
 
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-			panel.add(createDescriptorPanel(table, property, descriptor));
+			panel.add(createDescriptorPlotPanel(table, descriptor));
 		}
 
 		return panel;
 	}
 
-	private Widget createDescriptorPanel(final QdbTable table, final PropertyColumn property, final DescriptorColumn descriptor){
+	private Widget createDescriptorPlotPanel(final QdbTable table, final DescriptorColumn descriptor){
 		DisclosurePanel panel = new DisclosurePanel();
 
 		LazyHeader header = new LazyHeader(panel){
@@ -51,7 +49,7 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Widget createWidget(){
-				PlotPanel plotPanel = new DescriptorPlotPanel(table, property, descriptor);
+				PlotPanel plotPanel = new DescriptorPlotPanel(table, descriptor);
 
 				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 

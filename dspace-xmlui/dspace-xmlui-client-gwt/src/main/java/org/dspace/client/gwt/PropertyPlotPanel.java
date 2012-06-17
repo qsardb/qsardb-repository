@@ -8,10 +8,12 @@ import org.dspace.rpc.gwt.*;
 
 public class PropertyPlotPanel extends PlotPanel {
 
-	public PropertyPlotPanel(QdbTable table, PropertyColumn property){
+	public PropertyPlotPanel(QdbTable table){
 		Resolver resolver = new Resolver(table);
 
 		Set<String> ids = new LinkedHashSet<String>();
+
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		Map<String, Object> propertyValues = property.getValues();
 		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);

@@ -36,6 +36,11 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			addColumn(new PredictionErrorTextColumn(prediction), "Error");
 		}
 
+		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
+		if(leverage != null){
+			addColumn(new LeverageTextColumn(leverage), "Leverage");
+		}
+
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
 			addColumn(new DescriptorTextColumn(descriptor), new DescriptorTextHeader(descriptor));
@@ -235,9 +240,9 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	static
 	abstract
-	public class ParameterTextColumn <C extends ParameterColumn> extends CompoundTextColumn<C, Object> {
+	public class NumericTextColumn <C extends NumericColumn> extends CompoundTextColumn<C, Object> {
 
-		public ParameterTextColumn(Cell<String> cell, C column){
+		public NumericTextColumn(Cell<String> cell, C column){
 			super(cell, column);
 		}
 
@@ -258,7 +263,7 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 				@Override
 				public int compare(Compound left, Compound right){
-					return ParameterTextColumn.this.compare(getObject(left), getObject(right));
+					return NumericTextColumn.this.compare(getObject(left), getObject(right));
 				}
 			};
 		}
@@ -275,6 +280,15 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			}
 
 			return super.compare(left, right);
+		}
+	}
+
+	abstract
+	static
+	public class ParameterTextColumn <C extends ParameterColumn> extends NumericTextColumn<C> {
+
+		public ParameterTextColumn(Cell<String> cell, C column){
+			super(cell, column);
 		}
 	}
 
@@ -321,6 +335,14 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 					return PredictionErrorTextColumn.this.compare(getError(left), getError(right));
 				}
 			};
+		}
+	}
+
+	static
+	public class LeverageTextColumn extends NumericTextColumn<NumericColumn> {
+
+		public LeverageTextColumn(LeverageColumn column){
+			super(new TextCell(), column);
 		}
 	}
 

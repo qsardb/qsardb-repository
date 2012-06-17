@@ -21,16 +21,17 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 	private Widget createPropertyPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
 
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-
-		panel.add(createPropertyPanel(table, property));
-		panel.add(createResidualErrorPanel(table, property));
+		panel.add(createPropertyPlotPanel(table));
+		panel.add(createResidualErrorPlotPanel(table));
 
 		return panel;
 	}
 
-	private Widget createPropertyPanel(final QdbTable table, final PropertyColumn property){
+	private Widget createPropertyPlotPanel(final QdbTable table){
 		DisclosurePanel panel = new DisclosurePanel();
+
+		final
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		LazyHeader header = new LazyHeader(panel){
 
@@ -47,7 +48,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Widget createWidget(){
-				PlotPanel plotPanel = new PropertyPlotPanel(table, property);
+				PlotPanel plotPanel = new PropertyPlotPanel(table);
 
 				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 
@@ -63,7 +64,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 		return panel;
 	}
 
-	private Widget createResidualErrorPanel(final QdbTable table, final PropertyColumn property){
+	private Widget createResidualErrorPlotPanel(final QdbTable table){
 		DisclosurePanel panel = new DisclosurePanel();
 
 		LazyHeader header = new LazyHeader(panel){
@@ -81,7 +82,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Widget createWidget(){
-				PlotPanel plotPanel = new ResidualErrorPlotPanel(table, property);
+				PlotPanel plotPanel = new ResidualErrorPlotPanel(table);
 
 				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 

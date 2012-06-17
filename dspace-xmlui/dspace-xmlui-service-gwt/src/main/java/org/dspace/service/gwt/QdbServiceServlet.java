@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.qsardb.cargo.bodo.*;
 import org.qsardb.cargo.map.*;
+import org.qsardb.cargo.matrix.*;
 import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
@@ -107,6 +108,8 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 		List<QdbColumn<?>> columns = new ArrayList<QdbColumn<?>>();
 
+		Map<String, String> leverages = new LinkedHashMap<String, String>();
+
 		List<Prediction> predictions = new ArrayList<Prediction>();
 		predictions.addAll((qdb.getPredictionRegistry()).getByModel(model));
 
@@ -125,6 +128,17 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 			Map<String, ?> values = column.getValues();
 			keys.addAll(values.keySet());
+
+			columns.add(column);
+
+			leverages.putAll(loadLeverageValues(prediction));
+		}
+
+		if(leverages.size() > 0){
+			LeverageColumn column = new LeverageColumn();
+
+			column.setValues((Map)leverages);
+			column.setLength(parseLength(leverages));
 
 			columns.add(column);
 		}
@@ -330,6 +344,19 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		}
 
 		return values;
+	}
+
+	private Map<String, String> loadLeverageValues(Prediction prediction) throws IOException {
+
+		if(prediction.hasCargo(LeverageValuesCargo.class)){
+			LeverageValuesCargo leverageValuesCargo = prediction.getCargo(LeverageValuesCargo.class);
+
+			Map<String, String> leverageValues = new LinkedHashMap<String, String>(leverageValuesCargo.loadStringMap());
+
+			return leverageValues;
+		}
+
+		return Collections.<String, String>emptyMap();
 	}
 
 	private int parseLength(Map<String, ?> values){

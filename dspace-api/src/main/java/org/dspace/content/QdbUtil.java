@@ -152,6 +152,19 @@ public class QdbUtil {
 	}
 
 	static
+	public Bitstream setInternalBitstream(Context context, Item item, File file) throws AuthorizeException, SQLException, IOException {
+		QdbUtil.BitstreamData internalData = new QdbUtil.FileBitstreamData(file){
+
+			@Override
+			public String getName(){
+				return "archive.qdb";
+			}
+		};
+
+		return setInternalBitstream(context, item, internalData);
+	}
+
+	static
 	public Bitstream setInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
 		return setQdbBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
 	}
@@ -203,27 +216,32 @@ public class QdbUtil {
 
 	static
 	public File optimize(File file) throws QdbException, IOException {
-		File result = createTempFile();
-
-		ZipFileInput input = new ZipFileInput(file);
+		Storage storage = new ZipFileInput(file);
 
 		try {
-			Qdb qdb = new Qdb(input);
+			return optimize(storage);
+		} finally {
+			storage.close();
+		}
+	}
+
+	static
+	public File optimize(Storage storage) throws QdbException, IOException {
+		File result = createTempFile();
+
+		Qdb qdb = new Qdb(storage);
+
+		try {
+			ZipFileOutput output = new ZipFileOutput(result);
+			output.setLevel(0);
 
 			try {
-				ZipFileOutput output = new ZipFileOutput(result);
-				output.setLevel(0);
-
-				try {
-					qdb.copyTo(output);
-				} finally {
-					output.close();
-				}
+				qdb.copyTo(output);
 			} finally {
-				qdb.close();
+				output.close();
 			}
 		} finally {
-			input.close();
+			qdb.close();
 		}
 
 		return result;
@@ -238,7 +256,7 @@ public class QdbUtil {
 	}
 
 	static
-	private File createTempFile() throws IOException {
+	public File createTempFile() throws IOException {
 		return File.createTempFile("bitstream", ".qdb");
 	}
 

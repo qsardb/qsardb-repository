@@ -30,6 +30,10 @@ public class ParameterUtil {
 
 			if(column instanceof PredictionColumn){
 				ensureConverted((PredictionColumn)column);
+			} else
+
+			if(column instanceof LeverageColumn){
+				ensureConverted((LeverageColumn)column);
 			}
 		}
 
@@ -42,7 +46,7 @@ public class ParameterUtil {
 	}
 
 	static
-	public void ensureConverted(ParameterColumn column){
+	public void ensureConverted(NumericColumn column){
 
 		if(column.isConverted()){
 			return;
@@ -52,7 +56,7 @@ public class ParameterUtil {
 	}
 
 	static
-	private void convertParameterColumn(ParameterColumn column){
+	private void convertParameterColumn(NumericColumn column){
 		Map<String, Object> values = column.getValues();
 
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();

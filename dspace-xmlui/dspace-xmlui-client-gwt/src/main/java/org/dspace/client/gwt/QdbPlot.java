@@ -330,4 +330,6 @@ public class QdbPlot extends SimplePlot {
 
 	public static final String COLOR_TWO_SIGMA = "#ffff00";
 	public static final String COLOR_THREE_SIGMA = "#ff8080";
+
+	public static final String COLOR_CRITICAL_DISTANCE = "#ff8080";
 }

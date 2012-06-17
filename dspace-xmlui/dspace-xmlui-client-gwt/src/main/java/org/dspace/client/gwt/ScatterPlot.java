@@ -74,6 +74,17 @@ public class ScatterPlot extends QdbPlot {
 		this.seriesPoints.add(points);
 	}
 
+	public void addStDevMarkings(Number sigma){
+		Markings markings = ensureMarkings();
+		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(2), QdbPlot.COLOR_TWO_SIGMA));
+		markings.addMarkings(createStDevMarkings(sigma, Double.valueOf(3), QdbPlot.COLOR_THREE_SIGMA));
+	}
+
+	public void addDistanceMarkings(Number distance){
+		Markings markings = ensureMarkings();
+		markings.addMarking(createXMarking(distance, QdbPlot.COLOR_CRITICAL_DISTANCE));
+	}
+
 	public PointsSeriesOptions ensurePointsSeriesOptions(){
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 
@@ -87,7 +98,55 @@ public class ScatterPlot extends QdbPlot {
 		return pointSeriesOptions;
 	}
 
+	public Markings ensureMarkings(){
+		GridOptions gridOptions = ensureGridOptions();
+
+		Markings markings = gridOptions.getMarkings();
+		if(markings == null){
+			markings = new Markings();
+
+			gridOptions.setMarkings(markings);
+		}
+
+		return markings;
+	}
+
 	private ScatterDataPoint getDataPoint(PlotItem item){
 		return (this.seriesPoints).get((item.getSeriesIndex()).intValue()).get((item.getDataIndex()).intValue());
+	}
+
+	static
+	private Marking[] createStDevMarkings(Number sigma, Number multiplier, String color){
+		double value = (sigma.doubleValue() * multiplier.doubleValue());
+
+		return new Marking[]{
+			createYMarking(Double.valueOf(-1 * value), color),
+			createYMarking(Double.valueOf(value), color)
+		};
+	}
+
+	static
+	private Marking createXMarking(Number value, String color){
+		Marking result = createMarking(color);
+		result.setX(new Range(value.doubleValue(), value.doubleValue()));
+
+		return result;
+	}
+
+	static
+	private Marking createYMarking(Number value, String color){
+		Marking result = createMarking(color);
+		result.setY(new Range(value.doubleValue(), value.doubleValue()));
+
+		return result;
+	}
+
+	static
+	private Marking createMarking(String color){
+		Marking result = new Marking();
+		result.setColor(color);
+		result.setLineWidth(1);
+
+		return result;
 	}
 }

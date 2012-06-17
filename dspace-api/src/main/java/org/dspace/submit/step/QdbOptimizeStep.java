@@ -43,15 +43,7 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 			File internalFile = QdbUtil.optimize(file);
 
 			try {
-				QdbUtil.BitstreamData internalData = new QdbUtil.FileBitstreamData(internalFile){
-
-					@Override
-					public String getName(){
-						return "archive.qdb";
-					}
-				};
-
-				QdbUtil.setInternalBitstream(context, item, internalData);
+				QdbUtil.setInternalBitstream(context, item, internalFile);
 			} finally {
 				internalFile.delete();
 			}

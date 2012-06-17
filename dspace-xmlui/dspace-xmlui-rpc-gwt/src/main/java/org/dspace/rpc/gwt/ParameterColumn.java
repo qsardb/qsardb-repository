@@ -1,13 +1,11 @@
 package org.dspace.rpc.gwt;
 
 abstract
-public class ParameterColumn extends QdbColumn<Object> {
+public class ParameterColumn extends NumericColumn {
 
 	private String id = null;
 
 	private String name = null;
-
-	private boolean converted = false;
 
 
 	public String getId(){
@@ -24,13 +22,5 @@ public class ParameterColumn extends QdbColumn<Object> {
 
 	public void setName(String name){
 		this.name = name;
-	}
-
-	public boolean isConverted(){
-		return this.converted;
-	}
-
-	public void setConverted(boolean converted){
-		this.converted = converted;
 	}
 }

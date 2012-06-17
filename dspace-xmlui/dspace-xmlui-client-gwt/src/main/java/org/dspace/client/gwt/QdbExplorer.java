@@ -48,6 +48,12 @@ public class QdbExplorer extends QdbApplication {
 		DescriptorExplorerPanel descriptorExplorer = new DescriptorExplorerPanel(context, table);
 		panel.add(descriptorExplorer);
 
+		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
+		if(leverage != null && (leverage.getValues()).size() > 0){
+			ModelExplorerPanel modelExplorer = new ModelExplorerPanel(context, table);
+			panel.add(modelExplorer);
+		}
+
 		return panel;
 	}
 }

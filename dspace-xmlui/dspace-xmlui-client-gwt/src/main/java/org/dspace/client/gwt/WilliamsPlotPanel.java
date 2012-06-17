@@ -5,15 +5,15 @@ import java.util.*;
 
 import org.dspace.rpc.gwt.*;
 
-public class ResidualErrorPlotPanel extends PlotPanel {
+public class WilliamsPlotPanel extends PlotPanel {
 
-	public ResidualErrorPlotPanel(QdbTable table){
+	public WilliamsPlotPanel(QdbTable table){
 		Resolver resolver = new Resolver(table);
 
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
+		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
 
-		Map<String, Object> propertyValues = property.getValues();
-		QdbPlot.Bounds propertyBounds = QdbPlot.bounds(propertyValues);
+		Map<String, Object> leverageValues = leverage.getValues();
+		QdbPlot.Bounds leverageBounds = QdbPlot.bounds(leverageValues);
 
 		QdbPlot.Bounds errorBounds = new QdbPlot.Bounds();
 
@@ -22,31 +22,40 @@ public class ResidualErrorPlotPanel extends PlotPanel {
 		Map<String, BigDecimal> trainingErrors = null;
 
 		for(PredictionColumn prediction : predictions){
-			Map<String, Object> predictionValues = prediction.getValues();
 			Map<String, BigDecimal> predictionErrors = prediction.getErrors();
 
 			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
 				trainingErrors = predictionErrors;
 			}
 
-			propertyBounds = QdbPlot.bounds(propertyBounds, predictionValues);
 			errorBounds = QdbPlot.bounds(errorBounds, predictionErrors);
 		}
 
 		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
+		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
+
+		MathContext context = new MathContext(6);
+
+		// XXX
+		BigDecimal criticalLeverage = (new BigDecimal(3)).multiply(new BigDecimal(1 + descriptors.size()), context).divide(new BigDecimal((trainingErrors.values()).size()), context);
+
+		// XXX
+		leverageBounds.update(criticalLeverage.multiply(new BigDecimal(1.10D), context));
+
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
+		scatterPlot.addXAxisOptions(leverageBounds, "Leverage");
 		scatterPlot.addYAxisOptions(errorBounds, "Residual error");
 
 		Number sigma = MathUtil.standardDeviation(trainingErrors.values());
 
 		scatterPlot.addStDevMarkings(sigma);
+		scatterPlot.addDistanceMarkings(criticalLeverage);
 
 		add(scatterPlot);
 
 		for(PredictionColumn prediction : predictions){
-			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getErrors());
+			scatterPlot.addSeries(new PredictionSeries(prediction), leverageValues, prediction.getErrors());
 		}
 	}
 }
