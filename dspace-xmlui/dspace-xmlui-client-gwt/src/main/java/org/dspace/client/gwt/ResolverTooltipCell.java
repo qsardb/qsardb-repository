@@ -25,7 +25,7 @@ public class ResolverTooltipCell extends TooltipCell<String> {
 	public void showTooltip(Context context, Element element, NativeEvent event){
 		Compound compound = (Compound)context.getKey();
 
-		this.tooltip.schedule(compound.getId(), PopupUtil.getPopupX(event) + 5, PopupUtil.getPopupY(event) + 5);
+		this.tooltip.schedule(compound.getId(), PopupUtil.getPopupX(event), PopupUtil.getPopupY(event));
 	}
 
 	@Override

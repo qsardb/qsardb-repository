@@ -38,7 +38,7 @@ public class ScatterPlot extends QdbPlot {
 				if(item != null){
 					ScatterDataPoint point = getDataPoint(item);
 
-					this.tooltip.schedule(point.getId(), (item.getPageX()).intValue() + 5, (item.getPageY()).intValue() + 5);
+					this.tooltip.schedule(point.getId(), (item.getPageX()).intValue(), (item.getPageY()).intValue());
 				} else
 
 				{

@@ -2,6 +2,7 @@ package org.dspace.client.gwt;
 
 import java.util.*;
 
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 
@@ -115,11 +116,21 @@ public class ResolverTooltip extends Tooltip {
 		}
 	}
 
-	public void schedule(String id, final int left, final int top){
+	public void schedule(String id, final int x, final int y){
 		IdCallback callback = new IdCallback(id){
+
+			final int spacing = 5;
+
 
 			@Override
 			public void setPosition(int width, int height){
+				int left = (x + this.spacing);
+				int top = (y + this.spacing);
+
+				if((top + height) > (Window.getScrollTop() + Window.getClientHeight()) && (y - this.spacing - height) > Window.getScrollTop()){
+					top = (y - this.spacing - height);
+				}
+
 				setPopupPosition(left, top);
 			}
 		};
