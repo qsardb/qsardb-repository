@@ -76,7 +76,7 @@ public class DescriptorInputPanel extends Composite {
 	}
 
 	private Label createValueLabel(final DescriptorColumn descriptor, final BigDecimal mean, final BigDecimal sigma){
-		this.label = new DescriptorValueLabel();
+		this.label = new DescriptorValueLabel(mean, sigma);
 		this.label.setUserValue(getValue());
 
 		return this.label;
