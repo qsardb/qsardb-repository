@@ -107,4 +107,11 @@ public class ParameterUtil {
 
 		return result;
 	}
+
+	static
+	public BigDecimal criticalLeverage(int descriptors, int compounds){
+		return (new BigDecimal(3)).multiply(new BigDecimal(1 + descriptors), ParameterUtil.context).divide(new BigDecimal(compounds), ParameterUtil.context);
+	}
+
+	public static final MathContext context = new MathContext(6);
 }

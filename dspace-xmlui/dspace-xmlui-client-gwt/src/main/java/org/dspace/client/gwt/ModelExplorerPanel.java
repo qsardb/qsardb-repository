@@ -22,6 +22,7 @@ public class ModelExplorerPanel extends ExplorerPanel {
 		Panel panel = new VerticalPanel();
 
 		panel.add(createWilliamsPlotPanel(table));
+		panel.add(createInsubriaPlotPanel(table));
 
 		return panel;
 	}
@@ -45,6 +46,36 @@ public class ModelExplorerPanel extends ExplorerPanel {
 			@Override
 			public Widget createWidget(){
 				PlotPanel plotPanel = new WilliamsPlotPanel(table);
+
+				getContext().addSeriesDisplayEventHandler(plotPanel, true);
+
+				return plotPanel;
+			}
+		};
+		panel.setContent(content);
+
+		return panel;
+	}
+
+	private Widget createInsubriaPlotPanel(final QdbTable table){
+		DisclosurePanel panel = new DisclosurePanel();
+
+		LazyHeader header = new LazyHeader(panel){
+
+			@Override
+			public Label createLeft(){
+				return new Label("University of Insubria plot");
+			}
+		};
+		panel.setHeader(header);
+
+		header.ensureWidget();
+
+		LazyContent content = new LazyContent(panel){
+
+			@Override
+			public Widget createWidget(){
+				PlotPanel plotPanel = new InsubriaPlotPanel(table);
 
 				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 

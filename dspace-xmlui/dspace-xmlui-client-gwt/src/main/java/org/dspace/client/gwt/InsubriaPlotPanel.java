@@ -5,33 +5,35 @@ import java.util.*;
 
 import org.dspace.rpc.gwt.*;
 
-public class WilliamsPlotPanel extends PlotPanel {
+public class InsubriaPlotPanel extends PlotPanel {
 
-	public WilliamsPlotPanel(QdbTable table){
+	public InsubriaPlotPanel(QdbTable table){
 		Resolver resolver = new Resolver(table);
+
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
 
 		Map<String, Object> leverageValues = leverage.getValues();
 		QdbPlot.Bounds leverageBounds = QdbPlot.bounds(leverageValues);
 
-		QdbPlot.Bounds errorBounds = new QdbPlot.Bounds();
+		QdbPlot.Bounds predictionBounds = new QdbPlot.Bounds();
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
 		Map<String, BigDecimal> trainingErrors = null;
 
 		for(PredictionColumn prediction : predictions){
+			Map<String, Object> predictionValues = prediction.getValues();
+
+			predictionBounds = QdbPlot.bounds(predictionBounds, predictionValues);
+
 			Map<String, BigDecimal> predictionErrors = prediction.getErrors();
 
 			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
 				trainingErrors = predictionErrors;
 			}
-
-			errorBounds = QdbPlot.bounds(errorBounds, predictionErrors);
 		}
-
-		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 
@@ -43,17 +45,14 @@ public class WilliamsPlotPanel extends PlotPanel {
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
 		scatterPlot.addXAxisOptions(leverageBounds, "Leverage");
-		scatterPlot.addYAxisOptions(errorBounds, "Residual error");
+		scatterPlot.addYAxisOptions(predictionBounds, property.getName() + " (calc.)");
 
-		Number sigma = MathUtil.standardDeviation(trainingErrors.values());
-
-		scatterPlot.addStDevMarkings(sigma);
 		scatterPlot.addDistanceMarkings(criticalLeverage);
 
 		add(scatterPlot);
 
 		for(PredictionColumn prediction : predictions){
-			scatterPlot.addSeries(new PredictionSeries(prediction), leverageValues, prediction.getErrors());
+			scatterPlot.addSeries(new PredictionSeries(prediction), leverageValues, prediction.getValues());
 		}
 	}
 }
