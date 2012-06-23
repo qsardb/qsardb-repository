@@ -16,12 +16,21 @@ abstract
 public class QdbPlot extends SimplePlot {
 
 	public QdbPlot(){
-		super(new QdbPlotModel(), new QdbPlotOptions());
+		super(new QdbPlotModel(), new PlotOptions());
 
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
 
-		setSize(SIZE + 20);
+		setSize(PLOT_SIZE);
+	}
+
+	public void setSize(int size){
+		setSize(size, false);
+	}
+
+	public void setSize(int size, boolean refresh){
+		setWidth(size + (refresh ? getBorderWidth() : 0));
+		setHeight(size + (refresh ? getBorderHeight() : 0));
 	}
 
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
@@ -50,6 +59,7 @@ public class QdbPlot extends SimplePlot {
 				this.popup.setGlassEnabled(true);
 			}
 
+
 			@Override
 			public void onDoubleClick(DoubleClickEvent event){
 				QdbPlot widget = QdbPlot.this;
@@ -62,16 +72,16 @@ public class QdbPlot extends SimplePlot {
 					this.popup.center();
 
 					// XXX
-					int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 40;
+					int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 50;
 
-					widget.setSize(size + 20);
+					setSize(size, true);
 
 					this.popup.center();
 				} else
 
 				{
 					// Resize before attach
-					widget.setSize(SIZE + 20);
+					setSize(PLOT_SIZE, true);
 
 					parent.setWidget(widget);
 
@@ -83,27 +93,27 @@ public class QdbPlot extends SimplePlot {
 		addDomHandler(clickHandler, DoubleClickEvent.getType());
 	}
 
-	public void setSize(int size){
-		setWidth(size);
-		setHeight(size);
-	}
-
 	public void addXAxisOptions(Bounds bounds){
 		addXAxisOptions(bounds, null);
 	}
 
 	public void addXAxisOptions(Bounds bounds, String label){
 		AxisOptions axisOptions = convertBounds(bounds);
-		axisOptions.setLabelHeight(20);
+		axisOptions.setLabelHeight(PLOT_BORDER_SIZE);
 
-		if(label != null){
+		setHeight(getHeight() + PLOT_BORDER_SIZE);
+
+		if(isValid(label)){
 			axisOptions.setLabel(label);
 
-			// XXX
-			setHeight(getHeight() + 16);
+			setHeight(getHeight() + PLOT_LABEL_SIZE);
 		}
 
 		ensureXAxesOptions().addAxisOptions(axisOptions);
+	}
+
+	private int getBorderWidth(){
+		return getBorderSize(ensureXAxesOptions());
 	}
 
 	public void addYAxisOptions(Bounds bounds){
@@ -112,16 +122,21 @@ public class QdbPlot extends SimplePlot {
 
 	public void addYAxisOptions(Bounds bounds, String label){
 		AxisOptions axisOptions = convertBounds(bounds);
-		axisOptions.setLabelWidth(20);
+		axisOptions.setLabelWidth(PLOT_BORDER_SIZE);
 
-		if(label != null){
+		setWidth(getWidth() + PLOT_BORDER_SIZE);
+
+		if(isValid(label)){
 			axisOptions.setLabel(label);
 
-			// XXX
-			setWidth(getWidth() + 16);
+			setWidth(getWidth() + PLOT_LABEL_SIZE);
 		}
 
 		ensureYAxesOptions().addAxisOptions(axisOptions);
+	}
+
+	private int getBorderHeight(){
+		return getBorderSize(ensureYAxesOptions());
 	}
 
 	public GlobalSeriesOptions ensureGlobalSeriesOptions(){
@@ -207,11 +222,6 @@ public class QdbPlot extends SimplePlot {
 		return (QdbPlotModel)super.getModel();
 	}
 
-	@Override
-	public QdbPlotOptions getPlotOptions(){
-		return (QdbPlotOptions)super.getPlotOptions();
-	}
-
 	static
 	public AxisOptions convertBounds(Bounds bounds){
 		AxisOptions options = new AxisOptions();
@@ -256,6 +266,29 @@ public class QdbPlot extends SimplePlot {
 		return result;
 	}
 
+	static
+	private int getBorderSize(AxesOptions axesOptions){
+		int size = 0;
+
+		AbstractAxisOptions<?>[] axisOptions = axesOptions.getAxesOptions();
+		for(AbstractAxisOptions<?> axisOption : axisOptions){
+			size += PLOT_BORDER_SIZE;
+
+			String label = axisOption.getLabel();
+
+			if(isValid(label)){
+				size += PLOT_LABEL_SIZE;
+			}
+		}
+
+		return size;
+	}
+
+	static
+	private boolean isValid(String label){
+		return (label != null && !("").equals(label));
+	}
+
 	private static final BigDecimal MINUS_ONE = new BigDecimal(-1);
 
 	static
@@ -265,10 +298,6 @@ public class QdbPlot extends SimplePlot {
 		public List<SeriesHandler> getHandlers(){
 			return super.getHandlers();
 		}
-	}
-
-	static
-	protected class QdbPlotOptions extends PlotOptions {
 	}
 
 	static
@@ -326,7 +355,10 @@ public class QdbPlot extends SimplePlot {
 		}
 	}
 
-	public static final int SIZE = 360;
+	public static final int PLOT_SIZE = 360;
+
+	public static final int PLOT_BORDER_SIZE = 20;
+	public static final int PLOT_LABEL_SIZE = 16;
 
 	public static final String COLOR_TWO_SIGMA = "#ffff00";
 	public static final String COLOR_THREE_SIGMA = "#ff8080";

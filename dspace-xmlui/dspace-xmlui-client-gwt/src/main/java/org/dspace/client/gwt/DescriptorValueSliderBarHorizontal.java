@@ -18,7 +18,7 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 
 
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds){
-		this(bounds, QdbPlot.SIZE);
+		this(bounds, QdbPlot.PLOT_SIZE);
 	}
 
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds, int maxValue){
@@ -39,7 +39,7 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 
 		setMaxValue(maxValue);
 
-		setWidth((20 + QdbPlot.SIZE + 20) + "px");
+		setWidth(String.valueOf(20 + QdbPlot.PLOT_SIZE + 20) + "px");
 	}
 
 	@Override
