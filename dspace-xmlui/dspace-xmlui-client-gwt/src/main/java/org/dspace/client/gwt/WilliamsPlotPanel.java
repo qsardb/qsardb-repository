@@ -33,10 +33,7 @@ public class WilliamsPlotPanel extends PlotPanel {
 
 		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
-		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
-
-		// XXX
-		BigDecimal criticalLeverage = ParameterUtil.criticalLeverage(descriptors.size(), (trainingErrors.values()).size());
+		BigDecimal criticalLeverage = leverage.getCriticalValue();
 
 		// XXX
 		leverageBounds.update(criticalLeverage.multiply(new BigDecimal(1.10D), ParameterUtil.context));

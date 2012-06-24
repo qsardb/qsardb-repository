@@ -21,24 +21,13 @@ public class InsubriaPlotPanel extends PlotPanel {
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		Map<String, BigDecimal> trainingErrors = null;
-
 		for(PredictionColumn prediction : predictions){
 			Map<String, Object> predictionValues = prediction.getValues();
 
 			predictionBounds = QdbPlot.bounds(predictionBounds, predictionValues);
-
-			Map<String, BigDecimal> predictionErrors = prediction.getErrors();
-
-			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
-				trainingErrors = predictionErrors;
-			}
 		}
 
-		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
-
-		// XXX
-		BigDecimal criticalLeverage = ParameterUtil.criticalLeverage(descriptors.size(), (trainingErrors.values()).size());
+		BigDecimal criticalLeverage = leverage.getCriticalValue();
 
 		// XXX
 		leverageBounds.update(criticalLeverage.multiply(new BigDecimal(1.10D), ParameterUtil.context));

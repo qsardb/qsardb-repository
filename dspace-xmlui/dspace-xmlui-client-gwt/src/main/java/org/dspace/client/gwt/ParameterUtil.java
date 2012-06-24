@@ -61,30 +61,34 @@ public class ParameterUtil {
 
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();
 		for(Map.Entry<String, Object> entry : entries){
-			Object value = entry.getValue();
+			entry.setValue(convertValue(entry.getValue()));
+		}
+
+		column.setConverted(true);
+	}
+
+	static
+	private Object convertValue(Object value){
+
+		if(value instanceof String){
+			String string = (String)value;
+
+			if("0".equals(string)){
+				return BigDecimal.ZERO;
+			} else
+
+			if("1".equals(string)){
+				return BigDecimal.ONE;
+			}
 
 			try {
-				if(value instanceof String){
-					String string = (String)value;
-
-					if("0".equals(string)){
-						entry.setValue(BigDecimal.ZERO);
-					} else
-
-					if("1".equals(string)){
-						entry.setValue(BigDecimal.ONE);
-					} else
-
-					{
-						entry.setValue(new BigDecimal(string));
-					}
-				}
+				return new BigDecimal(string);
 			} catch(NumberFormatException nfe){
 				// Ignored
 			}
 		}
 
-		column.setConverted(true);
+		return value;
 	}
 
 	static
@@ -108,10 +112,5 @@ public class ParameterUtil {
 		return result;
 	}
 
-	static
-	public BigDecimal criticalLeverage(int descriptors, int compounds){
-		return (new BigDecimal(3)).multiply(new BigDecimal(1 + descriptors), ParameterUtil.context).divide(new BigDecimal(compounds), ParameterUtil.context);
-	}
-
-	public static final MathContext context = new MathContext(6);
+	public static final MathContext context = new MathContext(8);
 }

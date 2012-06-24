@@ -122,9 +122,15 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		};
 		Collections.sort(predictions, comparator);
 
+		Prediction training = null;
+
 		for(Prediction prediction : predictions){
 			PredictionColumn column = loadPredictionColumn(prediction);
 			column.setType(PredictionColumn.Type.valueOf((prediction.getType()).name()));
+
+			if((prediction.getType()).equals(Prediction.Type.TRAINING)){
+				training = prediction;
+			}
 
 			Map<String, ?> values = column.getValues();
 			keys.addAll(values.keySet());
@@ -132,15 +138,6 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 			columns.add(column);
 
 			leverages.putAll(loadLeverageValues(prediction));
-		}
-
-		if(leverages.size() > 0){
-			LeverageColumn column = new LeverageColumn();
-
-			column.setValues((Map)leverages);
-			column.setLength(parseLength(leverages));
-
-			columns.add(column);
 		}
 
 		table.setKeys(keys);
@@ -157,6 +154,16 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 				List<Descriptor> descriptors = evaluator.getDescriptors();
 				for(Descriptor descriptor : descriptors){
 					columns.add(loadDescriptorColumn(descriptor, keys));
+				}
+
+				if(leverages.size() > 0){
+					LeverageColumn column = new LeverageColumn();
+					column.setCriticalValue(calculateCriticalLeverage(training, descriptors));
+
+					column.setValues((Map)leverages);
+					column.setLength(parseLength(leverages));
+
+					columns.add(column);
 				}
 			} finally {
 				evaluator.destroy();
@@ -269,6 +276,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return PredictorUtil.evaluate(model, parameters);
 	}
 
+	static
 	private PredictionColumn loadPredictionColumn(Prediction prediction) throws IOException {
 		PredictionColumn column = new PredictionColumn();
 		column.setId(prediction.getId());
@@ -281,6 +289,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return column;
 	}
 
+	static
 	private PropertyColumn loadPropertyColumn(Property property, Collection<String> keys) throws IOException {
 		PropertyColumn column = new PropertyColumn();
 		column.setId(property.getId());
@@ -294,6 +303,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return column;
 	}
 
+	static
 	private DescriptorColumn loadDescriptorColumn(Descriptor descriptor, Collection<String> keys) throws IOException {
 		DescriptorColumn column = new DescriptorColumn();
 		column.setId(descriptor.getId());
@@ -309,6 +319,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return column;
 	}
 
+	static
 	private Map<String, Object> loadValues(Parameter<?, ?> parameter) throws IOException {
 		ValuesCargo valuesCargo = parameter.getCargo(ValuesCargo.class);
 
@@ -317,6 +328,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return values;
 	}
 
+	static
 	private Map<String, Object> loadValues(Parameter<?, ?> parameter, Collection<String> keys) throws IOException {
 		Map<String, Object> values = loadValues(parameter);
 
@@ -327,6 +339,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return values;
 	}
 
+	static
 	private Map<String, Object> truncateValues(Map<String, Object> values){
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();
 
@@ -346,6 +359,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return values;
 	}
 
+	static
 	private Map<String, String> loadLeverageValues(Prediction prediction) throws IOException {
 
 		if(prediction.hasCargo(LeverageValuesCargo.class)){
@@ -359,6 +373,14 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return Collections.<String, String>emptyMap();
 	}
 
+	static
+	private BigDecimal calculateCriticalLeverage(Prediction training, List<Descriptor> descriptors) throws IOException {
+		Map<String, Object> values = loadValues(training);
+
+		return (new BigDecimal(3)).multiply(new BigDecimal(1 + descriptors.size()), QdbServiceServlet.context).divide(new BigDecimal(values.size()), QdbServiceServlet.context);
+	}
+
+	static
 	private int parseLength(Map<String, ?> values){
 		int length = 0;
 
@@ -376,6 +398,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		return length;
 	}
 
+	static
 	private String parseFormat(Map<String, ?> values){
 		ScaleFrequencyMap map = new ScaleFrequencyMap();
 
@@ -479,4 +502,6 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 			this.id = id;
 		}
 	}
+
+	private static final MathContext context = new MathContext(8);
 }
