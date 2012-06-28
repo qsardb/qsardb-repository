@@ -22,7 +22,7 @@ public class ModelExplorerPanel extends ExplorerPanel {
 		Panel panel = new VerticalPanel();
 
 		panel.add(createWilliamsPlotPanel(table));
-		panel.add(createInsubriaPlotPanel(table));
+		panel.add(createGramaticaPlotPanel(table));
 
 		return panel;
 	}
@@ -57,14 +57,14 @@ public class ModelExplorerPanel extends ExplorerPanel {
 		return panel;
 	}
 
-	private Widget createInsubriaPlotPanel(final QdbTable table){
+	private Widget createGramaticaPlotPanel(final QdbTable table){
 		DisclosurePanel panel = new DisclosurePanel();
 
 		LazyHeader header = new LazyHeader(panel){
 
 			@Override
 			public Label createLeft(){
-				return new Label("University of Insubria plot");
+				return new Label("Gramatica plot");
 			}
 		};
 		panel.setHeader(header);
@@ -75,7 +75,7 @@ public class ModelExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Widget createWidget(){
-				PlotPanel plotPanel = new InsubriaPlotPanel(table);
+				PlotPanel plotPanel = new GramaticaPlotPanel(table);
 
 				getContext().addSeriesDisplayEventHandler(plotPanel, true);
 

@@ -5,9 +5,9 @@ import java.util.*;
 
 import org.dspace.rpc.gwt.*;
 
-public class InsubriaPlotPanel extends PlotPanel {
+public class GramaticaPlotPanel extends PlotPanel {
 
-	public InsubriaPlotPanel(QdbTable table){
+	public GramaticaPlotPanel(QdbTable table){
 		Resolver resolver = new Resolver(table);
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
