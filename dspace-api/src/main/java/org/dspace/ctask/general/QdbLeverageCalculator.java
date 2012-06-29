@@ -12,13 +12,13 @@ import org.jpmml.manager.*;
 import org.dspace.curate.*;
 
 @Distributive
-public class QdbCalculateLeverageTask extends QdbModelTask {
+public class QdbLeverageCalculator extends QdbModelTask {
 
 	@Override
 	public boolean accept(Model model){
 
 		if(model.hasCargo(PMMLCargo.class)){
-			return !model.hasCargo(LeverageCargo.class);
+			return !hasDistance(model, LeverageCargo.class);
 		}
 
 		return false;

@@ -5,6 +5,7 @@ import java.text.*;
 import java.util.*;
 
 import org.qsardb.cargo.map.*;
+import org.qsardb.cargo.matrix.*;
 import org.qsardb.model.*;
 
 import org.apache.log4j.*;
@@ -58,6 +59,24 @@ public class QdbModelTask extends QdbTask {
 		}
 
 		return changed;
+	}
+
+	static
+	public <C extends MatrixCargo> boolean hasDistance(Model model, Class<? extends C> clazz){
+
+		if(model.hasCargo(clazz)){
+			C matrixCargo = model.getCargo(clazz);
+
+			try {
+				matrixCargo.loadObject();
+
+				return true;
+			} catch(Exception e){
+				return false;
+			}
+		}
+
+		return false;
 	}
 
 	static

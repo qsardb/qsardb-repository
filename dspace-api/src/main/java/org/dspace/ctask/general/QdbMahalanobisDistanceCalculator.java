@@ -8,13 +8,13 @@ import org.qsardb.cargo.rds.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 
-public class QdbCalculateMahalanobisDistanceTask extends QdbModelTask {
+public class QdbMahalanobisDistanceCalculator extends QdbModelTask {
 
 	@Override
 	public boolean accept(Model model){
 
 		if(model.hasCargo(RDSCargo.class) || model.hasCargo(PMMLCargo.class)){
-			return !model.hasCargo(MahalanobisDistanceCargo.class);
+			return !hasDistance(model, MahalanobisDistanceCargo.class);
 		}
 
 		return false;
