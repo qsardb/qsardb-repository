@@ -11,6 +11,10 @@ public class QdbTable implements Serializable {
 	private List<QdbColumn<?>> columns = null;
 
 
+	public <C extends QdbColumn<?>> boolean hasColumn(Class<C> clazz){
+		return getColumn(clazz) != null;
+	}
+
 	public <C extends QdbColumn<?>> C getColumn(Class<C> clazz){
 		List<C> result = getAllColumns(clazz);
 

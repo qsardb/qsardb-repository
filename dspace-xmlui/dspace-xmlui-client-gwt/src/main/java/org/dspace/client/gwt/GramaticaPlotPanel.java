@@ -7,15 +7,15 @@ import org.dspace.rpc.gwt.*;
 
 public class GramaticaPlotPanel extends PlotPanel {
 
-	public GramaticaPlotPanel(QdbTable table){
+	public GramaticaPlotPanel(QdbTable table, Class<? extends DistanceColumn> clazz){
 		Resolver resolver = new Resolver(table);
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
-		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
+		DistanceColumn distance = table.getColumn(clazz);
 
-		Map<String, Object> leverageValues = leverage.getValues();
-		QdbPlot.Bounds leverageBounds = QdbPlot.bounds(leverageValues);
+		Map<String, Object> distanceValues = distance.getValues();
+		QdbPlot.Bounds distanceBounds = QdbPlot.bounds(distanceValues);
 
 		QdbPlot.Bounds predictionBounds = new QdbPlot.Bounds();
 
@@ -27,21 +27,21 @@ public class GramaticaPlotPanel extends PlotPanel {
 			predictionBounds = QdbPlot.bounds(predictionBounds, predictionValues);
 		}
 
-		BigDecimal criticalLeverage = leverage.getCriticalValue();
+		BigDecimal criticalDistance = distance.getCriticalValue();
 
 		// XXX
-		leverageBounds.update(criticalLeverage.multiply(new BigDecimal(1.10D), ParameterUtil.context));
+		distanceBounds.update(criticalDistance.multiply(new BigDecimal(1.10D), ParameterUtil.context));
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(leverageBounds, "Leverage");
+		scatterPlot.addXAxisOptions(distanceBounds, distance.getName());
 		scatterPlot.addYAxisOptions(predictionBounds, property.getName() + " (calc.)");
 
-		scatterPlot.addDistanceMarkings(criticalLeverage);
+		scatterPlot.addDistanceMarkings(criticalDistance);
 
 		add(scatterPlot);
 
 		for(PredictionColumn prediction : predictions){
-			scatterPlot.addSeries(new PredictionSeries(prediction), leverageValues, prediction.getValues());
+			scatterPlot.addSeries(new PredictionSeries(prediction), distanceValues, prediction.getValues());
 		}
 	}
 }

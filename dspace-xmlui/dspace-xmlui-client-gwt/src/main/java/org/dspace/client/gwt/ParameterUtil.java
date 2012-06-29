@@ -34,6 +34,10 @@ public class ParameterUtil {
 
 			if(column instanceof LeverageColumn){
 				ensureConverted((LeverageColumn)column);
+			} else
+
+			if(column instanceof MahalanobisDistanceColumn){
+				ensureConverted((MahalanobisDistanceColumn)column);
 			}
 		}
 

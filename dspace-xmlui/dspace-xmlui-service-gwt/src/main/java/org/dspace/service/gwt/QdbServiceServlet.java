@@ -12,6 +12,9 @@ import org.qsardb.cargo.structure.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 
+import org.apache.commons.math.*;
+import org.apache.commons.math.distribution.*;
+
 import org.dspace.content.*;
 import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
@@ -110,6 +113,8 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 		Map<String, String> leverages = new LinkedHashMap<String, String>();
 
+		Map<String, String> mahalanobisDistances = new LinkedHashMap<String, String>();
+
 		List<Prediction> predictions = new ArrayList<Prediction>();
 		predictions.addAll((qdb.getPredictionRegistry()).getByModel(model));
 
@@ -138,6 +143,8 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 			columns.add(column);
 
 			leverages.putAll(loadLeverageValues(prediction));
+
+			mahalanobisDistances.putAll(loadMahalanobisDistanceValues(prediction));
 		}
 
 		table.setKeys(keys);
@@ -162,6 +169,16 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 					column.setValues((Map)leverages);
 					column.setLength(parseLength(leverages));
+
+					columns.add(column);
+				} // End if
+
+				if(mahalanobisDistances.size() > 0){
+					MahalanobisDistanceColumn column = new MahalanobisDistanceColumn();
+					column.setCriticalValue(calculateCriticalMahalanobisDistance(training, descriptors));
+
+					column.setValues((Map)mahalanobisDistances);
+					column.setLength(parseLength(mahalanobisDistances));
 
 					columns.add(column);
 				}
@@ -378,6 +395,35 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		Map<String, Object> values = loadValues(training);
 
 		return (new BigDecimal(3)).multiply(new BigDecimal(1 + descriptors.size()), QdbServiceServlet.context).divide(new BigDecimal(values.size()), QdbServiceServlet.context);
+	}
+
+	static
+	private Map<String, String> loadMahalanobisDistanceValues(Prediction prediction) throws IOException {
+
+		if(prediction.hasCargo(MahalanobisDistanceValuesCargo.class)){
+			MahalanobisDistanceValuesCargo distanceValuesCargo = prediction.getCargo(MahalanobisDistanceValuesCargo.class);
+
+			Map<String, String> distanceValues = new LinkedHashMap<String, String>(distanceValuesCargo.loadStringMap());
+
+			return distanceValues;
+		}
+
+		return Collections.<String, String>emptyMap();
+	}
+
+	static
+	private BigDecimal calculateCriticalMahalanobisDistance(Prediction training, List<Descriptor> descriptors) throws IOException {
+		ChiSquaredDistribution distribution = new ChiSquaredDistributionImpl(descriptors.size());
+
+		double x = 0;
+
+		try {
+			x = distribution.inverseCumulativeProbability(0.95);
+		} catch(MathException me){
+			// Ignored
+		}
+
+		return new BigDecimal(Math.sqrt(x), QdbServiceServlet.context);
 	}
 
 	static

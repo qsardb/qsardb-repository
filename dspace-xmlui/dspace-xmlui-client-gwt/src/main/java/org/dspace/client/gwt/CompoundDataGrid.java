@@ -41,6 +41,11 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			addColumn(new LeverageTextColumn(leverage), "Leverage");
 		}
 
+		MahalanobisDistanceColumn mahalanobisDistance = table.getColumn(MahalanobisDistanceColumn.class);
+		if(mahalanobisDistance != null){
+			addColumn(new MahalanobisDistanceTextColumn(mahalanobisDistance), "Mahalanobis distance");
+		}
+
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
 			addColumn(new DescriptorTextColumn(descriptor), new DescriptorTextHeader(descriptor));
@@ -285,6 +290,15 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 	abstract
 	static
+	public class DistanceTextColumn <C extends DistanceColumn> extends NumericTextColumn<C> {
+
+		public DistanceTextColumn(Cell<String> cell, C column){
+			super(cell, column);
+		}
+	}
+
+	abstract
+	static
 	public class ParameterTextColumn <C extends ParameterColumn> extends NumericTextColumn<C> {
 
 		public ParameterTextColumn(Cell<String> cell, C column){
@@ -339,9 +353,17 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	}
 
 	static
-	public class LeverageTextColumn extends NumericTextColumn<NumericColumn> {
+	public class LeverageTextColumn extends DistanceTextColumn<LeverageColumn> {
 
 		public LeverageTextColumn(LeverageColumn column){
+			super(new TextCell(), column);
+		}
+	}
+
+	static
+	public class MahalanobisDistanceTextColumn extends DistanceTextColumn<MahalanobisDistanceColumn> {
+
+		public MahalanobisDistanceTextColumn(MahalanobisDistanceColumn column){
 			super(new TextCell(), column);
 		}
 	}
