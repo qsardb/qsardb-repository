@@ -23,8 +23,8 @@ public class PredictorUtil {
 	}
 
 	static
-	public Map<String, String> calculateDescriptors(Model model, String string) throws Exception {
-		IAtomContainer molecule = prepareMolecule(string);
+	public Map<String, String> calculateDescriptors(Model model, String structure) throws Exception {
+		IAtomContainer molecule = prepareMolecule(structure);
 
 		Evaluator evaluator = prepareEvaluator(model);
 		evaluator.init();
@@ -37,15 +37,15 @@ public class PredictorUtil {
 	}
 
 	static
-	public String evaluate(Model model, String string) throws Exception {
-		IAtomContainer molecule = prepareMolecule(string);
+	public String evaluate(Model model, Map<String, String> parameters, String structure) throws Exception {
+		IAtomContainer molecule = prepareMolecule(structure);
 
 		Evaluator evaluator = prepareEvaluator(model);
 
 		evaluator.init();
 
 		try {
-			Map<String, String> parameters = calculateDescriptors(evaluator, molecule);
+			parameters.putAll(calculateDescriptors(evaluator, molecule));
 
 			return evaluate(evaluator, parameters);
 		} finally {

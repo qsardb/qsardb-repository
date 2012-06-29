@@ -1,7 +1,9 @@
 package org.dspace.service.http;
 
 import java.io.*;
+import java.net.*;
 import java.sql.*;
+import java.util.*;
 import java.util.regex.*;
 
 import javax.servlet.http.*;
@@ -42,9 +44,8 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		}
 
 		final
-		String string = request.getQueryString();
-
-		if(string == null || ("").equals(string)){
+		String query = request.getQueryString();
+		if(query == null || "".equals(query)){
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 
 			return;
@@ -58,7 +59,20 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 				if(object instanceof Model){
 					Model model = (Model)object;
 
-					return PredictorUtil.evaluate(model, string);
+					Map<String, String> parameters = new LinkedHashMap<String, String>();
+
+					String structure = query;
+
+					int ampersand = query.indexOf('&');
+					if(ampersand > -1){
+						parameters.putAll(parseDescriptors(model.getQdb(), query.substring(ampersand + 1)));
+
+						structure = query.substring(0, ampersand);
+					}
+
+					structure = URLDecoder.decode(structure, "US-ASCII");
+
+					return PredictorUtil.evaluate(model, parameters, structure);
 				}
 
 				throw new IllegalArgumentException();
@@ -86,5 +100,25 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		} finally {
 			writer.close();
 		}
+	}
+
+	static
+	private Map<String, String> parseDescriptors(Qdb qdb, String string) throws UnsupportedEncodingException {
+		Map<String, String> result = new LinkedHashMap<String, String>();
+
+		String[] entries = string.split("&");
+		for(String entry : entries){
+			int equals = entry.indexOf('=');
+
+			String key = URLDecoder.decode(entry.substring(0, equals), "US-ASCII");
+			String value = URLDecoder.decode(entry.substring(equals + 1), "US-ASCII");
+
+			Descriptor descriptor = qdb.getDescriptor(key);
+			if(descriptor != null){
+				result.put(key, value);
+			}
+		}
+
+		return result;
 	}
 }
