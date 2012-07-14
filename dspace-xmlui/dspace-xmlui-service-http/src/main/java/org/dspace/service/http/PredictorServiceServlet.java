@@ -10,6 +10,8 @@ import javax.servlet.http.*;
 
 import org.qsardb.model.*;
 
+import org.apache.log4j.*;
+
 import org.dspace.content.*;
 import org.dspace.content.QdbUtil;
 import org.dspace.core.*;
@@ -19,6 +21,11 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 	@Override
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+		final
+		HttpSession session = request.getSession();
+
+		logger.debug(session.getId() + ": servicing request URI \"" + request.getRequestURI() + "\", query string \"" + request.getQueryString() + "\"");
+
 		Context context = getThreadLocalContext();
 
 		Matcher matcher = createMatcher(request);
@@ -42,6 +49,8 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 			return;
 		}
+
+		logger.debug(session.getId() + ": obtained item " + item.getHandle());
 
 		final
 		String query = request.getQueryString();
@@ -72,6 +81,8 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 					structure = URLDecoder.decode(structure, "US-ASCII");
 
+					logger.debug(session.getId() + ": evaluating \"" + structure + "\" " + (parameters.size() > 0 ? ("(extra parameters " + parameters + ")") : "(no extra parameters)"));
+
 					return PredictorUtil.evaluate(model, parameters, structure);
 				}
 
@@ -81,6 +92,8 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 		String result;
 
+		logger.debug(session.getId() + ": evaluation started");
+
 		try {
 			result = QdbUtil.invokeInternal(context, item, callable);
 		} catch(Exception e){
@@ -89,6 +102,8 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 
 			return;
+		} finally {
+			logger.debug(session.getId() + ": evaluation finished");
 		}
 
 		response.setContentType("text/plain");
@@ -121,4 +136,6 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 		return result;
 	}
+
+	private static final Logger logger = Logger.getLogger(PredictorServiceServlet.class);
 }
