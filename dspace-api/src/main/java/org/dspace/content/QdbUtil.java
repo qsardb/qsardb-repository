@@ -6,6 +6,8 @@ import java.util.*;
 
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
+import org.qsardb.cargo.pmml.*;
+import org.qsardb.cargo.rds.*;
 import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
@@ -17,6 +19,7 @@ import org.apache.log4j.*;
 
 import org.dspace.authorize.*;
 import org.dspace.core.*;
+import org.dspace.core.Context;
 
 public class QdbUtil {
 
@@ -249,10 +252,21 @@ public class QdbUtil {
 
 	static
 	public Evaluator getEvaluator(Model model) throws Exception {
-		EvaluatorFactory evaluatorFactory = EvaluatorFactory.getInstance();
-		evaluatorFactory.setActivating(false);
+		Qdb qdb = model.getQdb();
 
-		return evaluatorFactory.getEvaluator(model);
+		if(model.hasCargo(PMMLCargo.class)){
+			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
+
+			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
+		} else
+
+		if(model.hasCargo(RDSCargo.class)){
+			RDSCargo rdsCargo = model.getCargo(RDSCargo.class);
+
+			return new QdbRDSEvaluator(qdb, rdsCargo.loadRdsObject());
+		}
+
+		throw new IllegalArgumentException();
 	}
 
 	static
