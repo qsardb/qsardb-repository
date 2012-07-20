@@ -36,7 +36,7 @@ public class PredictorUtil {
 		}
 	}
 
-	static
+	static synchronized
 	public String evaluate(Model model, Map<String, String> parameters, String structure) throws Exception {
 		IAtomContainer molecule = prepareMolecule(structure);
 
@@ -53,7 +53,7 @@ public class PredictorUtil {
 		}
 	}
 
-	static
+	static synchronized
 	public String evaluate(Model model, Map<String, String> parameters) throws Exception {
 		Evaluator evaluator = prepareEvaluator(model);
 
