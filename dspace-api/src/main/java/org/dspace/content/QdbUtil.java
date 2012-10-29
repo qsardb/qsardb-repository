@@ -378,7 +378,7 @@ public class QdbUtil {
 
 		DescriptorRegistry descriptors = qdb.getDescriptorRegistry();
 		for(Descriptor descriptor : descriptors){
-			descriptorApplications.add(formatApplication(descriptor.getApplication()));
+			descriptorApplications.add(descriptor.getApplication());
 		}
 
 		if(descriptorApplications.size() > 0){
@@ -406,7 +406,7 @@ public class QdbUtil {
 
 		PredictionRegistry predictions = qdb.getPredictionRegistry();
 		for(Prediction prediction : predictions){
-			predictionApplications.add(formatApplication(prediction.getApplication()));
+			predictionApplications.add(prediction.getApplication());
 		}
 
 		if(predictionApplications.size() > 0){
@@ -529,11 +529,6 @@ public class QdbUtil {
 		}
 
 		return null;
-	}
-
-	static
-	private String formatApplication(Application application){
-		return (application != null ? application.getName() : null);
 	}
 
 	static
