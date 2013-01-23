@@ -85,10 +85,6 @@ public class QdbContentCallable<X> implements QdbCallable<X> {
 
 		if("predictions".equals(id)){
 			return qdb.getPredictionRegistry();
-		} else
-
-		if("workflows".equals(id)){
-			return qdb.getWorkflowRegistry();
 		}
 
 		throw new IllegalArgumentException(id);
