@@ -21,6 +21,11 @@
 
     1.3.2 Make the JRI library file [rhome]/library/rJava/jri/jri.dll known to the JVM
 
+  1.4 Update Tomcat configuration. The selected Web UI application (xmlui, jspui) must be deployed to the ROOT context.
+
+    1.4.1 Create a new file $CATALINA_HOME/conf/Catalina/localhost/ROOT.xml with the following contents:
+      <Context docBase="[dspace]/webapps/xmlui" path="" reloadable="true"/>
+
 
 2. HOW TO INSTALL BibTeX AND QsarDB METADATA SCHEMAS
 
