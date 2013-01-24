@@ -23,7 +23,7 @@
 
 		<dependency>
 			<groupId>org.qsardb</groupId>
-			<artifactId>bundle</artifactId>
+			<artifactId>model</artifactId>
 		</dependency>
 
 		<dependency>
