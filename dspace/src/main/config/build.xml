@@ -838,6 +838,18 @@ Common usage:
             <sysproperty key="dspace.configuration" value="${config}" />
             <arg line="-f '${dspace.dir}/config/registries/dublin-core-types.xml'" />
         </java>
+        <java classname="org.dspace.administer.MetadataImporter" classpathref="class.path" fork="yes" failonerror="yes">
+            <sysproperty key="log4j.configuration" value="file:config/log4j-console.properties" />
+            <sysproperty key="dspace.log.init.disable" value="true" />
+            <sysproperty key="dspace.configuration" value="${config}" />
+            <arg line="-f '${dspace.dir}/config/registries/bibtex-types.xml'" />
+        </java>
+        <java classname="org.dspace.administer.MetadataImporter" classpathref="class.path" fork="yes" failonerror="yes">
+            <sysproperty key="log4j.configuration" value="file:config/log4j-console.properties" />
+            <sysproperty key="dspace.log.init.disable" value="true" />
+            <sysproperty key="dspace.configuration" value="${config}" />
+            <arg line="-f '${dspace.dir}/config/registries/qsardb-types.xml'" />
+        </java>
 
         <!-- FIXME: this should be more modular -->
         <!-- import the SWORD required metadata -->
