@@ -3,13 +3,13 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
+import org.dspace.rpc.gwt.*;
+
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.*;
 
-import org.dspace.rpc.gwt.*;
-
-public class CompoundDataGrid extends DataGrid<Compound> {
+public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDisplayEventHandler {
 
 	public CompoundDataGrid(QdbTable table){
 		super(50);
@@ -51,10 +51,13 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 			addColumn(new DescriptorTextColumn(descriptor), new DescriptorTextHeader(descriptor));
 		}
 
-		addEmptyColumn();
+		addEmptyColumn(-1);
+
+		// Provides coverage for the right-side scroll bar
+		addEmptyColumn(20);
 	}
 
-	private void addEmptyColumn(){
+	private void addEmptyColumn(int width){
 		TextColumn<Compound> column = new TextColumn<Compound>(){
 
 			@Override
@@ -64,7 +67,34 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		};
 		addColumn(column, (String)null);
 
-		setColumnWidth(column, 20, Unit.PX);
+		if(width > -1){
+			setColumnWidth(column, width, Unit.PX);
+		}
+	}
+
+	@Override
+	public void onSeriesVisibilityChanged(SeriesDisplayEvent event){
+		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);
+
+		for(int i = 0; i < getColumnCount(); i++){
+			Column<Compound, ?> column = getColumn(i);
+
+			PredictionColumn prediction = null;
+
+			if(column instanceof PredictionTextColumn){
+				prediction = ((PredictionTextColumn)column).getColumn();
+			} else
+
+			if(column instanceof PredictionErrorTextColumn){
+				prediction = ((PredictionErrorTextColumn)column).getColumn();
+			} else
+
+			{
+				continue;
+			}
+
+			setVisible((CompoundTextColumn<?, ?>)column, visiblePredictions.contains(prediction));
+		}
 	}
 
 	@Override
@@ -72,28 +102,49 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 		super.insertColumn(index, column, header, footer);
 
 		if(column instanceof CompoundTextColumn){
-			CompoundTextColumn<?, ?> sortableColumn = (CompoundTextColumn<?, ?>)column;
-
-			int length = sortableColumn.getLength();
-
-			if(length > 0){
-				length = Math.min(Math.max(length, 2), 60);
-
-				// XXX: Cut the horizontal padding from 15 px to 5 px
-				setColumnWidth(column, 15 + (length * 6) + 15, Unit.PX);
-			}
+			resizeColumn((CompoundTextColumn<?, ?>)column);
 		}
+	}
+
+	private void resizeColumn(CompoundTextColumn<?, ?> column){
+		int length = column.getLength();
+
+		if(length > 0){
+			length = Math.min(Math.max(length, 2), 60);
+
+			// XXX: Cut the horizontal padding from 15 px to 5 px
+			setColumnWidth(column, 15 + (length * 6) + 15, Unit.PX);
+		}
+	}
+
+	private void setVisible(CompoundTextColumn<?, ?> column, boolean visible){
+
+		if(column.isVisible() == visible){
+			return;
+		} // End if
+
+		if(visible){
+			resizeColumn(column);
+		} else
+
+		{
+			setColumnWidth(column, 0, Unit.PX);
+		}
+
+		column.setVisible(visible);
 	}
 
 	public Comparator<Compound> getComparator(Column<?, ?> column){
 
 		if(column instanceof CompoundTextColumn){
-			CompoundTextColumn<?, ?> sortableColumn = (CompoundTextColumn<?, ?>)column;
-
-			return sortableColumn.getComparator();
+			return getComparator((CompoundTextColumn<?, ?>)column);
 		}
 
 		return null;
+	}
+
+	private Comparator<Compound> getComparator(CompoundTextColumn<?, ?> column){
+		return column.getComparator();
 	}
 
 	static
@@ -101,6 +152,8 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 	public class CompoundTextColumn <C extends QdbColumn<V>, V> extends Column<Compound, String> {
 
 		private C column = null;
+
+		private boolean visible = true;
 
 
 		protected CompoundTextColumn(Cell<String> cell, C column){
@@ -140,6 +193,14 @@ public class CompoundDataGrid extends DataGrid<Compound> {
 
 		private void setColumn(C column){
 			this.column = column;
+		}
+
+		private boolean isVisible(){
+			return this.visible;
+		}
+
+		private void setVisible(boolean visible){
+			this.visible = visible;
 		}
 	}
 

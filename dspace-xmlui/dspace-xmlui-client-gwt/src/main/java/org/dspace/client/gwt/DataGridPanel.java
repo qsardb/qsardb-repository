@@ -2,21 +2,29 @@ package org.dspace.client.gwt;
 
 import java.util.*;
 
+import org.dspace.rpc.gwt.*;
+
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.DockPanel.DockLayoutConstant;
-import com.google.gwt.view.client.*;
-
-import org.dspace.rpc.gwt.*;
 
 public class DataGridPanel extends Composite {
 
-	public DataGridPanel(QdbTable table, final ListDataProvider<Compound> dataProvider){
+	public DataGridPanel(ExplorerContext context, QdbTable table){
 		DockPanel panel = new DockPanel();
+
+		List<Compound> compounds = CompoundDataProvider.format(table.getKeys());
+
+		final
+		CompoundDataProvider dataProvider = new CompoundDataProvider(compounds);
+
+		context.addSeriesDisplayEventHandler(dataProvider, false);
 
 		final
 		CompoundDataGrid dataGrid = new CompoundDataGrid(table);
 		dataProvider.addDataDisplay(dataGrid);
+
+		context.addSeriesDisplayEventHandler(dataGrid, true);
 
 		ResizeLayoutPanel dataGridPanel = new ResizeLayoutPanel();
 		dataGridPanel.setWidget(dataGrid);

@@ -1,7 +1,5 @@
 package org.dspace.client.gwt;
 
-import java.util.*;
-
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.rpc.gwt.*;
@@ -15,13 +13,7 @@ public class TableExplorerPanel extends ExplorerPanel {
 
 		panel.add(new Heading("Data table", 3));
 
-		List<Compound> compounds = CompoundDataProvider.format(table.getKeys());
-
-		CompoundDataProvider dataProvider = new CompoundDataProvider(compounds);
-
-		context.addSeriesDisplayEventHandler(dataProvider, false);
-
-		DataGridPanel gridPanel = new DataGridPanel(table, dataProvider);
+		DataGridPanel gridPanel = new DataGridPanel(context, table);
 		panel.add(gridPanel);
 
 		initWidget(panel);
