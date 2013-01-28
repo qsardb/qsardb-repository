@@ -60,24 +60,6 @@ public class HistogramPlot extends QdbPlot {
 		this.seriesPoints.put(series, points);
 	}
 
-	public int getMaxHeight(){
-		int result = 0;
-
-		for(int i = 0; i < this.bars.size(); i++){
-			int height = 0;
-
-			for(List<HistogramDataPoint> points : this.seriesPoints){
-				HistogramDataPoint point = points.get(i);
-
-				height += point.getY();
-			}
-
-			result = Math.max(height, result);
-		}
-
-		return result;
-	}
-
 	public BarSeriesOptions ensureBarSeriesOptions(){
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 
