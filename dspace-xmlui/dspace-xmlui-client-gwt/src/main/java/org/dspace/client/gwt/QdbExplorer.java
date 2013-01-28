@@ -1,9 +1,11 @@
 package org.dspace.client.gwt;
 
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.ui.*;
+import java.util.*;
 
 import org.dspace.rpc.gwt.*;
+
+import com.google.gwt.event.shared.*;
+import com.google.gwt.user.client.ui.*;
 
 public class QdbExplorer extends QdbApplication {
 
@@ -21,23 +23,29 @@ public class QdbExplorer extends QdbApplication {
 	public Widget createWidget(ModelTable table){
 		Panel panel = new FlowPanel();
 
+		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
+
 		final
-		SeriesPanel seriesPanel = new SeriesPanel(table);
-		panel.add(seriesPanel);
+		SeriesMenuBar seriesMenu = new SeriesMenuBar(predictions);
 
 		ExplorerContext context = new ExplorerContext(){
 
 			@Override
 			public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler, boolean notify){
-				HandlerRegistration result = seriesPanel.addSeriesDisplayEventHandler(handler);
+				HandlerRegistration result = seriesMenu.addSeriesDisplayEventHandler(handler);
 
 				if(notify){
-					handler.onSeriesVisibilityChanged(seriesPanel.createSeriesDisplayEvent());
+					handler.onSeriesVisibilityChanged(seriesMenu.createSeriesDisplayEvent());
 				}
 
 				return result;
 			}
 		};
+
+		MenuBar menu = new MenuBar();
+		menu.addItem("Series", seriesMenu);
+
+		panel.add(menu);
 
 		TableExplorerPanel tableExplorer = new TableExplorerPanel(context, table);
 		panel.add(tableExplorer);

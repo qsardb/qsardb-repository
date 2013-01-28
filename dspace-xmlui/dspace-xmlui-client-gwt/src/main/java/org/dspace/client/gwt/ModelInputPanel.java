@@ -17,14 +17,12 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		PredictionColumn training = null;
-
-		for(PredictionColumn prediction : predictions){
-
-			if((prediction.getType()).equals(PredictionColumn.Type.TRAINING)){
-				training = prediction;
-			}
+		List<PredictionColumn> trainings = PredictionColumn.filter(predictions, PredictionColumn.Type.TRAINING);
+		if(trainings.size() != 1){
+			throw new IllegalStateException();
 		}
+
+		PredictionColumn training = trainings.get(0);
 
 		DescriptorValueChangeEventHandler changeHandler = new DescriptorValueChangeEventHandler(){
 

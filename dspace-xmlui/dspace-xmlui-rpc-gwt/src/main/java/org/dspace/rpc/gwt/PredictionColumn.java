@@ -35,6 +35,20 @@ public class PredictionColumn extends ParameterColumn {
 	}
 
 	static
+	public List<PredictionColumn> filter(List<PredictionColumn> predictions, Type type){
+		List<PredictionColumn> result = new ArrayList<PredictionColumn>();
+
+		for(PredictionColumn prediction : predictions){
+
+			if((prediction.getType()).equals(type)){
+				result.add(prediction);
+			}
+		}
+
+		return result;
+	}
+
+	static
 	public enum Type {
 		TRAINING,
 		VALIDATION,
