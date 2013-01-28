@@ -24,6 +24,9 @@ public class QdbPlot extends SimplePlot {
 		setSize(PLOT_SIZE);
 	}
 
+	abstract
+	protected Map<PredictionSeries, List<? extends DataPoint>> getData();
+
 	public void setSize(int size){
 		setSize(size, false);
 	}
@@ -36,13 +39,23 @@ public class QdbPlot extends SimplePlot {
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
 		QdbPlotModel model = getModel();
 
+		model.removeAllSeries();
+
 		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);
 
-		List<? extends SeriesHandler> handlers = model.getHandlers();
-		for(SeriesHandler handler : handlers){
-			PredictionSeries series = (PredictionSeries)handler.getSeries();
+		Map<PredictionSeries, List<? extends DataPoint>> data = getData();
 
-			handler.setVisible(visiblePredictions.contains(series.getPrediction()));
+		for(Map.Entry<PredictionSeries, List<? extends DataPoint>> entry : data.entrySet()){
+			PredictionSeries series = entry.getKey();
+
+			if(visiblePredictions.contains(series.getPrediction())){
+				SeriesHandler handler = model.addSeries(series);
+
+				List<? extends DataPoint> points = entry.getValue();
+				for(DataPoint point : points){
+					handler.add(point);
+				}
+			}
 		}
 
 		if(isAttached()){

@@ -10,7 +10,7 @@ public class HistogramPlot extends QdbPlot {
 
 	private BarList bars = null;
 
-	private List<List<HistogramDataPoint>> seriesPoints = new ArrayList<List<HistogramDataPoint>>();
+	private Map<PredictionSeries, List<HistogramDataPoint>> seriesPoints = new LinkedHashMap<PredictionSeries, List<HistogramDataPoint>>();
 
 
 	public HistogramPlot(Number min, Number max, int size){
@@ -35,7 +35,12 @@ public class HistogramPlot extends QdbPlot {
 		barSeriesOptions.setShow(true);
 	}
 
-	public void addSeries(Series series, Map<String, ?> values){
+	@Override
+	protected Map<PredictionSeries, List<? extends DataPoint>> getData(){
+		return (Map)this.seriesPoints;
+	}
+
+	public void addSeries(PredictionSeries series, Map<String, ?> values){
 		PlotModel model = getModel();
 
 		SeriesHandler handler = model.addSeries(series);
@@ -52,7 +57,7 @@ public class HistogramPlot extends QdbPlot {
 			handler.add(point);
 		}
 
-		this.seriesPoints.add(points);
+		this.seriesPoints.put(series, points);
 	}
 
 	public int getMaxHeight(){

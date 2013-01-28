@@ -10,7 +10,7 @@ import com.googlecode.gflot.client.options.*;
 
 public class ScatterPlot extends QdbPlot {
 
-	private List<List<ScatterDataPoint>> seriesPoints = new ArrayList<List<ScatterDataPoint>>();
+	private Map<PredictionSeries, List<ScatterDataPoint>> seriesPoints = new LinkedHashMap<PredictionSeries, List<ScatterDataPoint>>();
 
 
 	public ScatterPlot(final Resolver resolver){
@@ -49,7 +49,12 @@ public class ScatterPlot extends QdbPlot {
 		addHoverListener(hoverListener, false);
 	}
 
-	public void addSeries(Series series, Map<String, ?> xValues, Map<String, ?> yValues){
+	@Override
+	protected Map<PredictionSeries, List<? extends DataPoint>> getData(){
+		return (Map)this.seriesPoints;
+	}
+
+	public void addSeries(PredictionSeries series, Map<String, ?> xValues, Map<String, ?> yValues){
 		PlotModel model = getModel();
 
 		SeriesHandler handler = model.addSeries(series);
@@ -71,7 +76,7 @@ public class ScatterPlot extends QdbPlot {
 			}
 		}
 
-		this.seriesPoints.add(points);
+		this.seriesPoints.put(series, points);
 	}
 
 	public void addStDevMarkings(Number sigma){
@@ -112,7 +117,9 @@ public class ScatterPlot extends QdbPlot {
 	}
 
 	private ScatterDataPoint getDataPoint(PlotItem item){
-		return (this.seriesPoints).get((item.getSeriesIndex()).intValue()).get((item.getDataIndex()).intValue());
+		List<List<ScatterDataPoint>> points = new ArrayList<List<ScatterDataPoint>>(this.seriesPoints.values());
+
+		return points.get((item.getSeriesIndex()).intValue()).get((item.getDataIndex()).intValue());
 	}
 
 	static
