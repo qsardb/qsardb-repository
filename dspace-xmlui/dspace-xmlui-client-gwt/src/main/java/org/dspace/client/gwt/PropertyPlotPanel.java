@@ -51,8 +51,8 @@ public class PropertyPlotPanel extends PlotPanel {
 
 			Map<String, ?> predictionPropertyValues = ParameterUtil.subset(keys, propertyValues);
 
-			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getValues());
-			histogramPlot.addSeries(new PredictionSeries(prediction), predictionPropertyValues);
+			scatterPlot.addSeries(PredictionSeries.create(prediction), property.getValues(), prediction.getValues());
+			histogramPlot.addSeries(PredictionSeries.create(prediction), predictionPropertyValues);
 		}
 	}
 }

@@ -25,7 +25,7 @@
 	/>
 
 	<inherits
-		name="ca.nanometrics.gflot.GFlot"
+		name="com.googlecode.gflot.GFlot"
 	/>
 
 	<inherits

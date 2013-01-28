@@ -3,10 +3,10 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
-import ca.nanometrics.gflot.client.*;
-import ca.nanometrics.gflot.client.event.*;
-import ca.nanometrics.gflot.client.jsni.*;
-import ca.nanometrics.gflot.client.options.*;
+import com.googlecode.gflot.client.*;
+import com.googlecode.gflot.client.event.*;
+import com.googlecode.gflot.client.jsni.*;
+import com.googlecode.gflot.client.options.*;
 
 public class ScatterPlot extends QdbPlot {
 
@@ -64,7 +64,7 @@ public class ScatterPlot extends QdbPlot {
 			Object y = yValues.get(id);
 
 			if(x instanceof BigDecimal && y instanceof BigDecimal){
-				ScatterDataPoint point = new ScatterDataPoint(((BigDecimal)x).doubleValue(), ((BigDecimal)y).doubleValue(), id);
+				ScatterDataPoint point = ScatterDataPoint.create(((BigDecimal)x).doubleValue(), ((BigDecimal)y).doubleValue(), id);
 				points.add(point);
 
 				handler.add(point);
@@ -90,7 +90,7 @@ public class ScatterPlot extends QdbPlot {
 
 		PointsSeriesOptions pointSeriesOptions = globalSeriesOptions.getPointsSeriesOptions();
 		if(pointSeriesOptions == null){
-			pointSeriesOptions = new PointsSeriesOptions();
+			pointSeriesOptions = PointsSeriesOptions.create();
 
 			globalSeriesOptions.setPointsOptions(pointSeriesOptions);
 		}
@@ -103,7 +103,7 @@ public class ScatterPlot extends QdbPlot {
 
 		Markings markings = gridOptions.getMarkings();
 		if(markings == null){
-			markings = new Markings();
+			markings = Markings.create();
 
 			gridOptions.setMarkings(markings);
 		}
@@ -128,7 +128,7 @@ public class ScatterPlot extends QdbPlot {
 	static
 	private Marking createXMarking(Number value, String color){
 		Marking result = createMarking(color);
-		result.setX(new Range(value.doubleValue(), value.doubleValue()));
+		result.setX(Range.of(value.doubleValue(), value.doubleValue()));
 
 		return result;
 	}
@@ -136,14 +136,14 @@ public class ScatterPlot extends QdbPlot {
 	static
 	private Marking createYMarking(Number value, String color){
 		Marking result = createMarking(color);
-		result.setY(new Range(value.doubleValue(), value.doubleValue()));
+		result.setY(Range.of(value.doubleValue(), value.doubleValue()));
 
 		return result;
 	}
 
 	static
 	private Marking createMarking(String color){
-		Marking result = new Marking();
+		Marking result = Marking.create();
 		result.setColor(color);
 		result.setLineWidth(1);
 

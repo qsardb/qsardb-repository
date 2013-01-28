@@ -3,20 +3,20 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
+import org.dspace.rpc.gwt.*;
+
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
-import ca.nanometrics.gflot.client.*;
-import ca.nanometrics.gflot.client.options.*;
-
-import org.dspace.rpc.gwt.*;
+import com.googlecode.gflot.client.*;
+import com.googlecode.gflot.client.options.*;
 
 abstract
 public class QdbPlot extends SimplePlot {
 
 	public QdbPlot(){
-		super(new QdbPlotModel(), new PlotOptions());
+		super(new QdbPlotModel(), PlotOptions.create());
 
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
@@ -38,7 +38,7 @@ public class QdbPlot extends SimplePlot {
 
 		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);
 
-		List<SeriesHandler> handlers = model.getHandlers();
+		List<? extends SeriesHandler> handlers = model.getHandlers();
 		for(SeriesHandler handler : handlers){
 			PredictionSeries series = (PredictionSeries)handler.getSeries();
 
@@ -144,7 +144,7 @@ public class QdbPlot extends SimplePlot {
 
 		GlobalSeriesOptions globalSeriesOptions = options.getGlobalSeriesOptions();
 		if(globalSeriesOptions == null){
-			globalSeriesOptions = new GlobalSeriesOptions();
+			globalSeriesOptions = GlobalSeriesOptions.create();
 
 			options.setGlobalSeriesOptions(globalSeriesOptions);
 		}
@@ -157,7 +157,7 @@ public class QdbPlot extends SimplePlot {
 
 		LineSeriesOptions lineSeriesOptions = globalSeriesOptions.getLineSeriesOptions();
 		if(lineSeriesOptions == null){
-			lineSeriesOptions = new LineSeriesOptions();
+			lineSeriesOptions = LineSeriesOptions.create();
 
 			globalSeriesOptions.setLineSeriesOptions(lineSeriesOptions);
 		}
@@ -170,7 +170,7 @@ public class QdbPlot extends SimplePlot {
 
 		GridOptions gridOptions = options.getGridOptions();
 		if(gridOptions == null){
-			gridOptions = new GridOptions();
+			gridOptions = GridOptions.create();
 
 			options.setGridOptions(gridOptions);
 		}
@@ -183,7 +183,7 @@ public class QdbPlot extends SimplePlot {
 
 		LegendOptions legendOptions = options.getLegendOptions();
 		if(legendOptions == null){
-			legendOptions = new LegendOptions();
+			legendOptions = LegendOptions.create();
 
 			options.setLegendOptions(legendOptions);
 		}
@@ -196,7 +196,7 @@ public class QdbPlot extends SimplePlot {
 
 		AxesOptions axesOptions = options.getXAxesOptions();
 		if(axesOptions == null){
-			axesOptions = new AxesOptions();
+			axesOptions = AxesOptions.create();
 
 			options.setXAxesOptions(axesOptions);
 		}
@@ -209,7 +209,7 @@ public class QdbPlot extends SimplePlot {
 
 		AxesOptions axesOptions = options.getYAxesOptions();
 		if(axesOptions == null){
-			axesOptions = new AxesOptions();
+			axesOptions = AxesOptions.create();
 
 			options.setYAxesOptions(axesOptions);
 		}
@@ -224,7 +224,7 @@ public class QdbPlot extends SimplePlot {
 
 	static
 	public AxisOptions convertBounds(Bounds bounds){
-		AxisOptions options = new AxisOptions();
+		AxisOptions options = AxisOptions.create();
 
 		if(bounds != null){
 			options.setMinimum((bounds.getMin()).doubleValue());
@@ -270,9 +270,11 @@ public class QdbPlot extends SimplePlot {
 	private int getBorderSize(AxesOptions axesOptions){
 		int size = 0;
 
-		AbstractAxisOptions<?>[] axisOptions = axesOptions.getAxesOptions();
-		for(AbstractAxisOptions<?> axisOption : axisOptions){
+		for(int i = 0; i < axesOptions.length(); i++){
 			size += PLOT_BORDER_SIZE;
+
+			// The numbering starts at 1
+			AbstractAxisOptions<?> axisOption = axesOptions.getAxisOptions(i + 1);
 
 			String label = axisOption.getLabel();
 
@@ -295,7 +297,7 @@ public class QdbPlot extends SimplePlot {
 	protected class QdbPlotModel extends PlotModel {
 
 		@Override
-		public List<SeriesHandler> getHandlers(){
+		public List<? extends SeriesHandler> getHandlers(){
 			return super.getHandlers();
 		}
 	}

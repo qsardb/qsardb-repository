@@ -3,8 +3,8 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
-import ca.nanometrics.gflot.client.*;
-import ca.nanometrics.gflot.client.options.*;
+import com.googlecode.gflot.client.*;
+import com.googlecode.gflot.client.options.*;
 
 public class HistogramPlot extends QdbPlot {
 
@@ -16,6 +16,7 @@ public class HistogramPlot extends QdbPlot {
 	public HistogramPlot(Number min, Number max, int size){
 		this.bars = new BarList(min.doubleValue(), max.doubleValue(), size);
 
+		final
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
 		globalSeriesOptions.setStack(true);
 		globalSeriesOptions.setShadowSize(0);
@@ -45,7 +46,7 @@ public class HistogramPlot extends QdbPlot {
 
 		Collection<Map.Entry<Bar, List<String>>> entries = map.entrySet();
 		for(Map.Entry<Bar, List<String>> entry : entries){
-			HistogramDataPoint point = new HistogramDataPoint((entry.getKey()).getLocation(), entry.getValue());
+			HistogramDataPoint point = HistogramDataPoint.create((entry.getKey()).getLocation(), entry.getValue());
 			points.add(point);
 
 			handler.add(point);
@@ -63,7 +64,7 @@ public class HistogramPlot extends QdbPlot {
 			for(List<HistogramDataPoint> points : this.seriesPoints){
 				HistogramDataPoint point = points.get(i);
 
-				height += point.getHeight();
+				height += point.getY();
 			}
 
 			result = Math.max(height, result);
@@ -77,7 +78,7 @@ public class HistogramPlot extends QdbPlot {
 
 		BarSeriesOptions barSeriesOptions = globalSeriesOptions.getBarSeriesOptions();
 		if(barSeriesOptions == null){
-			barSeriesOptions = new BarSeriesOptions();
+			barSeriesOptions = BarSeriesOptions.create();
 
 			globalSeriesOptions.setBarsSeriesOptions(barSeriesOptions);
 		}

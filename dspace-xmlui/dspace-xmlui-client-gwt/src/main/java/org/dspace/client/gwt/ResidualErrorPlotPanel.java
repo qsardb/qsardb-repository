@@ -46,7 +46,7 @@ public class ResidualErrorPlotPanel extends PlotPanel {
 		add(scatterPlot);
 
 		for(PredictionColumn prediction : predictions){
-			scatterPlot.addSeries(new PredictionSeries(prediction), property.getValues(), prediction.getErrors());
+			scatterPlot.addSeries(PredictionSeries.create(prediction), property.getValues(), prediction.getErrors());
 		}
 	}
 }

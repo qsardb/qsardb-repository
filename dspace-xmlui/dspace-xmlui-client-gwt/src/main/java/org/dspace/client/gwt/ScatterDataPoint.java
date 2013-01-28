@@ -1,23 +1,30 @@
 package org.dspace.client.gwt;
 
-import ca.nanometrics.gflot.client.*;
+import com.googlecode.gflot.client.*;
 
 public class ScatterDataPoint extends DataPoint {
 
-	private String id = null;
-
-
-	public ScatterDataPoint(double x, double y, String id){
-		super(x, y);
-
-		setId(id);
+	protected ScatterDataPoint(){
 	}
 
+	final
 	public String getId(){
-		return this.id;
+		return getString(3);
 	}
 
-	private void setId(String id){
-		this.id = id;
+	final
+	public void setId(String id){
+		set(3, id);
+	}
+
+	static
+	public ScatterDataPoint create(double x, double y, String id){
+		ScatterDataPoint result = createArray().cast();
+		result.setX(x);
+		result.setY(y);
+
+		result.setId(id);
+
+		return result;
 	}
 }

@@ -2,28 +2,46 @@ package org.dspace.client.gwt;
 
 import java.util.*;
 
-import ca.nanometrics.gflot.client.*;
+import com.google.gwt.core.client.*;
+
+import com.googlecode.gflot.client.*;
 
 public class HistogramDataPoint extends DataPoint {
 
-	private List<String> ids = null;
-
-
-	public HistogramDataPoint(double x, List<String> ids){
-		super(x, ids.size());
-
-		setIds(ids);
+	protected HistogramDataPoint(){
 	}
 
-	public int getHeight(){
-		return getIds().size();
-	}
-
+	final
 	public List<String> getIds(){
-		return this.ids;
+		List<String> result = new ArrayList<String>();
+
+		JsArrayString array = getObject(3);
+		for(int i = 0; i < array.length(); i++){
+			result.add(array.get(i));
+		}
+
+		return result;
 	}
 
-	private void setIds(List<String> ids){
-		this.ids = ids;
+	final
+	public void setIds(List<String> ids){
+		JsArrayString array = createArray().cast();
+
+		for(String id : ids){
+			array.push(id);
+		}
+
+		set(3, array);
+	}
+
+	static
+	public HistogramDataPoint create(double x, List<String> ids){
+		HistogramDataPoint result = createArray().cast();
+		result.setX(x);
+		result.setY(ids.size());
+
+		result.setIds(ids);
+
+		return result;
 	}
 }

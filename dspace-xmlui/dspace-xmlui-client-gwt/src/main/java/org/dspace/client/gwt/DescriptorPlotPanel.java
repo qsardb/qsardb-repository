@@ -56,8 +56,8 @@ public class DescriptorPlotPanel extends PlotPanel {
 
 			Map<String, ?> predictionDescriptorValues = ParameterUtil.subset(keys, descriptorValues);
 
-			scatterPlot.addSeries(new PredictionSeries(prediction), predictionDescriptorValues, propertyValues);
-			histogramPlot.addSeries(new PredictionSeries(prediction), predictionDescriptorValues);
+			scatterPlot.addSeries(PredictionSeries.create(prediction), predictionDescriptorValues, propertyValues);
+			histogramPlot.addSeries(PredictionSeries.create(prediction), predictionDescriptorValues);
 		}
 	}
 }

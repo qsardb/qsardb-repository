@@ -50,7 +50,7 @@ public class WilliamsPlotPanel extends PlotPanel {
 		add(scatterPlot);
 
 		for(PredictionColumn prediction : predictions){
-			scatterPlot.addSeries(new PredictionSeries(prediction), distanceValues, prediction.getErrors());
+			scatterPlot.addSeries(PredictionSeries.create(prediction), distanceValues, prediction.getErrors());
 		}
 	}
 }

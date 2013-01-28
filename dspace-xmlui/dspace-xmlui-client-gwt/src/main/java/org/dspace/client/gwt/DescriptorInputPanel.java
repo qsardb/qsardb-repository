@@ -149,7 +149,7 @@ public class DescriptorInputPanel extends Composite {
 		histogramPlot.addXAxisOptions(xBounds);
 		histogramPlot.addYAxisOptions((String)null);
 
-		histogramPlot.addSeries(new PredictionSeries(training), trainingDescriptorValues);
+		histogramPlot.addSeries(PredictionSeries.create(training), trainingDescriptorValues);
 
 		panel.add(histogramPlot);
 
