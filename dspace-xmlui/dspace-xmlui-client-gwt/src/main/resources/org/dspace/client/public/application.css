@@ -1,0 +1,15 @@
+.gwt-MenuBarPopup {
+	background: #e3e8f3;
+}
+
+.gwt-MenuBarPopup td {
+	padding: 0px;
+}
+
+.gwt-MenuBar-vertical {
+	background: #e3e8f3;
+}
+
+.gwt-MenuItem {
+	text-align: left;
+}

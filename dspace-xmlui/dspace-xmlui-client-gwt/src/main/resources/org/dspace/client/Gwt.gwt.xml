@@ -3,6 +3,10 @@
 		path="gwt"
 	/>
 
+	<public
+		path="public"
+	/>
+
 	<inherits
 		name="org.dspace.rpc.Gwt"
 	/>
@@ -22,6 +26,10 @@
 
 	<inherits
 		name="com.google.gwt.user.theme.standard.Standard"
+	/>
+
+	<stylesheet
+		src="application.css"
 	/>
 
 	<inherits

@@ -1,10 +1,10 @@
 package org.dspace.client.gwt;
 
+import org.dspace.rpc.gwt.*;
+
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-
-import org.dspace.rpc.gwt.*;
 
 abstract
 public class QdbApplication extends Application {
