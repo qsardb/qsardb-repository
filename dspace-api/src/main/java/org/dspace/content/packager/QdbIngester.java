@@ -96,22 +96,12 @@ public class QdbIngester implements PackageIngester {
 
 			QdbUtil.resetTitle(item);
 
-			QdbUtil.BitstreamData data = new QdbUtil.FileBitstreamData(file);
-
-			QdbUtil.setOriginalBitstream(context, item, data);
+			QdbUtil.setOriginalBitstream(context, item, file);
 
 			File internalFile = QdbUtil.optimize(file);
 
 			try {
-				QdbUtil.BitstreamData internalData = new QdbUtil.FileBitstreamData(internalFile){
-
-					@Override
-					public String getName(){
-						return "archive.qdb";
-					}
-				};
-
-				QdbUtil.setInternalBitstream(context, item, internalData);
+				QdbUtil.setInternalBitstream(context, item, internalFile);
 			} finally {
 				internalFile.delete();
 			}

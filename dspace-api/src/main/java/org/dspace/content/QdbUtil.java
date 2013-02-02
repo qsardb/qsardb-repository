@@ -4,6 +4,10 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import org.dspace.authorize.*;
+import org.dspace.core.*;
+import org.dspace.core.Context;
+
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
 import org.qsardb.cargo.pmml.*;
@@ -15,11 +19,10 @@ import org.qsardb.storage.zipfile.*;
 import org.jbibtex.*;
 import org.jbibtex.citation.*;
 
-import org.apache.log4j.*;
+import edu.sdsc.grid.io.*;
+import edu.sdsc.grid.io.local.*;
 
-import org.dspace.authorize.*;
-import org.dspace.core.*;
-import org.dspace.core.Context;
+import org.apache.log4j.*;
 
 public class QdbUtil {
 
@@ -55,10 +58,10 @@ public class QdbUtil {
 
 	static
 	private <X> X invoke(Bitstream bitstream, QdbCallable<X> callable) throws Exception {
-		File file = loadFile(bitstream);
+		Storage storage = getStorage(bitstream);
 
 		try {
-			Qdb qdb = new Qdb(new ZipFileInput(file));
+			Qdb qdb = new Qdb(storage);
 
 			try {
 				return callable.call(qdb);
@@ -66,7 +69,7 @@ public class QdbUtil {
 				qdb.close();
 			}
 		} finally {
-			file.delete();
+			storage.close();
 		}
 	}
 
@@ -104,27 +107,42 @@ public class QdbUtil {
 	}
 
 	static
+	private Storage getStorage(Bitstream bitstream) throws AuthorizeException, IOException, SQLException {
+		GeneralFile file = bitstream.getFile();
+
+		if(file instanceof LocalFile){
+			LocalFile localFile = (LocalFile)file;
+
+			if(localFile.isFile()){
+				return new ZipFileInput(localFile.getFile());
+			}
+		}
+
+		throw new IOException("Not a local file");
+	}
+
+	static
 	public Bitstream getOriginalBitstream(Context context, Item item) throws SQLException {
-		return getQdbBitstream(context, item, ORIGINAL_BUNDLE_NAME);
+		return getBitstream(context, item, ORIGINAL_BUNDLE_NAME);
 	}
 
 	static
 	public Bitstream getInternalBitstream(Context context, Item item) throws SQLException {
-		return getQdbBitstream(context, item, INTERNAL_BUNDLE_NAME);
+		return getBitstream(context, item, INTERNAL_BUNDLE_NAME);
 	}
 
 	static
-	private Bitstream getQdbBitstream(Context context, Item item, String name) throws SQLException {
+	private Bitstream getBitstream(Context context, Item item, String name) throws SQLException {
 		BitstreamFormat format = getBitstreamFormat(context);
 
 		List<Bitstream> bitstreams = getAllBitstreams(item, name, format);
 
 		if(bitstreams.size() < 1){
-			throw new QdbConfigurationException("No QsarDB bitstreams");
+			throw new QdbConfigurationException("No QsarDB bitstreams for name \"" + name + "\"");
 		} else
 
 		if(bitstreams.size() > 1){
-			throw new QdbConfigurationException("Too many QsarDB bitstreams");
+			throw new QdbConfigurationException("Too many QsarDB bitstreams for name \"" + name + "\"");
 		}
 
 		return bitstreams.get(0);
@@ -150,13 +168,20 @@ public class QdbUtil {
 	}
 
 	static
-	public Bitstream setOriginalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
-		return setQdbBitstream(context, item, ORIGINAL_BUNDLE_NAME, data);
+	public Bitstream setOriginalBitstream(Context context, Item item, File file) throws AuthorizeException, IOException, SQLException {
+		BitstreamData data = new FileBitstreamData(file);
+
+		return setOriginalBitstream(context, item, data);
 	}
 
 	static
-	public Bitstream setInternalBitstream(Context context, Item item, File file) throws AuthorizeException, SQLException, IOException {
-		QdbUtil.BitstreamData internalData = new QdbUtil.FileBitstreamData(file){
+	public Bitstream setOriginalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, IOException, SQLException {
+		return setBitstream(context, item, ORIGINAL_BUNDLE_NAME, data);
+	}
+
+	static
+	public Bitstream setInternalBitstream(Context context, Item item, File file) throws AuthorizeException, IOException, SQLException {
+		BitstreamData data = new FileBitstreamData(file){
 
 			@Override
 			public String getName(){
@@ -164,37 +189,21 @@ public class QdbUtil {
 			}
 		};
 
-		return setInternalBitstream(context, item, internalData);
+		return setInternalBitstream(context, item, data);
 	}
 
 	static
-	public Bitstream setInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, SQLException, IOException {
-		return setQdbBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
+	public Bitstream setInternalBitstream(Context context, Item item, BitstreamData data) throws AuthorizeException, IOException, SQLException {
+		return setBitstream(context, item, INTERNAL_BUNDLE_NAME, data);
 	}
 
 	static
-	private Bitstream setQdbBitstream(Context context, Item item, String name, BitstreamData data) throws AuthorizeException, SQLException, IOException {
+	private Bitstream setBitstream(Context context, Item item, String name, BitstreamData data) throws AuthorizeException, IOException, SQLException {
 		BitstreamFormat format = getBitstreamFormat(context);
 
-		List<Bitstream> bitstreams = getAllBitstreams(item, name, format);
-		for(Bitstream bitstream : bitstreams){
-			Bundle[] bundles = bitstream.getBundles();
+		removeAllBitstreams(context, item, name, format);
 
-			for(Bundle bundle : bundles){
-				bundle.removeBitstream(bitstream);
-			}
-		}
-
-		Bundle bundle;
-
-		Bundle[] bundles = item.getBundles(name);
-		if(bundles.length > 0){
-			bundle = bundles[0];
-		} else
-
-		{
-			bundle = item.createBundle(name);
-		}
+		Bundle bundle = ensureBundle(item, name);
 
 		InputStream is = data.getInputStream();
 
@@ -215,6 +224,30 @@ public class QdbUtil {
 		} finally {
 			is.close();
 		}
+	}
+
+	static
+	private void removeAllBitstreams(Context context, Item item, String name, BitstreamFormat format) throws AuthorizeException, IOException, SQLException {
+		List<Bitstream> bitstreams = getAllBitstreams(item, name, format);
+
+		for(Bitstream bitstream : bitstreams){
+			Bundle[] bundles = bitstream.getBundles();
+
+			for(Bundle bundle : bundles){
+				bundle.removeBitstream(bitstream);
+			}
+		}
+	}
+
+	static
+	private Bundle ensureBundle(Item item, String name) throws AuthorizeException, IOException, SQLException {
+		Bundle[] bundles = item.getBundles(name);
+
+		if(bundles.length > 0){
+			return bundles[0];
+		}
+
+		return item.createBundle(name);
 	}
 
 	static
