@@ -172,22 +172,22 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 	interface Images extends ClientBundle {
 
 		@Source (
-			value = "slider_drag.png"
+			value = "images/sliderDrag.png"
 		)
 		ImageResource drag();
 
 		@Source (
-			value = "slider_less.png"
+			value = "images/sliderLess.png"
 		)
 		ImageResource less();
 
 		@Source (
-			value = "slider_more.png"
+			value = "images/sliderMore.png"
 		)
 		ImageResource more();
 
 		@Source (
-			value = "slider_scale.png"
+			value = "images/sliderScale.png"
 		)
 		DataResource scale();
 	}
