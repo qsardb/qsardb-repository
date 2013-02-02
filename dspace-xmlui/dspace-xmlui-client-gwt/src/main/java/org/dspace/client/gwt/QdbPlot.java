@@ -10,10 +10,16 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import com.googlecode.gflot.client.*;
+import com.googlecode.gflot.client.event.*;
 import com.googlecode.gflot.client.options.*;
 
 abstract
-public class QdbPlot extends SimplePlot {
+public class QdbPlot<P extends DataPoint> extends SimplePlot {
+
+	private List<PredictionSeries> visibleSeries = new ArrayList<PredictionSeries>();
+
+	private Map<PredictionSeries, List<P>> seriesPoints = new LinkedHashMap<PredictionSeries, List<P>>();
+
 
 	public QdbPlot(){
 		super(new QdbPlotModel(), PlotOptions.create());
@@ -24,8 +30,9 @@ public class QdbPlot extends SimplePlot {
 		setSize(PLOT_SIZE);
 	}
 
-	abstract
-	protected Map<PredictionSeries, List<? extends DataPoint>> getData();
+	protected void addSeries(PredictionSeries series, List<P> points){
+		this.seriesPoints.put(series, points);
+	}
 
 	public void setSize(int size){
 		setSize(size, false);
@@ -39,20 +46,24 @@ public class QdbPlot extends SimplePlot {
 	public void changeSeriesVisibility(SeriesDisplayEvent event){
 		QdbPlotModel model = getModel();
 
+		this.visibleSeries.clear();
+
 		model.removeAllSeries();
 
 		Set<PredictionColumn> visiblePredictions = event.getValues(Boolean.TRUE);
 
-		Map<PredictionSeries, List<? extends DataPoint>> data = getData();
+		Collection<Map.Entry<PredictionSeries, List<P>>> entries = this.seriesPoints.entrySet();
 
-		for(Map.Entry<PredictionSeries, List<? extends DataPoint>> entry : data.entrySet()){
+		for(Map.Entry<PredictionSeries, List<P>> entry : entries){
 			PredictionSeries series = entry.getKey();
 
 			if(visiblePredictions.contains(series.getPrediction())){
+				this.visibleSeries.add(series);
+
 				SeriesHandler handler = model.addSeries(series);
 
-				List<? extends DataPoint> points = entry.getValue();
-				for(DataPoint point : points){
+				Collection<P> points = entry.getValue();
+				for(P point : points){
 					handler.add(point);
 				}
 			}
@@ -61,6 +72,10 @@ public class QdbPlot extends SimplePlot {
 		if(isAttached()){
 			redraw();
 		}
+	}
+
+	public P getDataPoint(PlotItem item){
+		return this.seriesPoints.get(this.visibleSeries.get((item.getSeriesIndex()).intValue())).get((item.getDataIndex()).intValue());
 	}
 
 	public void enableDetach(final HasOneWidget parent){
@@ -75,7 +90,7 @@ public class QdbPlot extends SimplePlot {
 
 			@Override
 			public void onDoubleClick(DoubleClickEvent event){
-				QdbPlot widget = QdbPlot.this;
+				QdbPlot<P> widget = QdbPlot.this;
 
 				boolean attached = (widget.getParent()).equals(parent);
 

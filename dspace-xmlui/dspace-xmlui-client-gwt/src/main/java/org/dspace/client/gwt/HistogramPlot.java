@@ -3,14 +3,11 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
-import com.googlecode.gflot.client.*;
 import com.googlecode.gflot.client.options.*;
 
-public class HistogramPlot extends QdbPlot {
+public class HistogramPlot extends QdbPlot<HistogramDataPoint> {
 
 	private BarList bars = null;
-
-	private Map<PredictionSeries, List<HistogramDataPoint>> seriesPoints = new LinkedHashMap<PredictionSeries, List<HistogramDataPoint>>();
 
 
 	public HistogramPlot(Number min, Number max, int size){
@@ -35,16 +32,7 @@ public class HistogramPlot extends QdbPlot {
 		barSeriesOptions.setShow(true);
 	}
 
-	@Override
-	protected Map<PredictionSeries, List<? extends DataPoint>> getData(){
-		return (Map)this.seriesPoints;
-	}
-
 	public void addSeries(PredictionSeries series, Map<String, ?> values){
-		PlotModel model = getModel();
-
-		SeriesHandler handler = model.addSeries(series);
-
 		List<HistogramDataPoint> points = new ArrayList<HistogramDataPoint>();
 
 		Map<Bar, List<String>> map = this.bars.map(values);
@@ -53,11 +41,9 @@ public class HistogramPlot extends QdbPlot {
 		for(Map.Entry<Bar, List<String>> entry : entries){
 			HistogramDataPoint point = HistogramDataPoint.create((entry.getKey()).getLocation(), entry.getValue());
 			points.add(point);
-
-			handler.add(point);
 		}
 
-		this.seriesPoints.put(series, points);
+		addSeries(series, points);
 	}
 
 	public BarSeriesOptions ensureBarSeriesOptions(){

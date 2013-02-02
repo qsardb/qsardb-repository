@@ -3,15 +3,11 @@ package org.dspace.client.gwt;
 import java.math.*;
 import java.util.*;
 
-import com.googlecode.gflot.client.*;
 import com.googlecode.gflot.client.event.*;
 import com.googlecode.gflot.client.jsni.*;
 import com.googlecode.gflot.client.options.*;
 
-public class ScatterPlot extends QdbPlot {
-
-	private Map<PredictionSeries, List<ScatterDataPoint>> seriesPoints = new LinkedHashMap<PredictionSeries, List<ScatterDataPoint>>();
-
+public class ScatterPlot extends QdbPlot<ScatterDataPoint> {
 
 	public ScatterPlot(final Resolver resolver){
 		GlobalSeriesOptions globalSeriesOptions = ensureGlobalSeriesOptions();
@@ -49,16 +45,7 @@ public class ScatterPlot extends QdbPlot {
 		addHoverListener(hoverListener, false);
 	}
 
-	@Override
-	protected Map<PredictionSeries, List<? extends DataPoint>> getData(){
-		return (Map)this.seriesPoints;
-	}
-
 	public void addSeries(PredictionSeries series, Map<String, ?> xValues, Map<String, ?> yValues){
-		PlotModel model = getModel();
-
-		SeriesHandler handler = model.addSeries(series);
-
 		Set<String> ids = new LinkedHashSet<String>(xValues.keySet());
 		ids.retainAll(yValues.keySet());
 
@@ -70,13 +57,12 @@ public class ScatterPlot extends QdbPlot {
 
 			if(x instanceof BigDecimal && y instanceof BigDecimal){
 				ScatterDataPoint point = ScatterDataPoint.create(((BigDecimal)x).doubleValue(), ((BigDecimal)y).doubleValue(), id);
-				points.add(point);
 
-				handler.add(point);
+				points.add(point);
 			}
 		}
 
-		this.seriesPoints.put(series, points);
+		addSeries(series, points);
 	}
 
 	public void addStDevMarkings(Number sigma){
@@ -114,12 +100,6 @@ public class ScatterPlot extends QdbPlot {
 		}
 
 		return markings;
-	}
-
-	private ScatterDataPoint getDataPoint(PlotItem item){
-		List<List<ScatterDataPoint>> points = new ArrayList<List<ScatterDataPoint>>(this.seriesPoints.values());
-
-		return points.get((item.getSeriesIndex()).intValue()).get((item.getDataIndex()).intValue());
 	}
 
 	static
