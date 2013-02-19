@@ -7,8 +7,9 @@
  */
 package org.dspace.statistics;
 
-import com.Ostermiller.util.CSVParser;
-import com.Ostermiller.util.CSVPrinter;
+import au.com.bytecode.opencsv.CSVParser;
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
@@ -17,6 +18,7 @@ import java.io.*;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -478,9 +480,10 @@ public class SolrLogger
         else if (dso instanceof Collection)
         {
             Collection coll = (Collection) dso;
-            for (int i = 0; i < coll.getCommunities().length; i++)
+            Community[] communities = coll.getCommunities();
+            for (int i = 0; i < communities.length; i++)
             {
-                Community community = coll.getCommunities()[i];
+                Community community = communities[i];
                 doc1.addField("owningComm", community.getID());
                 storeParents(doc1, community);
             }
@@ -488,9 +491,10 @@ public class SolrLogger
         else if (dso instanceof Item)
         {
             Item item = (Item) dso;
-            for (int i = 0; i < item.getCollections().length; i++)
+            Collection[] collections = item.getCollections();
+            for (int i = 0; i < collections.length; i++)
             {
-                Collection collection = item.getCollections()[i];
+                Collection collection = collections[i];
                 doc1.addField("owningColl", collection.getID());
                 storeParents(doc1, collection);
             }
@@ -498,12 +502,14 @@ public class SolrLogger
         else if (dso instanceof Bitstream)
         {
             Bitstream bitstream = (Bitstream) dso;
-            for (int i = 0; i < bitstream.getBundles().length; i++)
+            Bundle[] bundles = bitstream.getBundles();
+            for (int i = 0; i < bundles.length; i++)
             {
-                Bundle bundle = bitstream.getBundles()[i];
-                for (int j = 0; j < bundle.getItems().length; j++)
+                Bundle bundle = bundles[i];
+                Item[] items = bundle.getItems();
+                for (int j = 0; j < items.length; j++)
                 {
-                    Item item = bundle.getItems()[j];
+                    Item item = items[j];
                     doc1.addField("owningItem", item.getID());
                     storeParents(doc1, item);
                 }
@@ -1298,7 +1304,8 @@ public class SolrLogger
 
                 InputStream  csvOutput = get.getResponseBodyAsStream();
                 Reader csvReader = new InputStreamReader(csvOutput);
-                String[][] csvParsed = CSVParser.parse(csvReader);
+                List<String[]> rows = new CSVReader(csvReader).readAll();
+                String[][] csvParsed = rows.toArray(new String[rows.size()][]);
                 String[] header = csvParsed[0];
                 //Attempt to find the bitstream id index !
                 int idIndex = 0;
@@ -1310,14 +1317,11 @@ public class SolrLogger
 
                 File tempCsv = new File(tempDirectory.getPath() + File.separatorChar + "temp." + i + ".csv");
                 tempCsvFiles.add(tempCsv);
-                FileOutputStream outputStream = new FileOutputStream(tempCsv);
-                CSVPrinter csvp = new CSVPrinter(outputStream);
-                csvp.setAlwaysQuote(false);
+                CSVWriter csvp = new CSVWriter(new FileWriter(tempCsv));
+                //csvp.setAlwaysQuote(false);
 
                 //Write the header !
-                csvp.write(header);
-                csvp.write("bundleName");
-                csvp.writeln();
+                csvp.writeNext((String[]) ArrayUtils.add(header, "bundleName"));
                 Map<Integer, String> bitBundleCache = new HashMap<Integer, String>();
                 //Loop over each line (skip the headers though)!
                 for (int j = 1; j < csvParsed.length; j++){
@@ -1361,9 +1365,7 @@ public class SolrLogger
                             bundleName = "BITSTREAM_DELETED";
                         }
                     }
-                    csvp.write(csvLine);
-                    csvp.write(bundleName);
-                    csvp.writeln();
+                    csvp.writeNext((String[]) ArrayUtils.add(csvLine, bundleName));
                 }
 
                 //Loop over our parsed csv
