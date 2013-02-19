@@ -194,7 +194,7 @@
 
 	<servlet>
 		<servlet-name>QdbServiceServlet</servlet-name>
-		<servlet-class>org.dspace.service.gwt.QdbServiceServlet</servlet-class>
+		<servlet-class>org.dspace.qsardb.service.gwt.QdbServiceServlet</servlet-class>
 
 		<init-param>
 			<param-name>contextProvider</param-name>
@@ -204,7 +204,7 @@
 
 	<servlet>
 		<servlet-name>PredictorServiceServlet</servlet-name>
-		<servlet-class>org.dspace.service.http.PredictorServiceServlet</servlet-class>
+		<servlet-class>org.dspace.qsardb.service.http.PredictorServiceServlet</servlet-class>
 
 		<init-param>
 			<param-name>contextProvider</param-name>

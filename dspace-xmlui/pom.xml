@@ -39,17 +39,17 @@
 				<configuration>
 					<tasks>
 						<copy
-							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.client.Explorer"
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Explorer"
 						>
 							<fileset
-								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.client.Explorer"
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Explorer"
 							/>
 						</copy>
 						<copy
-							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.client.Predictor"
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Predictor"
 						>
 							<fileset
-								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.client.Predictor"
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Predictor"
 							/>
 						</copy>
 					</tasks>

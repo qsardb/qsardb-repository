@@ -1,0 +1,9 @@
+<module>
+	<inherits
+		name="org.dspace.qsardb.client.Gwt"
+	/>
+
+	<entry-point
+		class="org.dspace.qsardb.client.gwt.QdbExplorer"
+	/>
+</module>
