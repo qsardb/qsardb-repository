@@ -733,5 +733,14 @@
       <extension>rdf</extension>
     </bitstream-type>
 
+    <bitstream-type>
+      <mimetype>application/x-zip</mimetype>
+      <short_description>QsarDB</short_description>
+      <description>QsarDB ZIP files</description>
+      <support_level>2</support_level>
+      <internal>false</internal>
+      <extension>qdb</extension>
+      <extension>zip</extension>
+    </bitstream-type>
 
 </dspace-bitstream-types>

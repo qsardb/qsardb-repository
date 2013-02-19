@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dspace-qsardb</artifactId>
+    <name>DSpace QsarDB</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>dspace-parent</artifactId>
+        <groupId>org.dspace</groupId>
+        <version>3.0</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <properties>
+        <!-- This is the path to the root [dspace-src] directory. -->
+        <root.basedir>${basedir}/..</root.basedir>
+    </properties>
+
+	<modules>
+		<module>dspace-qsardb-client-gwt</module>
+		<module>dspace-qsardb-rpc-gwt</module>
+		<module>dspace-qsardb-service</module>
+		<module>dspace-qsardb-service-gwt</module>
+		<module>dspace-qsardb-service-http</module>
+	</modules>
+
+    <build>
+    </build>
+
+    <profiles>
+    </profiles>
+
+    <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-dev</artifactId>
+				<version>2.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-servlet</artifactId>
+				<version>2.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-user</artifactId>
+				<version>2.5.0</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+    </dependencyManagement>
+</project>

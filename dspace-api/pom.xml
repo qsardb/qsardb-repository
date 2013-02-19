@@ -198,6 +198,34 @@
             <artifactId>dspace-tm-extractors</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>evaluation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.cargo</groupId>
+            <artifactId>map</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.cargo</groupId>
+            <artifactId>matrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.storage</groupId>
+            <artifactId>directory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.storage</groupId>
+            <artifactId>zipfile</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
         </dependency>

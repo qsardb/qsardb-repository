@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<dspace-dc-types>
+	<dc-schema>
+		<name>qdb</name>
+		<namespace>http://www.qsardb.org/QDB</namespace>
+	</dc-schema>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>property</element>
+		<qualifier>endpoint</qualifier>
+		<scope_note>QMRF endpoint</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>property</element>
+		<qualifier>species</qualifier>
+		<scope_note>Species</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>descriptor</element>
+		<qualifier>application</qualifier>
+		<scope_note>Descriptor calculation software</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>prediction</element>
+		<qualifier>application</qualifier>
+		<scope_note>Modeling software</scope_note>
+	</dc-type>
+
+	<dc-type>
+		<schema>qdb</schema>
+		<element>model</element>
+		<qualifier>type</qualifier>
+		<scope_note>Model type</scope_note>
+	</dc-type>
+</dspace-dc-types>

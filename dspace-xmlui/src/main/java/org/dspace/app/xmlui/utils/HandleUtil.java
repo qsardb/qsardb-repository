@@ -34,10 +34,6 @@ import org.dspace.handle.HandleManager;
 
 public class HandleUtil
 {
-
-    /** The URL prefix of all handles */
-    protected static final String HANDLE_PREFIX = "handle/";
-
     protected static final String DSPACE_OBJECT = "dspace.object";
 
     /**
@@ -58,13 +54,12 @@ public class HandleUtil
         {
             String uri = request.getSitemapURI();
 
-            if (!uri.startsWith(HANDLE_PREFIX))
+            String handle = stripPrefix(uri);
+            if(handle == null)
             {
                 // Doesn't start with the prefix then no match
                 return null;
             }
-
-            String handle = uri.substring(HANDLE_PREFIX.length());
 
             int firstSlash = handle.indexOf('/');
             if (firstSlash < 0)
@@ -90,6 +85,20 @@ public class HandleUtil
         }
 
         return dso;
+    }
+
+    static
+    private String stripPrefix(String uri)
+    {
+		String[] prefixes = {"handle/", "explorer/", "predictor/"};
+		for(String prefix : prefixes){
+
+			if(uri.startsWith(prefix)){
+				return uri.substring(prefix.length());
+			}
+		}
+
+        return null;
     }
 
     /**

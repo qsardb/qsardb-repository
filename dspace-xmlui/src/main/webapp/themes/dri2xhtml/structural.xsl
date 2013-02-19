@@ -105,6 +105,11 @@
               </xsl:when>
               <xsl:otherwise>
             <body>
+                <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='gwt'][@qualifier='historyFrame']">
+                  <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex="-1" style="position:absolute;width:0;height:0;border:0">
+                    <xsl:comment>GWT history</xsl:comment>
+                  </iframe>
+                </xsl:if>
                 
                 <div id="ds-main">
                     <!--
@@ -1729,13 +1734,13 @@
         <xsl:if test="@target">
             <a>
                 <xsl:attribute name="href"><xsl:value-of select="@target"/></xsl:attribute>
-                <xsl:if test="@title">
-                	<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
-                </xsl:if>
-                <xsl:if test="@rend">
-                	<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
-                </xsl:if>
                 <img>
+                    <xsl:if test="@title">
+                    	<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="@rend">
+                    	<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
+                    </xsl:if>
                     <xsl:attribute name="src"><xsl:value-of select="@source"/></xsl:attribute>
                     <xsl:attribute name="alt"><xsl:apply-templates /></xsl:attribute>
                 <xsl:attribute name="border"><xsl:text>none</xsl:text></xsl:attribute>
@@ -1744,6 +1749,12 @@
         </xsl:if>
         <xsl:if test="not(@target)">
             <img>
+				<xsl:if test="@title">
+					<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@rend">
+					<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
+				</xsl:if>
                 <xsl:attribute name="src"><xsl:value-of select="@source"/></xsl:attribute>
                 <xsl:attribute name="alt"><xsl:apply-templates /></xsl:attribute>
             </img>

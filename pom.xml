@@ -391,6 +391,20 @@
             </modules>
         </profile>
 
+        <!--
+           Builds QsarDB WAR for DSpace
+        -->
+        <profile>
+            <id>dspace-qsardb</id>
+            <activation>
+                <file>
+                    <exists>dspace-qsardb/pom.xml</exists>
+                </file>
+            </activation>
+            <modules>
+                <module>dspace-qsardb</module>
+            </modules>
+        </profile>
 
       <!--
          The 'release' profile is used by the 'maven-release-plugin' (see above)
@@ -538,6 +552,31 @@
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
+            <artifactId>dspace-qsardb-client-gwt</artifactId>
+            <version>3.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-qsardb-rpc-gwt</artifactId>
+            <version>3.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-qsardb-service</artifactId>
+            <version>3.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-qsardb-service-gwt</artifactId>
+            <version>3.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
+            <artifactId>dspace-qsardb-service-http</artifactId>
+            <version>3.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.dspace</groupId>
             <artifactId>dspace-services</artifactId>
             <version>3.0</version>
          </dependency>
@@ -560,6 +599,52 @@
               <artifactId>sword-common</artifactId>
               <version>1.1</version>
           </dependency>
+          <dependency>
+              <groupId>org.qsardb</groupId>
+              <artifactId>evaluation</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb</groupId>
+              <artifactId>model</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb</groupId>
+              <artifactId>validation</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.cargo</groupId>
+              <artifactId>bodo</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.cargo</groupId>
+              <artifactId>map</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.cargo</groupId>
+              <artifactId>matrix</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.cargo</groupId>
+              <artifactId>structure</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.storage</groupId>
+              <artifactId>directory</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+              <groupId>org.qsardb.storage</groupId>
+              <artifactId>zipfile</artifactId>
+              <version>1.0-SNAPSHOT</version>
+          </dependency>
+
         <!-- Explicitly Specify Latest Version of Spring -->
         <dependency>
             <artifactId>spring-core</artifactId>

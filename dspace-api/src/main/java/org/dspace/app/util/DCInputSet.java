@@ -9,7 +9,6 @@ package org.dspace.app.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class representing all DC inputs required for a submission, organized into pages
@@ -22,23 +21,14 @@ public class DCInputSet
 {
 	/** name of the input set  */
 	private String formName = null; 
-	/** the inputs ordered by page and row position */
-	private DCInput[][] inputPages = null;
+	/** the list of properly initialized pages of the input set */
+	private List<DCInput.Page> pages = null;
 	
 	/** constructor */
-	public DCInputSet(String formName, List<List<Map<String, String>>> pages, Map<String, List<String>> listMap)
+	public DCInputSet(String formName, List<DCInput.Page> pages)
 	{
 		this.formName = formName;
-		inputPages = new DCInput[pages.size()][];
-		for ( int i = 0; i < inputPages.length; i++ )
-		{
-			List<Map<String, String>> page = pages.get(i);
-			inputPages[i] = new DCInput[page.size()];
-			for ( int j = 0; j < inputPages[i].length; j++ )
-			{
-				inputPages[i][j] = new DCInput(page.get(j), listMap);
-			}
-		}
+		this.pages = pages;
 	}
 	
 	/**
@@ -56,7 +46,7 @@ public class DCInputSet
 	 */
 	public int getNumberPages()
 	{
-		return inputPages.length;
+		return pages.size();
 	}
 	
     /**
@@ -73,11 +63,12 @@ public class DCInputSet
 		      					 boolean addPublishedBefore)
 	{
 		List<DCInput> filteredInputs = new ArrayList<DCInput>();
-		if ( pageNum < inputPages.length )
+		if ( pageNum < pages.size() )
 		{
-			for (int i = 0; i < inputPages[pageNum].length; i++ )
+			DCInput.Page page = pages.get(pageNum);
+			DCInput[] inputs = page.getInputs();
+			for(DCInput input : inputs)
 			{
-				DCInput input = inputPages[pageNum][i];
 				if (doField(input, addTitleAlternative, addPublishedBefore))
 				{
 					filteredInputs.add(input);
@@ -90,6 +81,23 @@ public class DCInputSet
 		return filteredInputs.toArray(inputArray);
 	}
 	
+    /**
+	 * Gets the title for a page from the form definition
+	 *
+	 * @param  pageNum desired page within set
+	 *
+	 * @return The title or <code>null</code> if not set
+	 */
+
+	public String getPageTitle(int pageNum){
+		if( pageNum < pages.size() )
+		{
+			DCInput.Page page = pages.get(pageNum);
+			return page.getTitle();
+		}
+		return null;
+	}
+
     /**
      * Does this set of inputs include an alternate title field?
      *
@@ -120,13 +128,14 @@ public class DCInputSet
      */
     public boolean isFieldPresent(String fieldName)
     {
-    	for (int i = 0; i < inputPages.length; i++)
-	    {
-    		DCInput[] pageInputs = inputPages[i];
-    		for (int row = 0; row < pageInputs.length; row++)
+    	for (int i = 0; i < pages.size(); i++)
+    	{
+    		DCInput.Page page = pages.get(i);
+    		DCInput[] inputs = page.getInputs();
+    		for (DCInput input : inputs)
     		{
-    			String fullName = pageInputs[row].getElement() + "." + 
-				              	  pageInputs[row].getQualifier();
+    			String fullName = input.getElement() + "." +
+				              	  input.getQualifier();
     			if (fullName.equals(fieldName))
     			{
     				return true;

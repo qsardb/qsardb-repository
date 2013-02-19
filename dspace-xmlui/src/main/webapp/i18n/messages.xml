@@ -164,13 +164,38 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.order.desc">descending</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.author.column_heading">Authors Name</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.column_heading">Title</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.subject.column_heading">Subject</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_endpoint.column_heading">Endpoint</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_species.column_heading">Species</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.descriptor_application.column_heading">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.prediction_application.column_heading">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.model_type.column_heading">Model type</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.title">Browsing {0} by Title {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.title">Browsing {0} by Title</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.author">Browsing {0} by Author {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.author">Browsing {0} by Author</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.subject">Browsing {0} by Subject {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.subject">Browsing {0} by Subject</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_endpoint">Browsing {0} by Endpoint {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_endpoint">Browsing {0} by Endpoint</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_species">Browsing {0} by Species {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_species">Browsing {0} by Species</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.descriptor_application">Browsing {0} by Descriptor calculation software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.descriptor_application">Browsing {0} by Descriptor calculation software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.prediction_application">Browsing {0} by Modeling software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.prediction_application">Browsing {0} by Modeling software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.model_type">Browsing {0} by Model type {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.model_type">Browsing {0} by Model type</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.item.title">Browsing {0} by Title {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.item.title">Browsing {0} by Title</message>
@@ -181,6 +206,7 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.item.dateaccessioned">Browsing {0} by Submit Date {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.item.dateaccessioned">Browsing {0} by Submit Date</message>
 
+	<message key="xmlui.ArtifactBrowser.RepositoryViewer.head_recent_submissions">Recent Submissions</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.CollectionViewer.java -->
 	<message key="xmlui.ArtifactBrowser.CollectionViewer.search_scope">Search Scope</message>
@@ -244,11 +270,30 @@
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.ItemViewer.java -->
 	<message key="xmlui.ArtifactBrowser.ItemViewer.trail">View Item</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.metadata_head">Metadata</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.content_head">QsarDB content</message>
+
 	<message key="xmlui.ArtifactBrowser.ItemViewer.head_parent_collections">This item appears in the following Collection(s)</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_simple">Show simple item record</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_full">Show full item record</message>
 
-        <message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property">{0} - &quot;{1}&quot;</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_summary">Summary</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_values">{0} Compounds</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_models_summary">{0} Model(s) with {1} Prediction(s)</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_bibliography">Bibliography</message>
+
+	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.handle_trail">{0} - QDB Explorer</message>
+
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.trail">QDB Predictor</message>
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.handle_trail">{0} - QDB Predictor</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
 	<message key="xmlui.ArtifactBrowser.Navigation.head_browse">Browse</message>
@@ -259,6 +304,11 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_subject">Subjects</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateissued">By Issue Date</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateaccessioned">By Submit Date</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_endpoint">Endpoints</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_species">Species</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_descriptor_application">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_prediction_application">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_model_type">Model type</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_collection">This Collection</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_community">This Community</message>
 
@@ -595,6 +645,7 @@
 	<message key="xmlui.Submission.submit.progressbar.describe">Describe</message>
     <message key="xmlui.Submission.submit.progressbar.access">Access</message>
     <message key="xmlui.Submission.submit.progressbar.upload">Upload</message>
+	<message key="xmlui.Submission.submit.progressbar.validate">Validate</message>
 	<message key="xmlui.Submission.submit.progressbar.verify">Review</message>
 	<message key="xmlui.Submission.submit.progressbar.creative-commons">Creative Commons</message>
 	<message key="xmlui.Submission.submit.progressbar.CClicense">CC License</message>
@@ -637,6 +688,7 @@
 
 	<!-- org.dspace.app.xmlui.Submission.submit.DescribeStep -->
 	<message key="xmlui.Submission.submit.DescribeStep.head">Describe Item</message>
+	<message key="xmlui.Submission.submit.DescribeStep.head_title">Describe Item: {0}</message>
 	<message key="xmlui.Submission.submit.DescribeStep.unknown_field">Error: Unknown field type</message>
 	<message key="xmlui.Submission.submit.DescribeStep.required_field">This field is required</message>
 	<message key="xmlui.Submission.submit.DescribeStep.last_name_help">Last name, <i>e.g. Smith</i></message>
@@ -759,6 +811,20 @@
     <!-- org.dspace.app.xmlui.Submission.submit.EditBitstreamPolicies -->
     <message key="xmlui.Submission.submit.EditBitstreamPolicies.head">Edit Bitstream Access</message>
 
+	<!-- org.dspace.app.xmlui.Submission.submit.QdbValidateStep -->
+	<message key="xmlui.Submission.submit.QdbValidateStep.head">QsarDB validation</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.level">QDB conformance level</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic">Basic (one star)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic_help">All Container and Cargo instances are correctly defined. All Container instances are resolveable in local scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (two stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate_help">Additionally, all Compound, Property and Descriptor instances are resolveable in global scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (three stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced_help">Additionally, all Models are evaluateable and all Prediction results (training and external validation) are reproducible.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.validate">Validate</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_init">Not validated</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_success">QDB validation passed</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_qdb_error">QDB validation failed because of a low-level QDB error. The uploaded QDB file is unusable.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_error">QDB validation failed</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.ReviewStep -->
 	<message key="xmlui.Submission.submit.ReviewStep.head">Review Submission</message>
@@ -2017,6 +2083,7 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.no-preview">No preview available</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-title">Untitled</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-author">Unknown author</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.no-publisher">Unknown publisher</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.non-conformant">
 		This is not a DSpace object conformant to the METS 1.0 profile and as such cannot be
         rendered effectively. You can override either the template that handles the general
@@ -2027,6 +2094,7 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.item-preview">Preview</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.item-title">Title</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.item-author">Author</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.item-publisher">Publisher</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.item-abstract">Abstract</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.item-description">Description</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.item-uri">URI</message>

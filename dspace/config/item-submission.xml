@@ -17,7 +17,7 @@
  <!-- which does not appear in this map will be associated with the mapping-->
  <!-- for handle "default".                                                -->
  <submission-map>
-   <name-map collection-handle="default" submission-name="traditional" />
+   <name-map collection-handle="default" submission-name="QsarDB" />
  </submission-map>
 
 
@@ -166,7 +166,43 @@
  <!--				 "true" or "false".				                       -->
  <!--                                                                      -->
  <submission-definitions>
-   
+
+	<submission-process name="QsarDB">
+		<step>
+			<heading>submit.progressbar.upload</heading>
+			<processing-class>org.dspace.submit.step.UploadStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.UploadStep</xmlui-binding>
+			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
+			<heading>submit.progressbar.validate</heading>
+			<processing-class>org.dspace.submit.step.QdbValidateStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.QdbValidateStep</xmlui-binding>
+			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbOptimizeStep</processing-class>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbCrosswalkStep</processing-class>
+		</step>
+		<step>
+			<heading>submit.progressbar.describe</heading>
+			<processing-class>org.dspace.submit.step.QdbDescribeStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.QdbDescribeStep</xmlui-binding>
+			<workflow-editable>true</workflow-editable>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
+		</step>
+		<step>
+			<heading>submit.progressbar.CClicense</heading>
+			<processing-class>org.dspace.submit.step.CCLicenseStep</processing-class>
+			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.CCLicenseStep</xmlui-binding>
+			<workflow-editable>false</workflow-editable>
+		</step>
+	</submission-process>
+
    <!--This "traditional" process defines the DEFAULT item submission process-->
    <submission-process name="traditional">
      

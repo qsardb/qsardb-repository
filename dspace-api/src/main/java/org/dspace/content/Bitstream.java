@@ -26,6 +26,8 @@ import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.TableRow;
 import org.dspace.storage.rdbms.TableRowIterator;
 
+import edu.sdsc.grid.io.GeneralFile;
+
 /**
  * Class representing bitstreams stored in the DSpace system.
  * <P>
@@ -601,6 +603,15 @@ public class Bitstream extends DSpaceObject
         AuthorizeManager.authorizeAction(bContext, this, Constants.READ);
 
         return BitstreamStorageManager.retrieve(bContext, bRow
+                .getIntColumn("bitstream_id"));
+    }
+
+    public GeneralFile getFile() throws IOException, SQLException, 
+            AuthorizeException
+    {
+        AuthorizeManager.authorizeAction(bContext, this, Constants.READ);
+
+        return BitstreamStorageManager.getFile(bContext, bRow
                 .getIntColumn("bitstream_id"));
     }
 

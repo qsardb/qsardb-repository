@@ -164,6 +164,10 @@
         <listener-class>org.dspace.app.util.DSpaceContextListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>org.dspace.app.util.RDSContextListener</listener-class>
+    </listener>
+
     <!--
         - Declare Spring context listener which sets up the Spring
         Application Context - containing all Cocoon components (and user
@@ -188,6 +192,26 @@
         Servlet Configuration ==========================================
     -->
 
+	<servlet>
+		<servlet-name>QdbServiceServlet</servlet-name>
+		<servlet-class>org.dspace.service.gwt.QdbServiceServlet</servlet-class>
+
+		<init-param>
+			<param-name>contextProvider</param-name>
+			<param-value>org.dspace.app.xmlui.utils.XMLUIContextProvider</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
+		<servlet-name>PredictorServiceServlet</servlet-name>
+		<servlet-class>org.dspace.service.http.PredictorServiceServlet</servlet-class>
+
+		<init-param>
+			<param-name>contextProvider</param-name>
+			<param-value>org.dspace.app.xmlui.utils.XMLUIContextProvider</param-value>
+		</init-param>
+	</servlet>
+
     <!--servlet>
         <description>Cocoon</description>
         <display-name>Cocoon</display-name>
@@ -209,6 +233,16 @@
     </servlet>
 
     <!-- URL space mappings ============================================= -->
+
+	<servlet-mapping>
+		<servlet-name>QdbServiceServlet</servlet-name>
+		<url-pattern>/service/gwt</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>PredictorServiceServlet</servlet-name>
+		<url-pattern>/service/predictor/*</url-pattern>
+	</servlet-mapping>
 
     <!--
         Cocoon handles all the URL space assigned to the webapp using its sitemap.

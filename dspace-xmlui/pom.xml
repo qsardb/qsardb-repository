@@ -26,6 +26,35 @@
             <filter>${filters.file}</filter>
         </filters>
         <plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<tasks>
+						<copy
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.client.Explorer"
+						>
+							<fileset
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.client.Explorer"
+							/>
+						</copy>
+						<copy
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.client.Predictor"
+						>
+							<fileset
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.client.Predictor"
+							/>
+						</copy>
+					</tasks>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -97,6 +126,20 @@
             <groupId>org.dspace</groupId>
             <artifactId>dspace-api</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-client-gwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-gwt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-http</artifactId>
+		</dependency>
 
         <!-- Custom build DSpace cocoon -->
         <dependency>

@@ -64,17 +64,12 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
     private static final Message T_trail =
         message("xmlui.ArtifactBrowser.ItemViewer.trail");
 
-    private static final Message T_show_simple =
-        message("xmlui.ArtifactBrowser.ItemViewer.show_simple");
-
-    private static final Message T_show_full =
-        message("xmlui.ArtifactBrowser.ItemViewer.show_full");
-
-    private static final Message T_head_parent_collections =
-        message("xmlui.ArtifactBrowser.ItemViewer.head_parent_collections");
-
     private static final Message T_withdrawn = message("xmlui.ArtifactBrowser.ItemViewer.withdrawn");
-    
+
+    private static final Message T_item_metadata_head = message("xmlui.ArtifactBrowser.ItemViewer.metadata_head");
+
+    private static final Message T_item_content_head = message("xmlui.ArtifactBrowser.ItemViewer.content_head");
+
 	/** Cached validity object */
 	private SourceValidity validity = null;
 
@@ -99,7 +94,7 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
                 return "0"; // no item, something is wrong.
             }
 
-            return HashUtil.hash(dso.getHandle() + "full:" + showFullItem(objectModel));
+            return HashUtil.hash(dso.getHandle() + "full:" + ItemMetadataPanel.showFullItem(objectModel));
         }
         catch (SQLException sqle)
         {
@@ -274,76 +269,18 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
             p.addContent(T_withdrawn);
             //Set proper response. Return "404 Not Found"
             HttpServletResponse response = (HttpServletResponse)objectModel
-                    .get(HttpEnvironment.HTTP_RESPONSE_OBJECT);   
+                    .get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        Para showfullPara = division.addPara(null, "item-view-toggle item-view-toggle-top");
+        Division metadataPanel = division.addDivision("item-metadata", "primary");
+        metadataPanel.setHead(T_item_metadata_head);
+        ItemMetadataPanel.generate(this, item, metadataPanel);
 
-        if (showFullItem(objectModel))
-        {
-            String link = contextPath + "/handle/" + item.getHandle();
-            showfullPara.addXref(link).addContent(T_show_simple);
-        }
-        else
-        {
-            String link = contextPath + "/handle/" + item.getHandle()
-                    + "?show=full";
-            showfullPara.addXref(link).addContent(T_show_full);
-        }
-
-        ReferenceSet referenceSet;
-        if (showFullItem(objectModel))
-        {
-            referenceSet = division.addReferenceSet("collection-viewer",
-                    ReferenceSet.TYPE_DETAIL_VIEW);
-        }
-        else
-        {
-            referenceSet = division.addReferenceSet("collection-viewer",
-                    ReferenceSet.TYPE_SUMMARY_VIEW);
-        }
-
-        // Reference the actual Item
-        ReferenceSet appearsInclude = referenceSet.addReference(item).addReferenceSet(ReferenceSet.TYPE_DETAIL_LIST,null,"hierarchy");
-        appearsInclude.setHead(T_head_parent_collections);
-
-        // Reference all collections the item appears in.
-        for (Collection collection : item.getCollections())
-        {
-            appearsInclude.addReference(collection);
-        }
-
-        showfullPara = division.addPara(null,"item-view-toggle item-view-toggle-bottom");
-
-        if (showFullItem(objectModel))
-        {
-            String link = contextPath + "/handle/" + item.getHandle();
-            showfullPara.addXref(link).addContent(T_show_simple);
-        }
-        else
-        {
-            String link = contextPath + "/handle/" + item.getHandle()
-                    + "?show=full";
-            showfullPara.addXref(link).addContent(T_show_full);
-        }
-    }
-
-    /**
-     * Determine if the full item should be referenced or just a summary.
-     */
-    public static boolean showFullItem(Map objectModel)
-    {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        String show = request.getParameter("show");
-
-        if (show != null && show.length() > 0)
-        {
-            return true;
-        }
-
-        return false;
+        Division contentPanel = division.addDivision("item-content", "primary");
+        contentPanel.setHead(T_item_content_head);
+        ItemContentPanel.generate(this, item, contentPanel);
     }
 
     /**

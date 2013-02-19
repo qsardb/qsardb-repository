@@ -518,11 +518,17 @@ public class BitstreamStorageManager
     public static InputStream retrieve(Context context, int id)
             throws SQLException, IOException
     {
-        TableRow bitstream = DatabaseManager.find(context, "bitstream", id);
-
-		GeneralFile file = getFile(bitstream);
+		GeneralFile file = getFile(context, id);
 
 		return (file != null) ? FileFactory.newFileInputStream(file) : null;
+    }
+
+    public static GeneralFile getFile(Context context, int id)
+            throws SQLException, IOException
+    {
+        TableRow bitstream = DatabaseManager.find(context, "bitstream", id);
+
+        return getFile(bitstream);
     }
 
     /**

@@ -67,6 +67,8 @@ public class DescribeStep extends AbstractSubmissionStep
         /** Language Strings **/
     protected static final Message T_head =
         message("xmlui.Submission.submit.DescribeStep.head");
+    protected static final Message T_head_title =
+        message("xmlui.Submission.submit.DescribeStep.head_title");
     protected static final Message T_unknown_field=
         message("xmlui.Submission.submit.DescribeStep.unknown_field");
     protected static final Message T_required_field=
@@ -177,7 +179,17 @@ public class DescribeStep extends AbstractSubmissionStep
                 addSubmissionProgressList(div);
 
                 List form = div.addList("submit-describe",List.TYPE_FORM);
-                form.setHead(T_head);
+                String title = inputSet.getPageTitle(getPage()-1);
+                if(title != null)
+                {
+                    form.setHead(T_head_title.parameterize(title));
+                }
+                else
+                {
+                    form.setHead(T_head);
+                }
+
+                inputs = filterInputs(inputs);
 
                 // Fetch the document type (dc.type)
                 String documentType = "";
@@ -284,6 +296,11 @@ public class DescribeStep extends AbstractSubmissionStep
                 // add standard control/paging buttons
         addControlButtons(form);
         }
+
+    public DCInput[] filterInputs(DCInput[] inputs)
+    {
+        return inputs;
+    }
 
     /**
      * Each submission step must define its own information to be reviewed

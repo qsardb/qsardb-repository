@@ -128,6 +128,16 @@
          <scope>provided</scope>
       </dependency>
 
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-gwt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-http</artifactId>
+		</dependency>
+
    </dependencies>
 
 </project>

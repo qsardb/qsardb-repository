@@ -402,4 +402,34 @@ public class DCInput
 		return typeBind.contains(typeName);
 	}
 	
+
+    static
+    public class Page extends ArrayList<Map<String, String>> {
+
+        private String title = null;
+
+        private DCInput[] inputs = null;
+
+
+        void initInputs(Map<String, List<String>> listMap){
+            DCInput[] inputs = new DCInput[size()];
+            for(int i = 0; i < size(); i++)
+            {
+                inputs[i] = new DCInput(get(i), listMap);
+            }
+            this.inputs = inputs;
+        }
+
+        public String getTitle(){
+            return this.title;
+        }
+
+        public void setTitle(String title){
+            this.title = title;
+        }
+
+        public DCInput[] getInputs(){
+            return this.inputs;
+        }
+    }
 }

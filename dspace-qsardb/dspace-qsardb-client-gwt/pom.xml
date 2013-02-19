@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.dspace</groupId>
+	<artifactId>dspace-qsardb-client-gwt</artifactId>
+	<name>DSpace QsarDB :: GWT Client</name>
+
+	<parent>
+		<groupId>org.dspace</groupId>
+		<artifactId>dspace-qsardb</artifactId>
+		<version>3.0</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-rpc-gwt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gflot</groupId>
+			<artifactId>gflot</artifactId>
+			<version>3.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--
+		mvn -o install:install-file -DgroupId=com.kiouri.sliderbar -DartifactId=gwt-slider-bar -Dversion=1.0 -Dpackaging=jar -Dfile=gwt-slider-bar-1.0.jar
+		-->
+		<dependency>
+			<groupId>com.kiouri.sliderbar</groupId>
+			<artifactId>gwt-slider-bar</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.reveregroup.gwt</groupId>
+			<artifactId>gwt-image-loader</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>gflot.googlecode.com</id>
+			<url>http://gflot.googlecode.com/svn/repo/releases</url>
+		</repository>
+		<repository>
+			<id>gwt-image-loader.googlecode.com</id>
+			<url>http://gwt-image-loader.googlecode.com/svn/repo</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>2.5.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<style>PRETTY</style>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

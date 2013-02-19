@@ -99,7 +99,7 @@ public class SimpleHTMLFragment extends AbstractWingElement {
 			String xml = "<fragment>" + fragment + "</fragment>";
 
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(xml
-					.getBytes());
+					.getBytes("UTF-8"));
 
 			SAXBuilder builder = new SAXBuilder();
 			Document document = builder.build(inputStream);
@@ -416,6 +416,18 @@ public class SimpleHTMLFragment extends AbstractWingElement {
 					limitAttributes(element);
 					element.setName("hi");
 					element.setAttribute("rend", "underline");
+
+					translate(element);
+				} else if ("sup".equals(name)) {
+					limitAttributes(element);
+					element.setName("hi");
+					element.setAttribute("rend", "superscript");
+
+					translate(element);
+				} else if ("sub".equals(name)) {
+					limitAttributes(element);
+					element.setName("hi");
+					element.setAttribute("rend", "subscript");
 
 					translate(element);
 				} else if ("img".equals(name)) {

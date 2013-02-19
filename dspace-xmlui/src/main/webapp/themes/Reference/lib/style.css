@@ -403,6 +403,14 @@ p.copyright-text {
         text-align: center;
 }
 
+p.side-left {
+	float: left;
+}
+
+p.side-right {
+	float: right;
+}
+
 div.primary {
         overflow: auto;
         margin-bottom: 20px;
@@ -485,7 +493,21 @@ th.doubleIndent {
     padding-right: 0;
 }
 
+th.icon {
+	width: 22px;
+}
 
+th.short {
+	width: 50px;
+}
+
+th.medium {
+	width: 100px;
+}
+
+th.long {
+	width: 200px;
+}
 
 /* highlight a single row */
 tr.ds-table-row.highlight {
@@ -551,6 +573,14 @@ a.image-link img {
         border: none;
 }
 
+a.application-link {
+	margin-left: 5px;
+}
+
+img.icon {
+	border: 0px;
+}
+
 span.bold {
         font-weight: bold;
 }
@@ -561,6 +591,20 @@ span.italics,span.italic {
 
 span.underline {
         text-decoration: underline;
+}
+
+span.superscript {
+	font-size: .83em;
+	vertical-align: super;
+}
+
+span.subscript {
+	font-size: .83em;
+	vertical-align: sub;
+}
+
+td div {
+	white-space: nowrap;
 }
 
 span.floatleft {

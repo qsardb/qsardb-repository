@@ -358,7 +358,6 @@ public class ShibAuthentication implements AuthenticationMethod
 				} // foreach affiliations
 			} // if affiliations
 
-
 			log.info("Added current EPerson to special groups: "+groups);
 
 			// Convert from a Java Set to primitive int array

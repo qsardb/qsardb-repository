@@ -37,6 +37,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
