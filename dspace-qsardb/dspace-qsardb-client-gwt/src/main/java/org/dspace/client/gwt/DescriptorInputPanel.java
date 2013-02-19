@@ -153,6 +153,9 @@ public class DescriptorInputPanel extends Composite {
 
 		panel.add(histogramPlot);
 
+		// XXX
+		histogramPlot.changeSeriesVisibility(new SeriesDisplayEvent(Collections.singletonMap(training, Boolean.TRUE)));
+
 		return panel;
 	}
 
