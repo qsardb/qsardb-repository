@@ -11,6 +11,8 @@ import org.dspace.service.*;
 
 import org.qsardb.model.*;
 
+import org.apache.commons.io.*;
+
 public class PredictorServiceServlet extends ItemServlet {
 
 	@Override
@@ -24,7 +26,7 @@ public class PredictorServiceServlet extends ItemServlet {
 	}
 
 	@Override
-	protected QdbCallable<String> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+	protected QdbCallable<Result> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
 		final
 		String body;
 
@@ -46,10 +48,10 @@ public class PredictorServiceServlet extends ItemServlet {
 			}
 		}
 
-		QdbContentCallable<String> callable = new QdbContentCallable<String>(path){
+		QdbContentCallable<Result> callable = new QdbContentCallable<Result>(path){
 
 			@Override
-			public String call(Object object) throws Exception {
+			public Result call(Object object) throws Exception {
 
 				if(object instanceof Model){
 					return call((Model)object);
@@ -58,7 +60,7 @@ public class PredictorServiceServlet extends ItemServlet {
 				throw new IllegalArgumentException();
 			}
 
-			private String call(Model model) throws Exception {
+			private Result call(Model model) throws Exception {
 				String structure;
 
 				Map<String, String> parameters = new LinkedHashMap<String, String>();
@@ -85,7 +87,9 @@ public class PredictorServiceServlet extends ItemServlet {
 					}
 				}
 
-				return PredictorUtil.evaluate(model, parameters, structure);
+				String string = PredictorUtil.evaluate(model, parameters, structure);
+
+				return new StringResult(string);
 			}
 		};
 
@@ -110,16 +114,7 @@ public class PredictorServiceServlet extends ItemServlet {
 			InputStream is = request.getInputStream();
 
 			try {
-				byte[] buffer = new byte[512];
-
-				while(true){
-					int count = is.read(buffer);
-					if(count < 0){
-						break;
-					}
-
-					os.write(buffer, 0, count);
-				}
+				IOUtils.copy(is, os);
 			} finally {
 				is.close();
 			}

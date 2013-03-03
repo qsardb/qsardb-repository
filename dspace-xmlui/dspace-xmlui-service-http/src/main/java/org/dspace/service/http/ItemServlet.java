@@ -15,7 +15,7 @@ abstract
 public class ItemServlet extends DSpaceHttpServlet {
 
 	abstract
-	protected QdbCallable<String> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException;
+	protected QdbCallable<? extends Result> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException;
 
 	public void doService(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Context context = getThreadLocalContext();
@@ -60,7 +60,7 @@ public class ItemServlet extends DSpaceHttpServlet {
 			return;
 		}
 
-		QdbCallable<String> callable = null;
+		QdbCallable<? extends Result> callable = null;
 
 		try {
 			callable = createCallable(request, response, path);
@@ -77,17 +77,9 @@ public class ItemServlet extends DSpaceHttpServlet {
 		logger.debug(session.getId() + ": processing started");
 
 		try {
-			String result = QdbUtil.invokeInternal(context, item, callable);
+			Result result = QdbUtil.invokeInternal(context, item, callable);
 
-			response.setContentType("text/plain");
-
-			Writer writer = response.getWriter();
-
-			try {
-				writer.write(result);
-			} finally {
-				writer.close();
-			}
+			result.send(response);
 		} catch(Exception e){
 			log("Processing failed", e);
 
@@ -112,6 +104,60 @@ public class ItemServlet extends DSpaceHttpServlet {
 		Pattern pattern = Pattern.compile(request.getContextPath() + request.getServletPath() + "/(\\d+/\\d+)(?:/(.*))?");
 
 		return pattern.matcher(request.getRequestURI());
+	}
+
+	public interface Result {
+
+		void send(HttpServletResponse response) throws IOException;
+	}
+
+	static
+	public class StringResult implements Result {
+
+		private String string = null;
+
+
+		public StringResult(String string){
+			this.string = string;
+		}
+
+		@Override
+		public void send(HttpServletResponse response) throws IOException {
+			response.setContentType("text/plain; charset=UTF-8");
+
+			Writer writer = response.getWriter();
+
+			try {
+				writer.write(this.string);
+			} finally {
+				writer.close();
+			}
+		}
+	}
+
+	static
+	public class ByteArrayResult implements Result {
+
+		private byte[] bytes = null;
+
+
+		public ByteArrayResult(byte[] bytes){
+			this.bytes = bytes;
+		}
+
+		@Override
+		public void send(HttpServletResponse response) throws IOException {
+			response.setContentType("application/octet-stream");
+			response.setContentLength(this.bytes.length);
+
+			OutputStream os = response.getOutputStream();
+
+			try {
+				os.write(this.bytes);
+			} finally {
+				os.close();
+			}
+		}
 	}
 
 	private static final Logger logger = Logger.getLogger(ItemServlet.class);
