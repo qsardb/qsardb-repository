@@ -31,36 +31,46 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		Matcher matcher = createMatcher(request);
 
 		if(!matcher.matches()){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request URI");
 
 			return;
 		}
 
+		String handle = matcher.group(1);
+
 		Item item = null;
 
 		try {
-			item = ItemUtil.obtainItem(context, matcher.group(1));
+			item = ItemUtil.obtainItem(context, handle);
 		} catch(SQLException se){
 			// Ignored
 		}
 
 		if(item == null || item.isWithdrawn()){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Item handle");
 
 			return;
 		}
 
 		logger.debug(session.getId() + ": obtained item " + item.getHandle());
 
-		final
-		String query = request.getQueryString();
-		if(query == null || "".equals(query)){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		String path = matcher.group(2);
+
+		if(path == null || !(path.startsWith("models/") || path.contains("/models/"))){
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad QDB archive path");
 
 			return;
 		}
 
-		QdbContentCallable<String> callable = new QdbContentCallable<String>(matcher.group(2)){
+		final
+		String query = request.getQueryString();
+		if(query == null || "".equals(query)){
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad query string");
+
+			return;
+		}
+
+		QdbContentCallable<String> callable = new QdbContentCallable<String>(path){
 
 			@Override
 			public String call(Object object) throws Exception {
@@ -99,7 +109,7 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		} catch(Exception e){
 			log("Evaluation failed", e);
 
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Evaluation failure");
 
 			return;
 		} finally {
@@ -135,6 +145,13 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 		}
 
 		return result;
+	}
+
+	static
+	protected Matcher createMatcher(HttpServletRequest request){
+		Pattern pattern = Pattern.compile(request.getContextPath() + request.getServletPath() + "/(\\d+/\\d+)(?:/(.*))?");
+
+		return pattern.matcher(request.getRequestURI());
 	}
 
 	private static final Logger logger = Logger.getLogger(PredictorServiceServlet.class);
