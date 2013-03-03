@@ -14,17 +14,36 @@ import org.qsardb.model.*;
 public class PredictorServiceServlet extends ItemServlet {
 
 	@Override
-	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		doService(request, response);
 	}
 
 	@Override
-	protected QdbCallable<String> createCallable(HttpServletRequest request, HttpServletResponse response, String path){
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		doService(request, response);
+	}
+
+	@Override
+	protected QdbCallable<String> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		final
+		String body;
+
+		if("POST".equals(request.getMethod())){
+			body = readBody(request);
+		} else
+
+		{
+			body = null;
+		}
+
 		final
 		String query = request.getQueryString();
 
-		if(query == null){
-			return null;
+		if(body == null){
+
+			if(query == null){
+				return null;
+			}
 		}
 
 		QdbContentCallable<String> callable = new QdbContentCallable<String>(path){
@@ -40,18 +59,31 @@ public class PredictorServiceServlet extends ItemServlet {
 			}
 
 			private String call(Model model) throws Exception {
+				String structure;
+
 				Map<String, String> parameters = new LinkedHashMap<String, String>();
 
-				String structure = query;
+				// HTTP POST
+				if(body != null){
+					structure = body;
 
-				int ampersand = query.indexOf('&');
-				if(ampersand > -1){
-					parameters.putAll(parseDescriptors(model.getQdb(), query.substring(ampersand + 1)));
+					parameters.putAll(parseDescriptors(model.getQdb(), query));
+				} else
 
-					structure = query.substring(0, ampersand);
+				// HTTP GET
+				{
+					int ampersand = query.indexOf('&');
+
+					if(ampersand > -1){
+						structure = URLDecoder.decode(query.substring(0, ampersand), "US-ASCII");
+
+						parameters.putAll(parseDescriptors(model.getQdb(), query.substring(ampersand + 1)));
+					} else
+
+					{
+						structure = query;
+					}
 				}
-
-				structure = URLDecoder.decode(structure, "US-ASCII");
 
 				return PredictorUtil.evaluate(model, parameters, structure);
 			}
@@ -66,8 +98,45 @@ public class PredictorServiceServlet extends ItemServlet {
 	}
 
 	static
+	private String readBody(HttpServletRequest request) throws IOException {
+		String encoding = request.getCharacterEncoding();
+		if(encoding == null){
+			encoding = "US-ASCII";
+		}
+
+		ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+
+		try {
+			InputStream is = request.getInputStream();
+
+			try {
+				byte[] buffer = new byte[512];
+
+				while(true){
+					int count = is.read(buffer);
+					if(count < 0){
+						break;
+					}
+
+					os.write(buffer, 0, count);
+				}
+			} finally {
+				is.close();
+			}
+		} finally {
+			os.close();
+		}
+
+		return os.toString(encoding);
+	}
+
+	static
 	private Map<String, String> parseDescriptors(Qdb qdb, String string) throws UnsupportedEncodingException {
 		Map<String, String> result = new LinkedHashMap<String, String>();
+
+		if(string == null || "".equals(string)){
+			return result;
+		}
 
 		String[] entries = string.split("&");
 		for(String entry : entries){
