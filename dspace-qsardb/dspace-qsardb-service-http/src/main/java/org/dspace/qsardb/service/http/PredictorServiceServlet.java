@@ -2,123 +2,136 @@ package org.dspace.qsardb.service.http;
 
 import java.io.*;
 import java.net.*;
-import java.sql.*;
 import java.util.*;
-import java.util.regex.*;
 
 import javax.servlet.http.*;
 
-import org.qsardb.model.*;
-
-import org.apache.log4j.*;
-
 import org.dspace.content.*;
-import org.dspace.core.*;
 import org.dspace.qsardb.service.*;
 
-public class PredictorServiceServlet extends DSpaceHttpServlet {
+import org.qsardb.model.*;
+
+import org.apache.commons.io.*;
+
+public class PredictorServiceServlet extends ItemServlet {
 
 	@Override
-	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		doService(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		doService(request, response);
+	}
+
+	@Override
+	protected QdbCallable<Result> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
 		final
-		HttpSession session = request.getSession();
+		String body;
 
-		logger.debug(session.getId() + ": servicing request URI \"" + request.getRequestURI() + "\", query string \"" + request.getQueryString() + "\"");
+		if("POST".equals(request.getMethod())){
+			body = readBody(request);
+		} else
 
-		Context context = getThreadLocalContext();
-
-		Matcher matcher = createMatcher(request);
-
-		if(!matcher.matches()){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-
-			return;
+		{
+			body = null;
 		}
-
-		Item item = null;
-
-		try {
-			item = ItemUtil.obtainItem(context, matcher.group(1));
-		} catch(SQLException se){
-			// Ignored
-		}
-
-		if(item == null || item.isWithdrawn()){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-
-			return;
-		}
-
-		logger.debug(session.getId() + ": obtained item " + item.getHandle());
 
 		final
 		String query = request.getQueryString();
-		if(query == null || "".equals(query)){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 
-			return;
+		if(body == null){
+
+			if(query == null){
+				return null;
+			}
 		}
 
-		QdbContentCallable<String> callable = new QdbContentCallable<String>(matcher.group(2)){
+		QdbContentCallable<Result> callable = new QdbContentCallable<Result>(path){
 
 			@Override
-			public String call(Object object) throws Exception {
+			public Result call(Object object) throws Exception {
 
 				if(object instanceof Model){
-					Model model = (Model)object;
-
-					Map<String, String> parameters = new LinkedHashMap<String, String>();
-
-					String structure = query;
-
-					int ampersand = query.indexOf('&');
-					if(ampersand > -1){
-						parameters.putAll(parseDescriptors(model.getQdb(), query.substring(ampersand + 1)));
-
-						structure = query.substring(0, ampersand);
-					}
-
-					structure = URLDecoder.decode(structure, "US-ASCII");
-
-					logger.debug(session.getId() + ": evaluating \"" + structure + "\" " + (parameters.size() > 0 ? ("(extra parameters " + parameters + ")") : "(no extra parameters)"));
-
-					return PredictorUtil.evaluate(model, parameters, structure);
+					return call((Model)object);
 				}
 
 				throw new IllegalArgumentException();
 			}
+
+			private Result call(Model model) throws Exception {
+				String structure;
+
+				Map<String, String> parameters = new LinkedHashMap<String, String>();
+
+				// HTTP POST
+				if(body != null){
+					structure = body;
+
+					parameters.putAll(parseDescriptors(model.getQdb(), query));
+				} else
+
+				// HTTP GET
+				{
+					int ampersand = query.indexOf('&');
+
+					if(ampersand > -1){
+						structure = URLDecoder.decode(query.substring(0, ampersand), "US-ASCII");
+
+						parameters.putAll(parseDescriptors(model.getQdb(), query.substring(ampersand + 1)));
+					} else
+
+					{
+						structure = query;
+					}
+				}
+
+				String string = PredictorUtil.evaluate(model, parameters, structure);
+
+				return new StringResult(string);
+			}
 		};
 
-		String result;
+		return callable;
+	}
 
-		logger.debug(session.getId() + ": evaluation started");
+	@Override
+	protected boolean validatePath(String path){
+		return path != null && (path.startsWith("models/") || path.contains("/models/"));
+	}
 
-		try {
-			result = QdbUtil.invokeInternal(context, item, callable);
-		} catch(Exception e){
-			log("Evaluation failed", e);
-
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-
-			return;
-		} finally {
-			logger.debug(session.getId() + ": evaluation finished");
+	static
+	private String readBody(HttpServletRequest request) throws IOException {
+		String encoding = request.getCharacterEncoding();
+		if(encoding == null){
+			encoding = "US-ASCII";
 		}
 
-		response.setContentType("text/plain");
-
-		Writer writer = response.getWriter();
+		ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
 
 		try {
-			writer.write(result);
+			InputStream is = request.getInputStream();
+
+			try {
+				IOUtils.copy(is, os);
+			} finally {
+				is.close();
+			}
 		} finally {
-			writer.close();
+			os.close();
 		}
+
+		return os.toString(encoding);
 	}
 
 	static
 	private Map<String, String> parseDescriptors(Qdb qdb, String string) throws UnsupportedEncodingException {
 		Map<String, String> result = new LinkedHashMap<String, String>();
+
+		if(string == null || "".equals(string)){
+			return result;
+		}
 
 		String[] entries = string.split("&");
 		for(String entry : entries){
@@ -135,6 +148,4 @@ public class PredictorServiceServlet extends DSpaceHttpServlet {
 
 		return result;
 	}
-
-	private static final Logger logger = Logger.getLogger(PredictorServiceServlet.class);
 }
