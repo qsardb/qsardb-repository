@@ -46,13 +46,7 @@ public class ResolverTooltip extends Tooltip {
 		Map<String, String> values = resolver.resolve(callback.getId());
 
 		final
-		String imageValue = getValue(values, Arrays.asList(Resolver.INCHI, Resolver.SMILES, Resolver.NAME));
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("http://cactus.nci.nih.gov");
-		sb.append("/chemical/structure/").append(imageValue.replace("#", "%23").replace("?", "%3f")).append("/image").append("?").append("format=png");
-
-		String url = sb.toString();
+		String resolveMethod = resolver.resolveMethod(values);
 
 		ImageLoadHandler loadHandler = new ImageLoadHandler(){
 
@@ -68,17 +62,18 @@ public class ResolverTooltip extends Tooltip {
 						image.setPixelSize(size.getWidth(), size.getHeight());
 					}
 
-					resetTable(image, values, image != null ? imageValue : null);
+					resetTable(image, values, image != null ? resolveMethod : null);
 
 					setPopupPositionAndShow(callback);
 				}
 			}
 		};
 
+		String url = resolver.resolveURL(values);
 		ImagePreloader.load(url, loadHandler);
 	}
 
-	private void resetTable(Image image, Map<String, String> values, String imageValue){
+	private void resetTable(Image image, Map<String, String> values, String method){
 
 		if(this.table.getRowCount() > 0){
 			this.table.removeAllRows();
@@ -109,7 +104,7 @@ public class ResolverTooltip extends Tooltip {
 			this.table.setWidget(row, 0, new HTML("<b>" + key + "</b>")); // XXX
 			formatter.setHorizontalAlignment(row, 0, HasHorizontalAlignment.ALIGN_LEFT);
 
-			this.table.setWidget(row, 1, new HTML((value).equals(imageValue) ? "<u>" + value + "</u>" : value)); // XXX
+			this.table.setWidget(row, 1, new HTML((key).equals(method) ? "<u>" + value + "</u>" : value)); // XXX
 			formatter.setHorizontalAlignment(row, 1, HasHorizontalAlignment.ALIGN_LEFT);
 
 			row++;
