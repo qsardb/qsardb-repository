@@ -13,3 +13,18 @@
 .gwt-MenuItem {
 	text-align: left;
 }
+
+table.distances {
+	border: none;  
+}
+table.distances tr {
+    vertical-align: top; 
+}
+table.distances td {
+    padding-left: 1em;
+}
+table.distances hr {
+    height: 2px;
+    background-color: #e7e7e7;
+    border: none;
+}

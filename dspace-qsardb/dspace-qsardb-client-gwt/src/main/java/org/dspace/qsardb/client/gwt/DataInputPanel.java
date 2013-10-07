@@ -82,4 +82,5 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	private void setValues(Map<String, String> values){
 		this.values = values;
 	}
+
 }

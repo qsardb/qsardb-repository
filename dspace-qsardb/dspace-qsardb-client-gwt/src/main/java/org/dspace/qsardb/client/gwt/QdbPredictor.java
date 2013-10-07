@@ -32,6 +32,13 @@ public class QdbPredictor extends QdbApplication {
 
 		inputPanel.addEvaluationEventHandler(outputPanel);
 
+		panel.add(new Heading("Similar predictions", 3));
+
+		CompoundDistancePanel similarityPanel = new CompoundDistancePanel(table);
+		panel.add(similarityPanel);
+
+		inputPanel.addEvaluationEventHandler(similarityPanel);
+
 		return panel;
 	}
 }
