@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:qdb='urn:import:org.dspace.qsardb.client.gwt'>
+
+  <ui:style>
+    @external .gwt-TabPanel;
+    .gwt-TabPanel, .gwt-TabPanel table { border: none; }
+    .gwt-TabPanel td { padding: 0; }
+  </ui:style>
+
+  <g:HTMLPanel>
+    <g:TabPanel ui:field='tabPanel'>
+      <g:Tab text="Select compounds">
+        <qdb:CompoundSelectionPanel ui:field='compoundSelectionPanel'/>
+      </g:Tab>
+      <g:Tab text="Calculate descriptors">
+        <qdb:CompoundInputPanel ui:field='compoundInputPanel'/>
+      </g:Tab>
+    </g:TabPanel>
+
+    <br/>
+    <qdb:ModelInputPanel ui:field='modelInputPanel'/>
+    
+  </g:HTMLPanel>
+
+</ui:UiBinder>

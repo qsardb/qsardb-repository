@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+  <ui:style>
+    .panel div { padding: 3px 2px; }
+    @external .gwt-SuggestBoxPopup;
+    .gwt-SuggestBoxPopup { text-align: left; }
+    .gwt-SuggestBoxPopup table { border: none; }
+    .gwt-SuggestBoxPopup td { padding: 0; }
+  </ui:style>
+
+  <g:HTMLPanel styleName='{style.panel}'>
+    <div>Select a compound from the archive</div>
+
+    <div>
+      <g:Button ui:field='browseButton'>Browse</g:Button>
+      <g:SuggestBox ui:field='suggestBox'/>
+    </div>
+
+    <div>
+      <g:Button ui:field='predictButton'>Predict</g:Button>
+    </div>
+  </g:HTMLPanel>
+
+</ui:UiBinder>

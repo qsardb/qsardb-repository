@@ -1,8 +1,11 @@
 package org.dspace.qsardb.client.gwt;
 
+import com.google.gwt.core.shared.GWT;
 import java.util.*;
 
 import com.google.gwt.event.shared.*;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
@@ -22,26 +25,39 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 	private Map<String, String> values = null;
 
+	interface Binder extends UiBinder<Widget, DataInputPanel> {}
+	private static Binder binder = GWT.create(Binder.class);
+
+	@UiField
+	TabPanel tabPanel;
+
+	@UiField(provided = true)
+	CompoundSelectionPanel compoundSelectionPanel;
+
+	@UiField(provided = true)
+	CompoundInputPanel compoundInputPanel;
+	
+	@UiField(provided = true)
+	ModelInputPanel modelInputPanel;
 
 	public DataInputPanel(QdbTable table){
-		Panel panel = new FlowPanel();
+		initWidget(createUI(table));
+		tabPanel.getTabBar().selectTab(0);
+	}
 
-		CompoundInputPanel compoundPanel = new CompoundInputPanel(table);
-		compoundPanel.addInputChangeEventHandler(this);
+	private Widget createUI(QdbTable table) {
+		compoundSelectionPanel = new CompoundSelectionPanel(table);
+		compoundInputPanel = new CompoundInputPanel(table);
+		modelInputPanel = new ModelInputPanel(table);
 
-		panel.add(compoundPanel);
+		compoundSelectionPanel.addInputChangeEventHandler(this);
+		compoundInputPanel.addInputChangeEventHandler(this);
+		modelInputPanel.addInputChangeEventHandler(this);
 
-		// XXX
-		panel.add(new HTML("&nbsp;"));
+		compoundSelectionPanel.addInputChangeEventHandler(modelInputPanel);
+		compoundInputPanel.addInputChangeEventHandler(modelInputPanel);
 
-		ModelInputPanel modelPanel = new ModelInputPanel(table);
-		modelPanel.addInputChangeEventHandler(this);
-
-		panel.add(modelPanel);
-
-		compoundPanel.addInputChangeEventHandler(modelPanel);
-
-		initWidget(panel);
+		return binder.createAndBindUi(this);
 	}
 
 	@Override
