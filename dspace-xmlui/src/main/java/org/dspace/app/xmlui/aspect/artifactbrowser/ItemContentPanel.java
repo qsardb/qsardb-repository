@@ -58,9 +58,14 @@ class ItemContentPanel {
 	public void generate(ItemViewer viewer, org.dspace.content.Item item, Qdb qdb, Division division) throws IOException, WingException {
 		PropertyRegistry properties = qdb.getPropertyRegistry();
 
-		for(Property property : properties){
-			generatePropertyDivision(viewer, item, qdb, property, division);
+		if (properties.size() == 0) {
+			division.addPara("This archive contains no properties");
+		} else {
+			for(Property property : properties){
+				generatePropertyDivision(viewer, item, qdb, property, division);
+			}
 		}
+
 	}
 
 	static
@@ -153,8 +158,8 @@ class ItemContentPanel {
 					predictionRow.addCellContent(modelPrediction.getName());
 					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));
 					predictionRow.addCellContent(String.valueOf(predictionValues.size()));
-					predictionRow.addCellContent(String.valueOf(predictionValues.rsq(propertyValues)));
-					predictionRow.addCellContent(String.valueOf(predictionValues.stdev(propertyValues)));
+					predictionRow.addCellContent(formatStats(predictionValues.rsq(propertyValues)));
+					predictionRow.addCellContent(formatStats(predictionValues.stdev(propertyValues)));
 				}
 			}
 		} // End if
@@ -254,6 +259,10 @@ class ItemContentPanel {
 		return null;
 	}
 
+	private static String formatStats(BigDecimal val) {
+		return val != null ? String.valueOf(val) : "N/A";
+	}
+
 	static
 	private String loadSummary(Model model){
 
@@ -348,6 +357,10 @@ class ItemContentPanel {
 					regression.addData(thisValue.doubleValue(), thatValue.doubleValue());
 				}
 
+				if (regression.getN() < 2) {
+					return null;
+				}
+
 				BigDecimal result = new BigDecimal(regression.getRSquare());
 				result = result.setScale(3, RoundingMode.HALF_UP);
 
@@ -377,6 +390,10 @@ class ItemContentPanel {
 					}
 
 					statistic.addValue((thisValue).subtract(thatValue).doubleValue());
+				}
+
+				if (statistic.getN() < 2) {
+					return null;
 				}
 
 				BigDecimal result = new BigDecimal(statistic.getStandardDeviation());
