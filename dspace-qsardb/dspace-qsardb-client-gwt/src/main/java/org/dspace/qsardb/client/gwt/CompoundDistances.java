@@ -7,15 +7,17 @@ import org.dspace.qsardb.rpc.gwt.PredictionColumn;
 
 public class CompoundDistances {
 	private final ModelTable table;
+	private final Collection<String> compIds;
 	private final List<DescriptorColumn> descColumns;
 	private final ArrayList<Distance> distances;
 	private double[] minimas;
 	private double[] maximas;
 
-	public CompoundDistances(ModelTable table) {
+	public CompoundDistances(ModelTable table, Collection<String> compIds) {
 		this.table = table;
+		this.compIds = compIds;
 		this.descColumns = table.getAllColumns(DescriptorColumn.class);
-		this.distances = new ArrayList<Distance>(table.getKeys().size());
+		this.distances = new ArrayList<Distance>(compIds.size());
 	}
 
 	public void calculate(Map<String, String> descriptorValues) {
@@ -80,7 +82,7 @@ public class CompoundDistances {
 		}
 
 		// normalize descriptors for distance calculation
-		for (String compId: table.getKeys()) {
+		for (String compId: compIds) {
 			double darr[] = new double[descColumns.size()];
 			for (int j=0; j<descColumns.size(); j++) {
 				Object o = descColumns.get(j).getValue(compId);

@@ -13,7 +13,9 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 	CompoundDistancePanel(ModelTable table) {
 		this.table = table;
 		this.panel = new VerticalPanel();
-		this.distances = new CompoundDistances(table);
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+		Set<String> compIds = property.getValues().keySet();
+		this.distances = new CompoundDistances(table, compIds);
 		panel.add(new HTML("Loading ..."));
 		initWidget(panel);
 	}
