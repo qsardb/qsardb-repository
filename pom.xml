@@ -601,47 +601,47 @@
           <dependency>
               <groupId>org.qsardb</groupId>
               <artifactId>evaluation</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb</groupId>
               <artifactId>model</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb</groupId>
               <artifactId>validation</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.cargo</groupId>
               <artifactId>bodo</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.cargo</groupId>
               <artifactId>map</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.cargo</groupId>
               <artifactId>matrix</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.cargo</groupId>
               <artifactId>structure</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.storage</groupId>
               <artifactId>directory</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
           <dependency>
               <groupId>org.qsardb.storage</groupId>
               <artifactId>zipfile</artifactId>
-              <version>1.0-SNAPSHOT</version>
+              <version>1.0.0</version>
           </dependency>
 
         <!-- Explicitly Specify Latest Version of Spring -->
