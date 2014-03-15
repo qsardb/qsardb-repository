@@ -222,6 +222,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
                         context.addItem().addXref(contextPath+"/admin/export?itemID="+item.getID(), T_context_export_item );
                         context.addItem().addXref(contextPath+ "/csv/handle/"+dso.getHandle(),T_context_export_metadata );
                     }
+                    context.addItem().addXref(contextPath+"/validate/"+item.getHandle(), "QsarDB validator");
                 }
     	}
     	else if (dso instanceof Collection)

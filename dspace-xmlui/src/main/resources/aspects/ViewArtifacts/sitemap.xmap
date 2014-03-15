@@ -26,6 +26,7 @@ and searching the repository.
             <map:transformer name="CollectionViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.CollectionViewer"/>
             <map:transformer name="QdbExplorer" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbExplorer"/>
             <map:transformer name="QdbPredictor" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbPredictor"/>
+            <map:transformer name="QdbValidator" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbValidator"/>
             <map:transformer name="ItemViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.ItemViewer"/>
             <map:transformer name="FeedbackForm" src="org.dspace.app.xmlui.aspect.artifactbrowser.FeedbackForm"/>
             <map:transformer name="FeedbackSent" src="org.dspace.app.xmlui.aspect.artifactbrowser.FeedbackSent"/>
@@ -201,6 +202,11 @@ and searching the repository.
 
                         </map:match> <!-- End match handle/*/** -->
 
+                        <!-- Validate QsarDB archives -->
+                        <map:match pattern="validate/*/*">
+                            <map:transform type="QdbValidator"/>
+                            <map:serialize type="xml"/>
+                        </map:match>
 
                         <!--
                                 A simple feedback utility that presents the user with a form to fill out,

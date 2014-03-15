@@ -11,7 +11,7 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.submit.step.*;
-import org.dspace.submit.step.QdbValidateStep.Level;
+import org.dspace.submit.step.QdbValidation.Level;
 
 public class QdbValidateStep extends AbstractSubmissionStep {
 
@@ -23,24 +23,16 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 	public void addBody(Body body) throws WingException {
 		Item item = super.submissionInfo.getSubmissionItem().getItem();
 
-		Request request = ObjectModelHelper.getRequest(getObjectModel());
-
 		Collection collection = super.submission.getCollection();
 
-		String actionUrl = super.contextPath + "/handle/" + collection.getHandle() + "/submit/" + super.knot.getId() + ".continue";
+		Request request = ObjectModelHelper.getRequest(getObjectModel());
+		String level = (String)request.get("level");
 
+		String actionUrl = super.contextPath + "/handle/" + collection.getHandle() + "/submit/" + super.knot.getId() + ".continue";
 		Division division = body.addInteractiveDivision("submit-validate", actionUrl, Division.METHOD_POST, "primary submission");
 		division.setHead(T_submission_head);
 
 		addSubmissionProgressList(division);
-
-		List content = division.addList("validate", List.TYPE_FORM);
-
-		Radio levelRadio = (content.addItem()).addRadio("level");
-		levelRadio.setLabel(T_level);
-		levelRadio.setRequired(true);
-
-		String level = (String)request.get("level");
 
 		java.util.List<org.qsardb.validation.Message> messages = new ArrayList<org.qsardb.validation.Message>();
 
@@ -60,6 +52,39 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 		} catch(Exception e){
 			// Ignored
 		}
+
+		renderValidationForm(division, messages, level, super.contextPath); // XXX: SS: refactor??
+
+		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
+
+			if(level == null){
+				division.addPara(T_status_init);
+			} else
+
+			{
+				division.addPara(T_status_success);
+			}
+		} else
+
+		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR){
+			division.addPara(T_status_qdb_error);
+		} else
+
+		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR){
+			division.addPara(T_status_error);
+		}
+
+		List controls = division.addList("controls", List.TYPE_FORM);
+		addControlButtons(controls);
+	}
+
+	static
+	public void renderValidationForm(Division division, java.util.List<org.qsardb.validation.Message> messages, String level, String contextPath) throws WingException {
+		List content = division.addList("validate", List.TYPE_FORM);
+
+		Radio levelRadio = (content.addItem()).addRadio("level");
+		levelRadio.setLabel(T_level);
+		levelRadio.setRequired(true);
 
 		Option basic = levelRadio.addOption((Level.BASIC.getValue()).equals(level) || (level == null), Level.BASIC.getValue());
 		basic.addContent(T_option_basic);
@@ -107,10 +132,10 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 				Cell imageCell = messageRow.addCell();
 				switch(message.getLevel()){
 					case ERROR:
-						imageCell.addFigure(super.contextPath + "/static/icons/error.png", null, "icon"); // XXX
+						imageCell.addFigure(contextPath + "/static/icons/error.png", null, "icon"); // XXX
 						break;
 					case WARNING:
-						imageCell.addFigure(super.contextPath + "/static/icons/warning.png", null, "icon"); // XXX
+						imageCell.addFigure(contextPath + "/static/icons/warning.png", null, "icon"); // XXX
 						break;
 				}
 
@@ -119,28 +144,6 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			}
 		} // End if
 
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
-
-			if(level == null){
-				division.addPara(T_status_init);
-			} else
-
-			{
-				division.addPara(T_status_success);
-			}
-		} else
-
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR){
-			division.addPara(T_status_qdb_error);
-		} else
-
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR){
-			division.addPara(T_status_error);
-		}
-
-		List controls = division.addList("controls", List.TYPE_FORM);
-
-		addControlButtons(controls);
 	}
 
 	@Override
@@ -246,4 +249,5 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 	private static final Message T_status_qdb_error = message("xmlui.Submission.submit.QdbValidateStep.status_qdb_error");
 
 	private static final Message T_status_error = message("xmlui.Submission.submit.QdbValidateStep.status_error");
+
 }

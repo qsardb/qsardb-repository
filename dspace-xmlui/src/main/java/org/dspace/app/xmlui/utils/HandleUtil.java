@@ -90,7 +90,7 @@ public class HandleUtil
     static
     private String stripPrefix(String uri)
     {
-		String[] prefixes = {"handle/", "explorer/", "predictor/"};
+		String[] prefixes = {"handle/", "explorer/", "predictor/", "validate/"};
 		for(String prefix : prefixes){
 
 			if(uri.startsWith(prefix)){
