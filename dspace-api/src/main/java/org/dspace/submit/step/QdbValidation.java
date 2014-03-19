@@ -65,6 +65,7 @@ public class QdbValidation {
 		List<Validator<?>> result = new ArrayList<Validator<?>>();
 
 		if((Level.BASIC).compareTo(level) <= 0){
+			result.add(new ArchiveValidator());
 			result.add(new BasicContainerValidator());
 			result.add(new CompoundValidator(Scope.LOCAL));
 			result.add(new PropertyValidator(Scope.LOCAL));
