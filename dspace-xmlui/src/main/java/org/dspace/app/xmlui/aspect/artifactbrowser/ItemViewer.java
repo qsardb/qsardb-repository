@@ -274,13 +274,13 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
             return;
         }
 
-        Division metadataPanel = division.addDivision("item-metadata", "primary");
-        metadataPanel.setHead(T_item_metadata_head);
-        ItemMetadataPanel.generate(this, item, metadataPanel);
-
         Division contentPanel = division.addDivision("item-content", "primary");
         contentPanel.setHead(T_item_content_head);
         ItemContentPanel.generate(this, item, contentPanel);
+
+        Division metadataPanel = division.addDivision("item-metadata", "primary");
+        metadataPanel.setHead(T_item_metadata_head);
+        ItemMetadataPanel.generate(this, item, metadataPanel);
     }
 
     /**
