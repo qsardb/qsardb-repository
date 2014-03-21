@@ -69,7 +69,7 @@ public class CompoundBrowseDialog {
 			if (value == null) {
 				return;
 			}
-			String id = table.getColumn(IdColumn.class).getValue(value);
+			String id = value;
 			String name = table.getColumn(NameColumn.class).getValue(value);
 			sb.appendEscaped(id +": "+name);
 		}
