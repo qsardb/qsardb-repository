@@ -36,7 +36,7 @@ public class ResidualErrorPlotPanel extends PlotPanel {
 		errorBounds = QdbPlot.symmetricalBounds(errorBounds);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
+		scatterPlot.addXAxisOptions(propertyBounds, "Experimental");
 		scatterPlot.addYAxisOptions(errorBounds, "Residual error");
 
 		Number sigma = MathUtil.standardDeviation(trainingErrors.values());

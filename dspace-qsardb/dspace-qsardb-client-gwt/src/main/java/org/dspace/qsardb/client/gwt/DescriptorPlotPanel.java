@@ -35,8 +35,8 @@ public class DescriptorPlotPanel extends PlotPanel {
 		QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(descriptorBounds, descriptor.getName());
-		scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (exp.)");
+		scatterPlot.addXAxisOptions(descriptorBounds, "Descriptor");
+		scatterPlot.addYAxisOptions(propertyBounds, "Experimental property");
 
 		add(scatterPlot);
 
@@ -46,7 +46,7 @@ public class DescriptorPlotPanel extends PlotPanel {
 		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 
 		HistogramPlot histogramPlot = new HistogramPlot(descriptorBounds.getMin(), descriptorBounds.getMax(), size);
-		histogramPlot.addXAxisOptions(descriptorBounds, descriptor.getName());
+		histogramPlot.addXAxisOptions(descriptorBounds, "Descriptor");
 		histogramPlot.addYAxisOptions("Frequency");
 
 		add(histogramPlot);

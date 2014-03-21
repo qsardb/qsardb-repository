@@ -30,8 +30,8 @@ public class PropertyPlotPanel extends PlotPanel {
 		}
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
-		scatterPlot.addYAxisOptions(propertyBounds, property.getName() + " (calc.)");
+		scatterPlot.addXAxisOptions(propertyBounds, "Experimental");
+		scatterPlot.addYAxisOptions(propertyBounds, "Calculated");
 
 		add(scatterPlot);
 
@@ -41,7 +41,7 @@ public class PropertyPlotPanel extends PlotPanel {
 		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 
 		HistogramPlot histogramPlot = new HistogramPlot(propertyBounds.getMin(), propertyBounds.getMax(), size);
-		histogramPlot.addXAxisOptions(propertyBounds, property.getName() + " (exp.)");
+		histogramPlot.addXAxisOptions(propertyBounds, "Experimental");
 		histogramPlot.addYAxisOptions("Frequency");
 
 		add(histogramPlot);
