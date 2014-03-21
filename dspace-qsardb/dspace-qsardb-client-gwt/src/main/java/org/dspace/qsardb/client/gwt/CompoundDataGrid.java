@@ -461,7 +461,7 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 		public String getValue(){
 			ParameterColumn parameter = getParameter();
 
-			return parameter.getName();
+			return parameter.getId();
 		}
 
 		public ParameterColumn getParameter(){
