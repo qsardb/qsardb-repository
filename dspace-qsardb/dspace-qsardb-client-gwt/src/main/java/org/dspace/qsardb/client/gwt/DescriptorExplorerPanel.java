@@ -38,7 +38,7 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Label createLeft(){
-				return new Label(descriptor.getName());
+				return new Label(descriptor.getId()+": "+descriptor.getName());
 			}
 		};
 		panel.setHeader(header);

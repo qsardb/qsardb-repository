@@ -37,7 +37,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Label createLeft(){
-				return new Label(property.getName());
+				return new Label(property.getId()+": "+property.getName());
 			}
 		};
 		panel.setHeader(header);
