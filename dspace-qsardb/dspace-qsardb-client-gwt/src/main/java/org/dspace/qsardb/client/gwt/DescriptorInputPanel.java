@@ -51,7 +51,7 @@ public class DescriptorInputPanel extends Composite {
 
 			@Override
 			public Label createLeft(){
-				return new Label(descriptor.getName());
+				return new Label(descriptor.getId()+": "+descriptor.getName());
 			}
 
 			@Override
