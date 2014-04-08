@@ -1,12 +1,18 @@
 package org.dspace.content;
 
+import edu.sdsc.grid.io.*;
+import edu.sdsc.grid.io.local.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import org.apache.log4j.*;
 
 import org.dspace.authorize.*;
 import org.dspace.core.*;
 import org.dspace.core.Context;
+import org.dspace.content.citation.ACSReferenceStyle;
+import org.dspace.content.citation.ReferenceFormatter;
+import org.jbibtex.*;
 
 import org.qsardb.cargo.bibtex.*;
 import org.qsardb.cargo.map.*;
@@ -16,13 +22,6 @@ import org.qsardb.evaluation.*;
 import org.qsardb.model.*;
 import org.qsardb.storage.zipfile.*;
 
-import org.jbibtex.*;
-import org.jbibtex.citation.*;
-
-import edu.sdsc.grid.io.*;
-import edu.sdsc.grid.io.local.*;
-
-import org.apache.log4j.*;
 
 public class QdbUtil {
 

@@ -5,6 +5,7 @@ package org.dspace.content.citation;
 
 import java.io.*;
 import java.util.*;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import org.jbibtex.*;
 
@@ -33,7 +34,7 @@ public class FieldFormat {
 		} // End if
 
 		if(html){
-			string = StringUtil.escapeXml(string);
+			string = StringEscapeUtils.escapeXml(string);
 		}
 
 		return string;

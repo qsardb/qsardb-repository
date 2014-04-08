@@ -11,7 +11,6 @@ import org.qsardb.model.*;
 import org.qsardb.model.Container;
 
 import org.jbibtex.*;
-import org.jbibtex.citation.*;
 
 import org.apache.commons.math.stat.descriptive.*;
 import org.apache.commons.math.stat.regression.*;
@@ -22,6 +21,8 @@ import org.dspace.app.xmlui.wing.element.Item;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.content.*;
 import org.dspace.content.QdbUtil;
+import org.dspace.content.citation.ACSReferenceStyle;
+import org.dspace.content.citation.ReferenceFormatter;
 import org.dspace.core.*;
 
 class ItemContentPanel {
