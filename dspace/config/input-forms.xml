@@ -653,69 +653,141 @@ it, please enter the types and the actual numbers or codes below.</hint>
 
 	<value-pairs value-pairs-name="qdb_endpoints" dc-term="qdb.property.endpoint">
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.1. Melting point</displayed-value>
-			<stored-value>1. Physicochemical effects 1.1. Melting point</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.1. Melting point</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.1. Melting point</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.2. Boiling point</displayed-value>
-			<stored-value>1. Physicochemical effects 1.2. Boiling point</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.2. Boiling point</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.2. Boiling point</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.3. Water solubility</displayed-value>
-			<stored-value>1. Physicochemical effects 1.3. Water solubility</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.3. Water solubility</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.3. Water solubility</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.4. Vapour pressure</displayed-value>
-			<stored-value>1. Physicochemical effects 1.4. Vapour pressure</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.4. Vapour pressure</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.4. Vapour pressure</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.5. Surface tension</displayed-value>
-			<stored-value>1. Physicochemical effects 1.5. Surface tension</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.5. Surface tension</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.5. Surface tension</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.6. Octanol-water partition coefficient (Kow)</displayed-value>
-			<stored-value>1. Physicochemical effects 1.6. Octanol-water partition coefficient (Kow)</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.6. Octanol-water partition coefficient (Kow)</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.6. Octanol-water partition coefficient (Kow)</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.7. Octanol-water distribution coefficient (D)</displayed-value>
-			<stored-value>1. Physicochemical effects 1.7. Octanol-water distribution coefficient (D)</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.7. Octanol-water distribution coefficient (D)</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.7. Octanol-water distribution coefficient (D)</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.8. Octanol-air partition coefficient (Koa)</displayed-value>
-			<stored-value>1. Physicochemical effects 1.8. Octanol-air partition coefficient (Koa)</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.8. Octanol-air partition coefficient (Koa)</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.8. Octanol-air partition coefficient (Koa)</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.9. Air-water partition coefficient (Henry's law constant, H)</displayed-value>
-			<stored-value>1. Physicochemical effects 1.9. Air-water partition coefficient (Henry's law constant, H)</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.9. Air-water partition coefficient (Henry's law constant, H)</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.9. Air-water partition coefficient (Henry's law constant, H)</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>1. Physicochemical effects 1.10. Dissociation constant (pKa)</displayed-value>
-			<stored-value>1. Physicochemical effects 1.10. Dissociation constant (pKa)</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.10. Dissociation constant (pKa)</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.10. Dissociation constant (pKa)</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>2. Environmental fate parameters 2.1. Abiotic degradation in water</displayed-value>
-			<stored-value>2. Environmental fate parameters 2.1. Abiotic degradation in water</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.11 Adsorption/Desorption</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.11 Adsorption/Desorption</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>2. Environmental fate parameters 2.2. Abiotic degradation in air</displayed-value>
-			<stored-value>2. Environmental fate parameters 2.2. Abiotic degradation in air</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.12. Complex Formation Ability in Water</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.12. Complex Formation Ability in Water</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>2. Environmental fate parameters 2.3. Biodegradation</displayed-value>
-			<stored-value>2. Environmental fate parameters 2.3. Biodegradation</stored-value>
+			<displayed-value>1. Physical Chemical Properties 1.13. Density</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.13. Density</stored-value>
 		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.14. Particle Size Distribution</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.14. Particle Size Distribution</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.15. Hydrolysis</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.15. Hydrolysis</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.16. Stability</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.16. Stability</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.17. Viscosity</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.17. Viscosity</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.18. Fat Solubility</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.18. Fat Solubility</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.19. Flash point</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.19. Flash point</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.20. Flammability</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.20. Flammability</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.21. Explosive Properties</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.21. Explosive Properties</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.22. Auto-Ignition</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.22. Auto-Ignition</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.23. Oxidizing Properties</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.23. Oxidizing Properties</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.24. Average Molecular Weight of Polymers</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.24. Average Molecular Weight of Polymers</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.25. Solution/Extraction Behaviour of Polymers in Water</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.25. Solution/Extraction Behaviour of Polymers in Water</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>1. Physical Chemical Properties 1.26. Length Weighted Geometric Mean Diameter of Fibres</displayed-value>
+			<stored-value>1. Physical Chemical Properties 1.26. Length Weighted Geometric Mean Diameter of Fibres</stored-value>
+		</pair>
+
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.1. Persistence: Abiotic degradation in water</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.1. Persistence: Abiotic degradation in water</stored-value>
+		</pair>
+		<!-- 2.1.a. Hydrolysis, 2.1.b. Oxidation, 2.1.c. Other -->
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.2. Persistence: Abiotic degradation in air</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.2. Persistence: Abiotic degradation in air</stored-value>
+		</pair>
+		<!-- 2.2.a. (Phototransformation). Direct photolysis 2.2.b. (Phototransformation). Indirect photolysis (OH-radical reaction, ozone-radical reaction, other) -->
+		<pair>
+			<displayed-value>2. Environmental fate parameters 2.3. Persistence: Biodegradation</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.3. Persistence: Biodegradation</stored-value>
+		</pair>
+		<!-- 2.3.a. Ready/not ready biodegradability 2.3.b. Biodegradation time frame (primary, ultimate degradation) -->
 		<pair>
 			<displayed-value>2. Environmental fate parameters 2.4. Bioconcentration</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.4. Bioconcentration</stored-value>
 		</pair>
+		<!-- 2.4.a. BCF fish 2.4.b. BCF other organisms --> 
 		<pair>
 			<displayed-value>2. Environmental fate parameters 2.5. Bioaccumulation</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.5. Bioaccumulation</stored-value>
 		</pair>
+		<!-- 2.5.a. BAF fish 2.5.b. BAF other organisms -->
 		<pair>
-			<displayed-value>2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon</displayed-value>
-			<stored-value>2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon</stored-value>
+			<displayed-value>2. Environmental fate parameters 2.6. Partition coefficient. Organic carbon-sorption partition coefficient.</displayed-value>
+			<stored-value>2. Environmental fate parameters 2.6. Partition coefficient. Organic carbon-sorption partition coefficient.</stored-value>
 		</pair>
+		<!-- (organic carbon; Koc)
+			 TODO: qsardb-repo algne versioon: 2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon -->
 		<pair>
 			<displayed-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</stored-value>
@@ -736,69 +808,86 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>2. Environmental fate parameters 2.11. Vegetation-soil partition coefficient</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.11. Vegetation-soil partition coefficient</stored-value>
 		</pair>
+
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.1. Short-term toxicity to Daphnia</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.1. Short-term toxicity to Daphnia</stored-value>
 		</pair>
+		<!-- (immobilisation) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.2. Short-term toxicity to algae</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.2. Short-term toxicity to algae</stored-value>
 		</pair>
+		<!-- (inhibition of the exponential growth rate) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.3. Acute toxicity to fish</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.3. Acute toxicity to fish</stored-value>
 		</pair>
+		<!--  (lethality) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.4. Long-term toxicity to Daphnia</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.4. Long-term toxicity to Daphnia</stored-value>
 		</pair>
+		<!-- (lethality, inhibition of reproduction) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.5. Long-term toxicity to fish</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.5. Long-term toxicity to fish</stored-value>
 		</pair>
+		<!-- (egg/sac fry, growth inhibition of juvenile fish, early life stage, full life cycle) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.6. Microbial inhibition</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.6. Microbial inhibition</stored-value>
 		</pair>
+		<!-- (activated sludge respiration inhibition, inhibition of nitrification, other) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.7. Toxicity to soil microorganisms</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.7. Toxicity to soil microorganisms</stored-value>
 		</pair>
+		<!-- (inhibition of C-mineralisation, inhibition of N-mineralisation, other) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.8. Toxicity to earthworms</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.8. Toxicity to earthworms</stored-value>
 		</pair>
+		<!-- (survival, growth, reproduction) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.9. Toxicity to plants</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.9. Toxicity to plants</stored-value>
 		</pair>
+		<!-- (leaves, seed germination, root elongation) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.10. Toxicity to soil invertebrates</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.10. Toxicity to soil invertebrates</stored-value>
 		</pair>
+		<!-- (survival, growth, reproduction) -->
 		<pair>
 			<displayed-value>3. Ecotoxic effects 3.11. Toxicity to sediment organisms</displayed-value>
 			<stored-value>3. Ecotoxic effects 3.11. Toxicity to sediment organisms</stored-value>
 		</pair>
+		<!-- (survival, growth, reproduction) -->
 		<pair>
-			<displayed-value>3. Ecotoxic effects 3.12. Short-term toxicity to birds</displayed-value>
-			<stored-value>3. Ecotoxic effects 3.12. Short-term toxicity to birds</stored-value>
+			<displayed-value>3. Ecotoxic effects 3.12. Toxicity to birds</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.12. Toxicity to birds</stored-value>
+		</pair>
+		<!-- 3.12.a Short term toxicity (feeding, gavage, other) 3.12.b. Long-term toxicity (survival, growth, reproduction)
+			 qsardb-repo had long term toxicity as 3.13
+			 -->
+		<pair>
+			<displayed-value>3. Ecotoxic effects 3.13. Toxicity to honeybees</displayed-value>
+			<stored-value>3. Ecotoxic effects 3.13. Toxicity to honeybees</stored-value>
+		</pair>
+		<!-- 3.13.a. Acute oral toxicity 3.13.b. Acute contact toxicity -->
+
+		<pair>
+			<displayed-value>4. Human health effects 4.1. Acute Inhalation toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.1. Acute Inhalation toxicity</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>3. Ecotoxic effects 3.13. Long-term toxicity to birds</displayed-value>
-			<stored-value>3. Ecotoxic effects 3.13. Long-term toxicity to birds</stored-value>
+			<displayed-value>4. Human health effects 4.2. Acute Oral toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.2. Acute Oral toxicity</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>4. Human health effects 4.1. Acute inhalation toxicity</displayed-value>
-			<stored-value>4. Human health effects 4.1. Acute inhalation toxicity</stored-value>
-		</pair>
-		<pair>
-			<displayed-value>4. Human health effects 4.2. Acute oral toxicity</displayed-value>
-			<stored-value>4. Human health effects 4.2. Acute oral toxicity</stored-value>
-		</pair>
-		<pair>
-			<displayed-value>4. Human health effects 4.3. Acute dermal toxicity</displayed-value>
-			<stored-value>4. Human health effects 4.3. Acute dermal toxicity</stored-value>
+			<displayed-value>4. Human health effects 4.3. Acute Dermal toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.3. Acute Dermal toxicity</stored-value>
 		</pair>
 		<pair>
 			<displayed-value>4. Human health effects 4.4. Skin irritation/corrosion</displayed-value>
@@ -848,18 +937,29 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>4. Human health effects 4.15. In vitro reproductive toxicity</displayed-value>
 			<stored-value>4. Human health effects 4.15. In vitro reproductive toxicity</stored-value>
 		</pair>
+		<!-- (e.g. embryotoxic effects in cell culture such as embryo stem cells) -->
 		<pair>
-			<displayed-value>4. Human health effects 4.16. In vivo developmental toxicity</displayed-value>
-			<stored-value>4. Human health effects 4.16. In vivo developmental toxicity</stored-value>
+			<displayed-value>4. Human health effects 4.16. In vivo pre-natal-developmental toxicity</displayed-value>
+			<stored-value>4. Human health effects 4.16. In vivo pre-natal-developmental toxicity</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>4. Human health effects 4.17. In vivo developmental toxicity</displayed-value>
-			<stored-value>4. Human health effects 4.17. In vivo developmental toxicity</stored-value>
+			<displayed-value>4. Human health effects 4.17. In vivo pre-, peri-, post natal development and / or fertility</displayed-value>
+			<stored-value>4. Human health effects 4.17. In vivo pre-, peri-, post natal development and / or fertility</stored-value>
 		</pair>
+		<!-- (1 or 2 generation)
+			 TODO: old qsardb-repo version: In vivo developmental toxicity -->
 		<pair>
-			<displayed-value>4. Human health effects 4.18. Endocrine activity</displayed-value>
-			<stored-value>4. Human health effects 4.18. Endocrine activity</stored-value>
+			<displayed-value>4. Human health effects 4.18. Endocrine Activity</displayed-value>
+			<stored-value>4. Human health effects 4.18. Endocrine Activity</stored-value>
 		</pair>
+		<!-- 4.18.a. Endocrine Activity. Receptor-binding (specify receptor)
+			 4.18.b. Receptor binding and gene expression (specify receptor)
+             4.18.c. Endocrine Activity. Other (e.g. inhibition of specific enzymes involved in hormone synthesis or regulation, specify enzyme(s) and hormone) -->
+		<pair>
+			<displayed-value>4. Human health effects 4.19. Neurotoxicity</displayed-value>
+			<stored-value>4. Human health effects 4.19. Neurotoxicity</stored-value>
+		</pair>
+
 		<pair>
 			<displayed-value>5. Toxicokinetics 5.1. Skin penetration</displayed-value>
 			<stored-value>5. Toxicokinetics 5.1. Skin penetration</stored-value>
@@ -892,6 +992,7 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>5. Toxicokinetics 5.8. Metabolism</displayed-value>
 			<stored-value>5. Toxicokinetics 5.8. Metabolism</stored-value>
 		</pair>
+		<!-- (including metabolic clearance) -->
 		<pair>
 			<displayed-value>5. Toxicokinetics 5.9. Protein-binding</displayed-value>
 			<stored-value>5. Toxicokinetics 5.9. Protein-binding</stored-value>
@@ -901,11 +1002,13 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<stored-value>5. Toxicokinetics 5.10. DNA-binding</stored-value>
 		</pair>
 		<pair>
-			<displayed-value>6. Other 6.1. Other</displayed-value>
-			<stored-value>6. Other 6.1. Other</stored-value>
+			<displayed-value>6. Other</displayed-value>
+			<stored-value>6. Other</stored-value>
 		</pair>
+		<!-- TODO: qsardb-repo algne versioon: 6. Other 6.1. Other -->
 	</value-pairs>
 
     </form-value-pairs>
 
 </input-forms>
+
