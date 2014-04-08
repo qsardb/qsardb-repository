@@ -14,6 +14,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		addFormat(BibTeXEntry.TYPE_BOOK, createBookFormat());
 		addFormat(BibTeXEntry.TYPE_INCOLLECTION, createInCollectionFormat());
 		addFormat(BibTeXEntry.TYPE_INPROCEEDINGS, createInProceedingsFormat());
+		addFormat(BibTeXEntry.TYPE_MISC, createMiscFormat());
 		addFormat(BibTeXEntry.TYPE_UNPUBLISHED, createUnpublishedFormat());
 	}
 
@@ -73,6 +74,18 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new FieldFormat(BibTeXEntry.KEY_ORGANIZATION, ";"),
 			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
 			new DOIFormat(null)
+		);
+
+		return new EntryFormat(fields);
+	}
+
+	static
+	private EntryFormat createMiscFormat(){
+		List<FieldFormat> fields = Arrays.asList(
+			new AuthorFormat(null),
+			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
+			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
+			new URLFormat(null)
 		);
 
 		return new EntryFormat(fields);
@@ -228,6 +241,25 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			String string = super.format(value, latex, html);
 
 			return bold(string, html);
+		}
+	}
+
+	static
+	private class URLFormat extends FieldFormat {
+
+		public URLFormat(String separator){
+			super(BibTeXEntry.KEY_URL, separator);
+		}
+
+		@Override
+		public String format(Value value, boolean latex, boolean html){
+			String string = super.format(value, latex, html);
+
+			if(html){
+				return "<a href=\"" + string + "\">" + string + "</a>";
+			} else {
+				return string;
+			}
 		}
 	}
 }
