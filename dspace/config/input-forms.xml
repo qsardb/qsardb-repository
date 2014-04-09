@@ -221,8 +221,8 @@
 				<repeatable>true</repeatable>
 				<label>QMRF endpoint</label>
 				<input-type value-pairs-name="qdb_endpoints">dropdown</input-type>
-				<hint>QMRF endpoint</hint>
-				<required>You must enter a QMRF endpoint</required>
+				<hint>Press CTRL key to select multiple QMRF endpoints</hint>
+				<required>You must select one (or more) QMRF endpoints</require
 			</field>
 			<field>
 				<dc-schema>qdb</dc-schema>
