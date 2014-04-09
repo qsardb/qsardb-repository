@@ -35,7 +35,7 @@ public class ReferenceFormatter {
 
 		EntryFormat format = style.getFormat(type);
 		if(format == null){
-			throw new IllegalArgumentException(type.getValue());
+			return "["+entry.getKey().getValue()+"]";
 		}
 
 		List<FieldFormat> fields = format.getFields();
