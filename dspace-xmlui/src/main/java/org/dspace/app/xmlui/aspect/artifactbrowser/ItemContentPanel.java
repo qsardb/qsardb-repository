@@ -79,7 +79,7 @@ class ItemContentPanel {
 
 		Values<?> propertyValues = loadValues(property);
 
-		Map<Key, BibTeXEntry> bibliography = new LinkedHashMap<Key, BibTeXEntry>();
+		Map<String, BibTeXEntry> bibliography = new LinkedHashMap<String, BibTeXEntry>();
 
 		bibliography.putAll(loadBibliography(property));
 
@@ -169,23 +169,15 @@ class ItemContentPanel {
 			List bibliographyList = propertyDivision.addList("property-bibliography-" + property.getId(), null);
 			bibliographyList.setHead(T_property_bibliography);
 
-			java.util.List<Key> keys = new ArrayList<Key>(bibliography.keySet());
-
-			Comparator<Key> comparator = new Comparator<Key>(){
-
-				@Override
-				public int compare(Key left, Key right){
-					return ((left.getValue()).toLowerCase()).compareTo((right.getValue()).toLowerCase());
-				}
-			};
-			Collections.sort(keys, comparator);
+			ArrayList<String> keys = new ArrayList<String>(bibliography.keySet());
+			Collections.sort(keys);
 
 			ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
 
-			for(Key key : keys){
+			for(String key : keys){
 				BibTeXEntry entry = bibliography.get(key);
 
-				Item referencePara = bibliographyList.addItem("property-reference-" + key.getValue(), null);
+				Item referencePara = bibliographyList.addItem();
 				referencePara.addHtmlContent(formatter.format(entry, true));
 			}
 		}
@@ -216,21 +208,40 @@ class ItemContentPanel {
 	}
 
 	static
-	private Map<Key, BibTeXEntry> loadBibliography(Container<?, ?> container){
+	private Map<String, BibTeXEntry> loadBibliography(Container<?, ?> container){
 
 		if(container.hasCargo(BibTeXCargo.class)){
 			BibTeXCargo bibtexCargo = container.getCargo(BibTeXCargo.class);
 
 			try {
 				BibTeXDatabase database = bibtexCargo.loadBibTeX();
+				Map<String, BibTeXEntry> m = new LinkedHashMap<String, BibTeXEntry>();
 
-				return database.getEntries();
+				for (BibTeXEntry e: database.getEntries().values()) {
+					m.put(createSortableEntryKey(e), e);
+				}
+				return m;
 			} catch(Exception e){
 				// Ignored
 			}
 		}
 
-		return Collections.<Key, BibTeXEntry>emptyMap();
+		return Collections.<String, BibTeXEntry>emptyMap();
+	}
+
+	static
+	private String createSortableEntryKey (BibTeXEntry e) {
+		org.jbibtex.Value yearField = e.getField(BibTeXEntry.KEY_YEAR);
+		org.jbibtex.Value authorField = e.getField(BibTeXEntry.KEY_AUTHOR);
+
+		String year = (yearField != null) ? yearField.toUserString() : "0000";
+
+		String author = "unknown";
+		if (authorField != null) {
+			author = authorField.toUserString().split(",")[0];
+		}
+
+		return year + author + e.hashCode();
 	}
 
 	static
