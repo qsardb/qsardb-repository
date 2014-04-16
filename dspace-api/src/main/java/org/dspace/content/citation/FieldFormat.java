@@ -25,11 +25,12 @@ public class FieldFormat {
 		String string = value.toUserString();
 
 		if(latex){
-
 			try {
 				string = printLaTeX(parseLaTeX(string));
-			} catch(Exception e){
-				throw new IllegalArgumentException(string, e);
+			} catch (TokenMgrError e) {
+				// ignore, show string as is
+			} catch (Exception e) {
+				// ignore, show string as is
 			}
 		} // End if
 
