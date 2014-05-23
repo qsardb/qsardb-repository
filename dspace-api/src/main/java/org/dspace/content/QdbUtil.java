@@ -585,16 +585,18 @@ public class QdbUtil {
 
 	static
 	private String toString(Value value){
-
-		try {
-			if(value != null){
-				return printLaTeX(parseLaTeX(value.toUserString()));
-			}
-		} catch(Exception e){
-			// Ignored
+		if (value == null) {
+			return null;
 		}
 
-		return null;
+		String string = value.toUserString();
+		try {
+			return printLaTeX(parseLaTeX(string));
+		} catch (TokenMgrError e) {
+			return string;
+		} catch (Exception e) {
+			return string;
+		}
 	}
 
 	static
