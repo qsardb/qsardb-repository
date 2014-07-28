@@ -4,7 +4,7 @@
    <groupId>org.dspace</groupId>
    <artifactId>dspace-parent</artifactId>
    <packaging>pom</packaging>
-   <version>3.1</version>
+   <version>4.2</version>
    <name>DSpace Parent Project</name>
    <url>https://github.com/dspace/DSpace</url>
 
@@ -458,71 +458,71 @@
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-api</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace.modules</groupId>
             <artifactId>additions</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
 
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-sword</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-sword</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-swordv2</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-swordv2</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
 
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-jspui</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-jspui</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-oai</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-oai</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-lni</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
@@ -534,51 +534,51 @@
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-lni</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-xmlui</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>jar</type>
             <classifier>classes</classifier>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-xmlui</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
             <type>war</type>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-client-gwt</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-rpc-gwt</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service-gwt</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service-http</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-services</artifactId>
-            <version>3.1</version>
+            <version>4.2</version>
          </dependency>
          <!-- DSpace Localization Packages -->
          <dependency>
