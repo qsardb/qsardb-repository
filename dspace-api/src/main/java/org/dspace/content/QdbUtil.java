@@ -320,6 +320,11 @@ public class QdbUtil {
 
 	static
 	private void collectMetadata(Item item, Qdb qdb){
+		DCValue[] issued = item.getDC("date", "issued", Item.ANY);
+		if (issued.length == 0) {
+			item.addMetadata("dc", "date", "issued", Item.ANY, "today");
+		}
+
 		collectBibTeXMetadata(item, qdb);
 		collectQdbMetadata(item, qdb);
 	}
