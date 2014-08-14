@@ -21,7 +21,6 @@ collections / items / and bitstreams.
         <map:transformers>
             <map:transformer name="Navigation" src="org.dspace.app.xmlui.aspect.browseArtifacts.Navigation"/>
             <map:transformer name="CommunityBrowser" src="org.dspace.app.xmlui.aspect.artifactbrowser.CommunityBrowser"/>
-            <map:transformer name="RepositoryRecentSubmissions" src="org.dspace.app.xmlui.aspect.artifactbrowser.RepositoryRecentSubmissions"/>
             <map:transformer name="CommunityRecentSubmissions" src="org.dspace.app.xmlui.aspect.artifactbrowser.CommunityRecentSubmissions"/>
             <map:transformer name="CollectionRecentSubmissions" src="org.dspace.app.xmlui.aspect.artifactbrowser.CollectionRecentSubmissions"/>
             <map:transformer name="CommunityBrowse" src="org.dspace.app.xmlui.aspect.browseArtifacts.CommunityBrowse"/>
@@ -50,8 +49,6 @@ collections / items / and bitstreams.
             <map:match pattern="">
                 <map:transform type="CommunityBrowser">
                         <map:parameter name="depth" value="1"/>
-                </map:transform>
-                <map:transform type="RepositoryRecentSubmissions">
                 </map:transform>
                 <map:serialize type="xml"/>
             </map:match>

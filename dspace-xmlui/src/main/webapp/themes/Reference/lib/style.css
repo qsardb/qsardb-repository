@@ -1502,3 +1502,8 @@ div.vocabulary-container li.error{
 .didYouMean a{
     font-weight: bold;
 }
+
+#aspect_discovery_recentSubmissions_RecentSubmissionTransformer_div_recent-submissions {
+	overflow: auto;
+	margin-bottom: 6px;
+}
