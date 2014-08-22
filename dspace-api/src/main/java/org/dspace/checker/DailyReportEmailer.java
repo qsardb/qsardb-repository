@@ -12,21 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -79,12 +65,16 @@ public class DailyReportEmailer
     public void sendReport(File attachment, int numberOfBitstreams) 
             throws IOException, javax.mail.MessagingException 
     { 
-        Email email = new Email(); 
-        email.setSubject("Checksum checker Report - " + numberOfBitstreams + " Bitstreams found with POSSIBLE issues"); 
-        email.setContent("report is attached ..."); 
-        email.addAttachment(attachment, "checksum_checker_report.txt"); 
-        email.addRecipient(ConfigurationManager.getProperty("mail.admin")); 
-        email.send(); 
+        if(numberOfBitstreams > 0)
+        {
+            String hostname = ConfigurationManager.getProperty("dspace.hostname");
+            Email email = new Email();
+            email.setSubject("Checksum checker Report - " + numberOfBitstreams + " Bitstreams found with POSSIBLE issues on " + hostname);
+            email.setContent("report is attached ...");
+            email.addAttachment(attachment, "checksum_checker_report.txt");
+            email.addRecipient(ConfigurationManager.getProperty("mail.admin"));
+            email.send();
+        }
     } 
 
     /**

@@ -1,6 +1,9 @@
-Installation instructions are included in this release package under
+Installation instructions may be found in DSpace-Manual.pdf, offered 
+with the source archives in the SourceForge project:
 
- - dspace/docs/DSpace-Manual.pdf
+  http://sourceforge.net/projects/dspace/files/DSpace%20Stable/VERSION/
+
+(Replace "VERSION" with the version you are installing, such as "4.0".)
 
 DSpace version information can be viewed online at
  - https://wiki.duraspace.org/display/DSDOC/
@@ -51,4 +54,4 @@ places to seek help, news articles and lists of other users, please see:
 DSpace source code licensing information available online at:
  - http://www.dspace.org/license/
 
-Copyright (c) 2002-2012, DuraSpace.  All rights reserved.
+Copyright (c) 2002-2013, DuraSpace.  All rights reserved.

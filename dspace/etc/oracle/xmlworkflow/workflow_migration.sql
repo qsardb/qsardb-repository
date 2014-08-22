@@ -5,28 +5,28 @@ INSERT INTO cwf_collectionrole (collectionrole_id, role_id, group_id, collection
 SELECT
 cwf_collectionrole_seq.nextval as collectionrole_id,
 'reviewer' AS role_id,
-eperson_group_id AS group_id,
-to_number(replace(replace(name, 'COLLECTION_', ''), '_WORKFLOW_STEP_1', '')) AS collection_id
-FROM epersongroup
-WHERE name LIKE 'COLLECTION_%_WORKFLOW_STEP_1';
+collection.workflow_step_1 AS group_id,
+collection.collection_id AS collection_id
+FROM collection
+WHERE collection.workflow_step_1 IS NOT NULL;
 
 INSERT INTO cwf_collectionrole  (collectionrole_id, role_id, group_id, collection_id)
 SELECT
 cwf_collectionrole_seq.nextval as collectionrole_id,
 'editor' AS role_id,
-eperson_group_id AS group_id,
-to_number(replace(replace(name, 'COLLECTION_', ''), '_WORKFLOW_STEP_2', '')) AS collection_id
-FROM epersongroup
-WHERE name LIKE 'COLLECTION_%_WORKFLOW_STEP_2';
+collection.workflow_step_2 AS group_id,
+collection.collection_id AS collection_id
+FROM collection
+WHERE collection.workflow_step_2 IS NOT NULL;
 
 INSERT INTO cwf_collectionrole  (collectionrole_id, role_id, group_id, collection_id)
 SELECT
 cwf_collectionrole_seq.nextval as collectionrole_id,
 'finaleditor' AS role_id,
-eperson_group_id AS group_id,
-to_number(replace(replace(name, 'COLLECTION_', ''), '_WORKFLOW_STEP_3', '')) AS collection_id
-FROM epersongroup
-WHERE name LIKE 'COLLECTION_%_WORKFLOW_STEP_3';
+collection.workflow_step_3 AS group_id,
+collection.collection_id AS collection_id
+FROM collection
+WHERE collection.workflow_step_3 IS NOT NULL;
 
 
 -- Migrate workflow items
@@ -121,7 +121,7 @@ DELETE FROM resourcepolicy
 WHERE resource_type_id = 0 AND resource_id IN
   (SELECT bundle2bitstream.bitstream_id FROM
     ((workflowitem INNER JOIN item2bundle ON workflowitem.item_id = item2bundle.item_id)
-      INNER JOIN bundle2bitstream ON item2bundle.bundle_id = bundle2bitstream.bundle_id);
+      INNER JOIN bundle2bitstream ON item2bundle.bundle_id = bundle2bitstream.bundle_id));
 -- Create policies for claimtasks
 --     public static final int BITSTREAM = 0;
 --     public static final int BUNDLE = 1;
@@ -137,7 +137,7 @@ WHERE resource_type_id = 0 AND resource_id IN
 -- Create a temporarty table with action ID's
 CREATE TABLE temptable(
   action_id INTEGER PRIMARY KEY
-)
+);
 INSERT ALL
   INTO temptable (action_id) VALUES (0)
   INTO temptable (action_id) VALUES (1)
@@ -266,11 +266,11 @@ FROM (((cwf_workflowitem INNER JOIN item ON cwf_workflowitem.item_id = item.item
 );
 
 -- TODO: not tested yet
-INSERT INTO cwf_in_progress_user (in_progress_user_id, workflowitem_id, step_id, user_id, finished)
+INSERT INTO cwf_in_progress_user (in_progress_user_id, workflowitem_id, user_id, finished)
 SELECT
   cwf_in_progress_user_seq.nextval AS in_progress_user_id,
-  cwf_workflowitem.item_id AS workflowitem_id,
-  cwf_claimtask.owner_id AS user_id
+  cwf_workflowitem.workflowitem_id AS workflowitem_id,
+  cwf_claimtask.owner_id AS user_id,
   0 as finished
 FROM
   (cwf_claimtask INNER JOIN cwf_workflowitem ON cwf_workflowitem.workflowitem_id = cwf_claimtask.workflowitem_id);

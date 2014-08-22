@@ -623,6 +623,10 @@ it, please enter the types and the actual numbers or codes below.</hint>
        <stored-value>zh</stored-value>
      </pair>
      <pair>
+       <displayed-value>Turkish</displayed-value>
+       <stored-value>tr</stored-value>
+     </pair>
+     <pair>
        <displayed-value>(Other)</displayed-value>
        <stored-value>other</stored-value>
      </pair>
@@ -786,8 +790,6 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>2. Environmental fate parameters 2.6. Partition coefficient. Organic carbon-sorption partition coefficient.</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.6. Partition coefficient. Organic carbon-sorption partition coefficient.</stored-value>
 		</pair>
-		<!-- (organic carbon; Koc)
-			 TODO: qsardb-repo algne versioon: 2. Environmental fate parameters 2.6. Organic carbon-sorption partition coefficient (organic carbon -->
 		<pair>
 			<displayed-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</displayed-value>
 			<stored-value>2. Environmental fate parameters 2.7. Adsorption/Desorption in soil</stored-value>
@@ -946,8 +948,6 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>4. Human health effects 4.17. In vivo pre-, peri-, post natal development and / or fertility</displayed-value>
 			<stored-value>4. Human health effects 4.17. In vivo pre-, peri-, post natal development and / or fertility</stored-value>
 		</pair>
-		<!-- (1 or 2 generation)
-			 TODO: old qsardb-repo version: In vivo developmental toxicity -->
 		<pair>
 			<displayed-value>4. Human health effects 4.18. Endocrine Activity</displayed-value>
 			<stored-value>4. Human health effects 4.18. Endocrine Activity</stored-value>
@@ -1005,10 +1005,9 @@ it, please enter the types and the actual numbers or codes below.</hint>
 			<displayed-value>6. Other</displayed-value>
 			<stored-value>6. Other</stored-value>
 		</pair>
-		<!-- TODO: qsardb-repo algne versioon: 6. Other 6.1. Other -->
 	</value-pairs>
 
-    </form-value-pairs>
+ </form-value-pairs>
 
 </input-forms>
 
