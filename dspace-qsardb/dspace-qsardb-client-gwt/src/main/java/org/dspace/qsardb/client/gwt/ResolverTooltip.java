@@ -173,20 +173,6 @@ public class ResolverTooltip extends Tooltip {
 	}
 
 	static
-	public String getValue(Map<String, String> values, List<String> keys){
-
-		for(String key : keys){
-			String value = values.get(key);
-
-			if(value != null){
-				return value;
-			}
-		}
-
-		return null;
-	}
-
-	static
 	abstract
 	private class IdCallback implements PositionCallback {
 
