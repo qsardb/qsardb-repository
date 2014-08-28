@@ -36,7 +36,7 @@ public class WilliamsPlotPanel extends PlotPanel {
 		BigDecimal criticalDistance = distance.getCriticalValue();
 
 		// XXX
-		distanceBounds.update(criticalDistance.multiply(new BigDecimal(1.10D), ParameterUtil.context));
+		distanceBounds.update(criticalDistance.multiply(BigDecimal.valueOf(1.10D), ParameterUtil.context));
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
 		scatterPlot.addXAxisOptions(distanceBounds, distance.getName());
