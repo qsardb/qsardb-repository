@@ -28,7 +28,7 @@ public class ParameterTooltip extends Tooltip {
 	public void schedule(final int left, final int top){
 		setPopupPosition(left, top);
 
-		this.timer.schedule(TIMER_DELAY);
+		this.timer.schedule(SHOW_DELAY);
 	}
 
 	public void cancel(){

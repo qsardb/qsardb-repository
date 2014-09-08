@@ -139,7 +139,7 @@ public class ResolverTooltip extends Tooltip {
 
 		setCallback(callback);
 
-		this.timer.schedule(TIMER_DELAY);
+		this.timer.schedule(SHOW_DELAY);
 	}
 
 	public void cancel(){
