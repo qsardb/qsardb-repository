@@ -10,51 +10,33 @@ import com.reveregroup.gwt.imagepreloader.*;
 
 public class ResolverTooltip extends Tooltip {
 
-	private Resolver resolver = null;
+	private final Resolver resolver;
+	private String scheduledKey;
 
 	private FlexTable table = null;
 
-	final
-	private Timer timer = new Timer(){
-
-		@Override
-		public void run(){
-			resolve();
-		}
-	};
-
-	private IdCallback callback = null;
-
-
 	public ResolverTooltip(Resolver resolver){
-		setResolver(resolver);
-
+		this.resolver = resolver;
 		this.table = new FlexTable();
 		this.table.addStyleName("resolver-tooltip");
 		setWidget(this.table);
 	}
 
-	private void resolve(){
-		final
-		IdCallback callback = getCallback();
-		if(callback == null){
+	@Override
+	protected void render() {
+		final String resolveKey = scheduledKey;
+		if(resolveKey == null){
 			return;
 		}
 
-		Resolver resolver = getResolver();
-
-		final
-		Map<String, String> values = resolver.resolve(callback.getId());
-
-		final
-		String resolveMethod = resolver.resolveMethod(values);
+		final Map<String, String> values = resolver.resolve(resolveKey);
+		final String resolveMethod = resolver.resolveMethod(values);
 
 		ImageLoadHandler loadHandler = new ImageLoadHandler(){
 
 			@Override
 			public void imageLoaded(ImageLoadEvent event){
-
-				if(isActive(callback)){
+				if(resolveKey.equals(scheduledKey)){
 					Image image = null;
 
 					Dimensions size = event.getDimensions();
@@ -65,7 +47,7 @@ public class ResolverTooltip extends Tooltip {
 
 					resetTable(image, values, image != null ? resolveMethod : null);
 
-					setPopupPositionAndShow(callback);
+					setPopupPositionAndShow(getPositionCallback());
 				}
 			}
 		};
@@ -113,103 +95,13 @@ public class ResolverTooltip extends Tooltip {
 	}
 
 	public void schedule(String id, final int x, final int y){
-		IdCallback callback = new IdCallback(id){
-
-			final int spacing = 5;
-
-			@Override
-			public void setPosition(int width, int height){
-				int left = (x + this.spacing);
-				int top = (y + this.spacing);
-
-				if((top + height) > (Window.getScrollTop() + Window.getClientHeight())){
-					top = Math.max(y - this.spacing - height, Window.getScrollTop());
-				}
-
-				if(left + width > (Window.getScrollLeft() + Window.getClientWidth())){
-					left = Math.max(x - this.spacing - width, Window.getScrollLeft());
-				}
-
-				setPopupPosition(left, top);
-			}
-		};
-
-		// Update position, but do not restart timer
-		if(isActive(callback)){
-			setCallback(callback);
-
-			return;
-		}
-
-		setCallback(callback);
-
-		this.timer.schedule(SHOW_DELAY);
+		scheduledKey = id;
+		super.schedule(x, y);
 	}
 
+	@Override
 	public void cancel(){
-		setCallback(null);
-
-		this.timer.cancel();
-
-		if(isShowing()){
-			hide();
-		}
-	}
-
-	private boolean isActive(IdCallback callback){
-		return callback != null && (callback).equals(getCallback());
-	}
-
-	public Resolver getResolver(){
-		return this.resolver;
-	}
-
-	private void setResolver(Resolver resolver){
-		this.resolver = resolver;
-	}
-
-	private IdCallback getCallback(){
-		return this.callback;
-	}
-
-	private void setCallback(IdCallback callback){
-		this.callback = callback;
-	}
-
-	static
-	abstract
-	private class IdCallback implements PositionCallback {
-
-		private String id = null;
-
-
-		public IdCallback(String id){
-			setId(id);
-		}
-
-		@Override
-		public int hashCode(){
-			return getId().hashCode();
-		}
-
-		@Override
-		public boolean equals(Object object){
-
-			if(object instanceof IdCallback){
-				IdCallback that = (IdCallback)object;
-
-				return (this.getId()).equals(that.getId());
-			}
-
-			return false;
-		}
-
-		public String getId(){
-			return this.id;
-		}
-
-		private void setId(String id){
-			this.id = id;
-		}
+		scheduledKey = null;
+		super.cancel();
 	}
 }

@@ -25,7 +25,7 @@ public class ParameterTooltipCell extends TooltipCell<String> {
 
 	@Override
 	public void showTooltip(Context context, Element element, NativeEvent event){
-		this.tooltip.schedule(PopupUtil.getPopupX(event) + 5, PopupUtil.getPopupY(event) + 5);
+		this.tooltip.schedule(PopupUtil.getPopupX(event), PopupUtil.getPopupY(event));
 	}
 
 	@Override
