@@ -30,6 +30,7 @@ public class ResolverTooltip extends Tooltip {
 		setResolver(resolver);
 
 		this.table = new FlexTable();
+		this.table.addStyleName("resolver-tooltip");
 		setWidget(this.table);
 	}
 
@@ -116,14 +117,17 @@ public class ResolverTooltip extends Tooltip {
 
 			final int spacing = 5;
 
-
 			@Override
 			public void setPosition(int width, int height){
 				int left = (x + this.spacing);
 				int top = (y + this.spacing);
 
-				if((top + height) > (Window.getScrollTop() + Window.getClientHeight()) && (y - this.spacing - height) > Window.getScrollTop()){
-					top = (y - this.spacing - height);
+				if((top + height) > (Window.getScrollTop() + Window.getClientHeight())){
+					top = Math.max(y - this.spacing - height, Window.getScrollTop());
+				}
+
+				if(left + width > (Window.getScrollLeft() + Window.getClientWidth())){
+					left = Math.max(x - this.spacing - width, Window.getScrollLeft());
 				}
 
 				setPopupPosition(left, top);

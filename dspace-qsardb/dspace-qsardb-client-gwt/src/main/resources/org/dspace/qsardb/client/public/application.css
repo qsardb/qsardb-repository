@@ -28,3 +28,12 @@ table.distances hr {
     background-color: #e7e7e7;
     border: none;
 }
+
+.resolver-tooltip td {
+	padding: 0 2px 4px 2px;
+	vertical-align: top;
+}
+.resolver-tooltip td + td > div {
+	width: 300px;
+	white-space: normal;
+}
