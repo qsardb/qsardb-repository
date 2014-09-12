@@ -35,13 +35,15 @@ public class DescriptorPlotPanel extends PlotPanel {
 		QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		scatterPlot.addXAxisOptions(descriptorBounds, "Descriptor");
-		scatterPlot.addYAxisOptions(propertyBounds, "Experimental property");
+		if (property.isNumeric()) {
+			scatterPlot.addXAxisOptions(descriptorBounds, "Descriptor");
+			scatterPlot.addYAxisOptions(propertyBounds, "Experimental property");
 
-		add(scatterPlot);
+			add(scatterPlot);
 
-		// XXX
-		add(new HTML("&nbsp;"));
+			// XXX
+			add(new HTML("&nbsp;"));
+		}
 
 		int size = Math.max((int)Math.sqrt(ids.size()), 10);
 

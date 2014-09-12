@@ -21,8 +21,13 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 	private Widget createPropertyPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
 
-		panel.add(createPropertyPlotPanel(table));
-		panel.add(createResidualErrorPlotPanel(table));
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+		if (property.isNumeric()) {
+			panel.add(createPropertyPlotPanel(table));
+			panel.add(createResidualErrorPlotPanel(table));
+		} else {
+			panel.add(createPropertyClassesPanel(table));
+		}
 
 		return panel;
 	}
@@ -90,6 +95,41 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 			}
 		};
 		panel.setContent(content);
+
+		return panel;
+	}
+
+	private Widget createPropertyClassesPanel(final QdbTable table){
+		DisclosurePanel panel = new DisclosurePanel();
+
+		final
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+
+		LazyHeader header = new LazyHeader(panel){
+
+			@Override
+			public Label createLeft(){
+				return new Label(property.getId()+": "+property.getName());
+			}
+		};
+		panel.setHeader(header);
+
+		header.ensureWidget();
+
+		LazyContent content = new LazyContent(panel){
+
+			@Override
+			public Widget createWidget(){
+				PropertyClassesPanel classesPanel = new PropertyClassesPanel(table);
+				getContext().addSeriesDisplayEventHandler(classesPanel, true);
+				return classesPanel;
+			}
+		};
+		panel.setContent(content);
+
+		if(!panel.isOpen()){
+			panel.setOpen(true);
+		}
 
 		return panel;
 	}

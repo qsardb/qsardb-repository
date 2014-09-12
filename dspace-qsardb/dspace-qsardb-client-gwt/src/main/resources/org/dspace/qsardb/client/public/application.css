@@ -37,3 +37,14 @@ table.distances hr {
 	width: 300px;
 	white-space: normal;
 }
+
+table.confusion-matrix {
+	width: initial;
+	margin-bottom: 6px;
+	border-collapse: collapse;
+}
+
+.confusion-matrix td {
+	border: 1px solid #e7e7e7;
+	text-align: center;
+}

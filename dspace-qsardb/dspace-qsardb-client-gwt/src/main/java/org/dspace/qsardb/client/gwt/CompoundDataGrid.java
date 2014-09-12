@@ -33,7 +33,9 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 		for(PredictionColumn prediction : predictions){
 			addColumn(new PredictionTextColumn(prediction), new PredictionTextHeader(prediction));
-			addColumn(new PredictionErrorTextColumn(prediction), "Error");
+			if (prediction.isNumeric()) {
+				addColumn(new PredictionErrorTextColumn(prediction), "Error");
+			}
 		}
 
 		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
