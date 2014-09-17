@@ -94,15 +94,10 @@ public class SeriesMenuBar extends MenuBar {
 	private SafeHtml formatName(PredictionColumn prediction, boolean selected){
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 
-		if(selected){
-			builder.append(SafeHtmlUtils.fromSafeConstant("<u>"));
-		}
-
+		String check = "<input type=\"checkbox\" " + (selected ? "checked>" : ">");
+		builder.append(SafeHtmlUtils.fromSafeConstant(check));
 		builder.append(SafeHtmlUtils.fromString(prediction.getName()));
-
-		if(selected){
-			builder.append(SafeHtmlUtils.fromSafeConstant("</u>"));
-		}
+		builder.append(SafeHtmlUtils.fromSafeConstant("</input>"));
 
 		return builder.toSafeHtml();
 	}
