@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.*;
 public class CompoundSimplePager extends SimplePager {
 
 	public CompoundSimplePager(){
-		super();
+		super(TextLocation.CENTER, false, true);
 
 		adjustCellAlignment();
 	}
