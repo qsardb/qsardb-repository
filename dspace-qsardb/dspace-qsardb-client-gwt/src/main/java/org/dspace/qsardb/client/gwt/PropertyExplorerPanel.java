@@ -33,83 +33,31 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 	}
 
 	private Widget createPropertyPlotPanel(final QdbTable table){
-		DisclosurePanel panel = new DisclosurePanel();
-
-		final
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
-
-		LazyHeader header = new LazyHeader(panel){
-
-			@Override
-			public Label createLeft(){
-				return new Label(property.getId()+": "+property.getName());
-			}
-		};
-		panel.setHeader(header);
-
-		header.ensureWidget();
-
-		LazyContent content = new LazyContent(panel){
-
-			@Override
-			public Widget createWidget(){
-				PlotPanel plotPanel = new PropertyPlotPanel(table);
-
-				getContext().addSeriesDisplayEventHandler(plotPanel, true);
-
-				return plotPanel;
-			}
-		};
-		panel.setContent(content);
-
-		if(!panel.isOpen()){
-			panel.setOpen(true);
-		}
-
-		return panel;
+		String title = property.getId()+": "+property.getName();
+		PlotPanel plotPanel = new PropertyPlotPanel(table);
+		return createDisclosurePanel(title, plotPanel, true);
 	}
 
 	private Widget createResidualErrorPlotPanel(final QdbTable table){
-		DisclosurePanel panel = new DisclosurePanel();
-
-		LazyHeader header = new LazyHeader(panel){
-
-			@Override
-			public Label createLeft(){
-				return new Label("Residual error");
-			}
-		};
-		panel.setHeader(header);
-
-		header.ensureWidget();
-
-		LazyContent content = new LazyContent(panel){
-
-			@Override
-			public Widget createWidget(){
-				PlotPanel plotPanel = new ResidualErrorPlotPanel(table);
-
-				getContext().addSeriesDisplayEventHandler(plotPanel, true);
-
-				return plotPanel;
-			}
-		};
-		panel.setContent(content);
-
-		return panel;
+		PlotPanel plotPanel = new ResidualErrorPlotPanel(table);
+		return createDisclosurePanel("Residual error", plotPanel, false);
 	}
 
 	private Widget createPropertyClassesPanel(final QdbTable table){
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+		String title = property.getId()+": "+property.getName();
+		PropertyClassesPanel classesPanel = new PropertyClassesPanel(table);
+		return createDisclosurePanel(title, classesPanel, true);
+	}
+
+	private <W extends Widget & SeriesDisplayEventHandler> DisclosurePanel createDisclosurePanel(final String title, final W contentPanel, boolean startOpen) {
 		DisclosurePanel panel = new DisclosurePanel();
 
-		final
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-
 		LazyHeader header = new LazyHeader(panel){
-
 			@Override
 			public Label createLeft(){
-				return new Label(property.getId()+": "+property.getName());
+				return new Label(title);
 			}
 		};
 		panel.setHeader(header);
@@ -120,14 +68,13 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 
 			@Override
 			public Widget createWidget(){
-				PropertyClassesPanel classesPanel = new PropertyClassesPanel(table);
-				getContext().addSeriesDisplayEventHandler(classesPanel, true);
-				return classesPanel;
+				getContext().addSeriesDisplayEventHandler(contentPanel, true);
+				return contentPanel;
 			}
 		};
 		panel.setContent(content);
 
-		if(!panel.isOpen()){
+		if(startOpen && !panel.isOpen()){
 			panel.setOpen(true);
 		}
 
