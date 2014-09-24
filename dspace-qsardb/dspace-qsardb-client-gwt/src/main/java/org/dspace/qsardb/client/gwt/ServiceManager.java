@@ -1,5 +1,6 @@
 package org.dspace.qsardb.client.gwt;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
 
 abstract
@@ -11,7 +12,8 @@ public class ServiceManager<A> {
 
 
 	protected ServiceManager(String path){
-		setPath(path);
+		String context = Application.getInstance().getContextPath();
+		setPath(context+path);
 	}
 
 	abstract
@@ -29,7 +31,6 @@ public class ServiceManager<A> {
 		value = {"unchecked"}
 	)
 	public A getInstance(){
-
 		if(this.instance == null){
 			Object object = createObject();
 

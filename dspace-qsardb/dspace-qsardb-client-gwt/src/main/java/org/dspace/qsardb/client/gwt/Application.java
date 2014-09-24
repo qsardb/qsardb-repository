@@ -15,6 +15,13 @@ public class Application implements EntryPoint {
 	abstract
 	public String getId();
 
+	abstract
+	public String getPath();
+
+	public String getContextPath() {
+		return match("(/.*)/"+getPath(), 1, Window.Location.getPath());
+	}
+
 	public void setWidget(Widget widget){
 		RootPanel panel = RootPanel.get(getId());
 

@@ -10,9 +10,6 @@ abstract
 public class QdbApplication extends Application {
 
 	abstract
-	public String getPath();
-
-	abstract
 	public Widget createWidget(ModelTable model);
 
 	@Override
