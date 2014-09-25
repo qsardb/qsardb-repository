@@ -36,6 +36,7 @@ table.distances hr {
 .resolver-tooltip td + td > div {
 	width: 300px;
 	white-space: normal;
+	word-wrap: break-word;
 }
 
 table.confusion-matrix {
