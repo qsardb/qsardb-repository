@@ -2,6 +2,7 @@ package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.*;
+import com.reveregroup.gwt.imagepreloader.*;
 import java.util.*;
 import org.dspace.qsardb.rpc.gwt.*;
 
@@ -29,7 +30,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 		Resolver resolver = new Resolver(table);
 
-		FlexTable flexTable = new FlexTable();
+		final FlexTable flexTable = new FlexTable();
 		flexTable.setStylePrimaryName("distances");
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
@@ -39,15 +40,17 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 			String compId = distances.getId(i);
 			double distance = distances.getDistance(i);
 
-			int row = flexTable.getRowCount();
+			final int row = flexTable.getRowCount();
 
-			StringBuilder depiction = new StringBuilder();
-			depiction.append("<img src=\"");
-			depiction.append(resolver.resolveURL(compId));
-			depiction.append("&crop=2");
-			depiction.append("\">");
-
-			flexTable.setHTML(row, 0, depiction.toString());
+			String depictionUrl = resolver.resolveURL(compId) + "&crop=2";
+			ImagePreloader.load(depictionUrl, new ImageLoadHandler() {
+				@Override
+				public void imageLoaded(ImageLoadEvent event) {
+					if (!event.isLoadFailed()) {
+						flexTable.setWidget(row, 0, event.takeImage());
+					}
+				}
+			});
 			flexTable.getFlexCellFormatter().setRowSpan(row, 0, 4);
 			flexTable.getRowFormatter().addStyleName(row, "start");
 
@@ -85,5 +88,4 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 		panel.add(flexTable);
 	}
-
 }
