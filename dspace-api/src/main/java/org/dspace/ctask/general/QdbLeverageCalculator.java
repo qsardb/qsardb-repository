@@ -10,6 +10,7 @@ import org.qsardb.model.*;
 import org.jpmml.manager.*;
 
 import org.dspace.curate.*;
+import org.jpmml.evaluator.RegressionModelEvaluator;
 
 @Distributive
 public class QdbLeverageCalculator extends QdbModelTask {
@@ -81,7 +82,7 @@ public class QdbLeverageCalculator extends QdbModelTask {
 	static
 	private boolean checkModelManager(ModelManager<?> modelManager){
 
-		if(modelManager instanceof RegressionModelManager){
+		if(modelManager instanceof RegressionModelEvaluator){
 			return true;
 		}
 
