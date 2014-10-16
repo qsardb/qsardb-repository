@@ -308,7 +308,7 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 
 	static
 	abstract
-	public class NumericTextColumn <C extends NumericColumn> extends CompoundTextColumn<C, Object> {
+	public class NumericTextColumn <C extends ValuesColumn> extends CompoundTextColumn<C, Object> {
 
 		public NumericTextColumn(Cell<String> cell, C column){
 			super(cell, column);

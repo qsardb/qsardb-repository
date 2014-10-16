@@ -50,7 +50,7 @@ public class ParameterUtil {
 	}
 
 	static
-	public void ensureConverted(NumericColumn column){
+	public void ensureConverted(ValuesColumn column){
 
 		if(column.isConverted()){
 			return;
@@ -60,7 +60,7 @@ public class ParameterUtil {
 	}
 
 	static
-	private void convertParameterColumn(NumericColumn column){
+	private void convertParameterColumn(ValuesColumn column){
 		Map<String, Object> values = column.getValues();
 
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();

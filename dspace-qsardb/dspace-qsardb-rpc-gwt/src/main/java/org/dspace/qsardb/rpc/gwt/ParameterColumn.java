@@ -1,7 +1,7 @@
 package org.dspace.qsardb.rpc.gwt;
 
 abstract
-public class ParameterColumn extends NumericColumn {
+public class ParameterColumn extends ValuesColumn {
 
 	private String id = null;
 

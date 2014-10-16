@@ -3,7 +3,7 @@ package org.dspace.qsardb.rpc.gwt;
 import java.math.*;
 
 abstract
-public class DistanceColumn extends NumericColumn {
+public class DistanceColumn extends ValuesColumn {
 
 	private BigDecimal criticalValue = null;
 

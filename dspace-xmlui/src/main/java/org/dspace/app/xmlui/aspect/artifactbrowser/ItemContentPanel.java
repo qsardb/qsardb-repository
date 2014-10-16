@@ -78,6 +78,7 @@ class ItemContentPanel {
 		propertyDivision.setHead(T_property_head.parameterize(property.getId(), property.getName()));
 
 		Values<?> propertyValues = loadValues(property);
+		boolean isClassification = propertyValues instanceof StringValues;
 
 		Map<String, BibTeXEntry> bibliography = new LinkedHashMap<String, BibTeXEntry>();
 
@@ -124,7 +125,9 @@ class ItemContentPanel {
 
 				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 
-				Table modelTable = modelDivision.addTable("model-summary-" + propertyModel.getId(), modelPredictions.size(), 5);
+
+				int columns = isClassification ? 4 : 5;
+				Table modelTable = modelDivision.addTable("model-summary-" + propertyModel.getId(), modelPredictions.size(), columns);
 
 				if(true){
 					Row headerRow = modelTable.addRow(Row.ROLE_HEADER);
@@ -138,11 +141,16 @@ class ItemContentPanel {
 					Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
 					sizeCell.addContent("n");
 
-					Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-					rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
+					if (isClassification) {
+						Cell accCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+						accCell.addContent("Accuracy");
+					} else {
+						Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+						rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
 
-					Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-					stdevCell.addHtmlContent("<p>&#x3c3;</p>");
+						Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+						stdevCell.addHtmlContent("<p>&#x3c3;</p>");
+					}
 				}
 
 				Values<?> trainingValues = null;
@@ -159,8 +167,12 @@ class ItemContentPanel {
 					predictionRow.addCellContent(modelPrediction.getName());
 					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));
 					predictionRow.addCellContent(String.valueOf(predictionValues.size()));
-					predictionRow.addCellContent(formatStats(predictionValues.rsq(propertyValues)));
-					predictionRow.addCellContent(formatStats(predictionValues.stdev(propertyValues)));
+					if (isClassification) {
+						predictionRow.addCellContent(formatStats(predictionValues.accuracy(propertyValues)));
+					} else {
+						predictionRow.addCellContent(formatStats(predictionValues.rsq(propertyValues)));
+						predictionRow.addCellContent(formatStats(predictionValues.stdev(propertyValues)));
+					}
 				}
 			}
 		} // End if
@@ -323,6 +335,10 @@ class ItemContentPanel {
 			return null;
 		}
 
+		public BigDecimal accuracy(Values<?> values){
+			return null;
+		}
+
 		public X get(String key){
 			return this.values.get(key);
 		}
@@ -337,6 +353,27 @@ class ItemContentPanel {
 
 		public StringValues(Map<String, String> values){
 			super(values);
+		}
+
+		@Override
+		public BigDecimal accuracy(Values<?> values) {
+			StringValues that = (StringValues)values;
+			int correct = 0;
+			int total = 0;
+			for(String key : keySet()){
+				String thisValue = this.get(key);
+				Object thatValue = that.get(key);
+
+				if(thisValue == null || thatValue == null){
+					continue;
+				}
+
+				if (thisValue.equals(thatValue)) {
+					correct++;
+				}
+				total++;
+			}
+			return new BigDecimal(correct).divide(new BigDecimal(total), 2, RoundingMode.HALF_UP);
 		}
 	}
 

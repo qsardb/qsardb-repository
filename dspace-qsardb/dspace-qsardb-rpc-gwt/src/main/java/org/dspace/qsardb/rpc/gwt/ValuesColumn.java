@@ -1,6 +1,6 @@
 package org.dspace.qsardb.rpc.gwt;
 
-public class NumericColumn extends QdbColumn<Object> {
+public class ValuesColumn extends QdbColumn<Object> {
 
 	private boolean converted = false;
 	private boolean numeric = false;
