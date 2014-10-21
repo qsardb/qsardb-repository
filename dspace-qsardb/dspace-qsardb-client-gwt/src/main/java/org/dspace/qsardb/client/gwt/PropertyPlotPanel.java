@@ -3,6 +3,7 @@ package org.dspace.qsardb.client.gwt;
 import java.util.*;
 
 import com.google.gwt.user.client.ui.*;
+import java.util.logging.Logger;
 
 import org.dspace.qsardb.rpc.gwt.*;
 
@@ -23,7 +24,8 @@ public class PropertyPlotPanel extends PlotPanel {
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
 		for(PredictionColumn prediction : predictions){
-			Map<String, Object> predictionValues = prediction.getValues();
+			Map<String, ?> predictionValues = ParameterUtil.subset(
+					propertyValues.keySet(), prediction.getValues());
 			propertyBounds = QdbPlot.bounds(propertyBounds, predictionValues);
 
 			ids.addAll(predictionValues.keySet());
