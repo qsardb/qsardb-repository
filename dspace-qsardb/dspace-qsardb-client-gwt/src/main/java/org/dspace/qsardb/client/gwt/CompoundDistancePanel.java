@@ -23,6 +23,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 	@Override
 	public void onEvaluate(EvaluationEvent event) {
+		java.util.logging.Logger.getLogger("SS:").fine("test");
 		panel.clear();
 
 		DataInputPanel input = (DataInputPanel)event.getSource(); // XXX
@@ -64,7 +65,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 			flexTable.setText(row+1, 1, resolver.getName(compId));
 
 			flexTable.setText(row+1, 2, "Experimental:");
-			flexTable.setText(row+1, 3, property.getValue(compId).toString());
+			flexTable.setText(row+1, 3, fmtParameter(property, compId));
 
 			flexTable.setText(row+2, 0, "CAS:");
 			flexTable.setText(row+2, 1, resolver.getCas(compId));
@@ -77,7 +78,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 			for (PredictionColumn p: predictions) {
 				if (p.getValues().containsKey(compId)) {
-					flexTable.setText(row+2, 3, p.getValue(compId).toString());
+					flexTable.setText(row+2, 3, fmtParameter(p,compId));
 					flexTable.setText(row+3, 1, p.getId());
 				}
 			}
@@ -88,4 +89,10 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 		panel.add(flexTable);
 	}
+
+	private String fmtParameter(ParameterColumn col, String key) {
+		Object v = col.getValue(key);
+		return v != null ? v.toString() : "N/A";
+	}
+
 }
