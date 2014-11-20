@@ -1,5 +1,6 @@
 package org.dspace.qsardb.service.gwt;
 
+import com.google.common.base.Joiner;
 import java.io.*;
 import java.math.*;
 import java.util.*;
@@ -208,6 +209,15 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 				return compound.getName();
 			}
 		};
+
+		AttributeCollector labelsValues = new AttributeCollector(){
+
+			@Override
+			public String collect(Compound compound){
+				return Joiner.on(", ").join(compound.getLabels());
+			}
+		};
+
 		AttributeCollector casValues = new AttributeCollector(){
 
 			@Override
@@ -230,6 +240,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 			idValues.add(compound);
 			nameValues.add(compound);
+			labelsValues.add(compound);
 			casValues.add(compound);
 			inChIValues.add(compound);
 
@@ -249,6 +260,13 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 			columns.add(column);
 		} // End if
+
+		if (labelsValues.size() > 0) {
+			LabelsColumn column = new LabelsColumn();
+			labelsValues.init(column);
+
+			columns.add(column);
+		}
 
 		if(casValues.size() > 0){
 			CasColumn column = new CasColumn();

@@ -17,6 +17,7 @@ public class Resolver {
 		Map<String, String> result = new LinkedHashMap<String, String>();
 		result.put(ID, key);
 		result.put(NAME, getName(key));
+		result.put(LABELS, getLabels(key));
 		result.put(CAS, getCas(key));
 		result.put(INCHI, getInChI(key));
 		result.put(SMILES, getSmiles(key));
@@ -63,6 +64,10 @@ public class Resolver {
 		return getValue(SmilesColumn.class, key);
 	}
 
+	public String getLabels(String key){
+		return getValue(LabelsColumn.class, key);
+	}
+
 	private String getValue(Class<? extends QdbColumn<?>> clazz, String key){
 		QdbColumn<?> column = getTable().getColumn(clazz);
 
@@ -84,6 +89,8 @@ public class Resolver {
 	public static final String ID = "Id";
 
 	public static final String NAME = "Name";
+
+	public static final String LABELS = "Labels";
 
 	public static final String CAS = "CAS";
 

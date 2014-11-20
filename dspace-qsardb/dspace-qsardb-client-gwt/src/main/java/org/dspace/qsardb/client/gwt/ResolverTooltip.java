@@ -80,7 +80,7 @@ public class ResolverTooltip extends Tooltip {
 			String key = entry.getKey();
 			String value = entry.getValue();
 
-			if(value == null){
+			if(value == null || value.isEmpty()){
 				continue;
 			}
 
