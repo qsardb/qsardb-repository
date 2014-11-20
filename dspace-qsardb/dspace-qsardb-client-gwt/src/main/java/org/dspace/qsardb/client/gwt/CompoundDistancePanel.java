@@ -23,7 +23,6 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 	@Override
 	public void onEvaluate(EvaluationEvent event) {
-		java.util.logging.Logger.getLogger("SS:").fine("test");
 		panel.clear();
 
 		DataInputPanel input = (DataInputPanel)event.getSource(); // XXX
@@ -33,6 +32,8 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 		final FlexTable flexTable = new FlexTable();
 		flexTable.setStylePrimaryName("distances");
+
+		LabelsColumn labels = table.getColumn(LabelsColumn.class);
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		NumberFormat fmt = NumberFormat.getFormat("0.0000");
@@ -48,11 +49,11 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 				@Override
 				public void imageLoaded(ImageLoadEvent event) {
 					if (!event.isLoadFailed()) {
-						flexTable.setWidget(row, 0, event.takeImage());
+						flexTable.setWidget(row, 0, new Image(event.getImageUrl()));
 					}
 				}
 			});
-			flexTable.getFlexCellFormatter().setRowSpan(row, 0, 4);
+			flexTable.getFlexCellFormatter().setRowSpan(row, 0, 5);
 			flexTable.getRowFormatter().addStyleName(row, "start");
 
 			flexTable.setText(row, 1, "Id:");
@@ -72,9 +73,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 			flexTable.setText(row+2, 2, "Calculated:");
 
-			flexTable.getRowFormatter().addStyleName(row, "start");
 			flexTable.setText(row+3, 0, "Set:");
-			flexTable.getRowFormatter().addStyleName(row+3, "end");
 
 			for (PredictionColumn p: predictions) {
 				if (p.getValues().containsKey(compId)) {
@@ -83,8 +82,12 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 				}
 			}
 
-			flexTable.setHTML(row+4, 0, "<hr>");
-			flexTable.getFlexCellFormatter().setColSpan(row+4, 0, 5);
+			flexTable.setText(row+4, 0, "Labels:");
+			flexTable.setText(row+4, 1, labels.getValue(compId));
+
+			flexTable.getRowFormatter().addStyleName(row+4, "end");
+			flexTable.setHTML(row+5, 0, "<hr>");
+			flexTable.getFlexCellFormatter().setColSpan(row+5, 0, 5);
 		}
 
 		panel.add(flexTable);
