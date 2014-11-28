@@ -43,7 +43,7 @@ public class ReferenceFormatter {
 			Key key = field.getKey();
 			Value value = entry.getField(key);
 
-			if(value == null){
+			if(value == null || value.toUserString().trim().isEmpty()){
 				continue;
 			}
 
@@ -58,6 +58,11 @@ public class ReferenceFormatter {
 		}
 
 		ensureSuffix(sb, (fields.get(fields.size() - 1)).getSeparator());
+
+		// fix dangling comma (e.g. missing pages field for journal entry)
+		if (sb.charAt(sb.length()-1) == ',') {
+			sb.setCharAt(sb.length()-1, '.');
+		}
 
 		return sb.toString();
 	}
