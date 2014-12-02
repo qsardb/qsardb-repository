@@ -483,44 +483,29 @@ public class QdbUtil {
 	public BibTeXEntry getPopularEntry(Qdb qdb){
 		FrequencyMap<BibTeXEntryHandle> map = new FrequencyMap<BibTeXEntryHandle>();
 
-		collectEntries(map, qdb.getPropertyRegistry());
-		collectEntries(map, qdb.getModelRegistry());
+		PropertyRegistry props = qdb.getPropertyRegistry();
+		collectEntries(map, props, 1);
+		collectEntries(map, qdb.getModelRegistry(), 1+props.size());
 
 		int maxCount = 0;
+		BibTeXEntryHandle bestHandle = null;
 
-		Set<BibTeXEntryHandle> maxHandles = new LinkedHashSet<BibTeXEntryHandle>();
-
-		java.util.Collection<BibTeXEntryHandle> handles = map.getKeys();
-		for(BibTeXEntryHandle handle : handles){
+		for(BibTeXEntryHandle handle : map.getKeys()){
 			int count = map.getCount(handle);
 
-			if(count < maxCount){
-				continue;
-			} else
-
-			if(count == maxCount){
-				maxHandles.add(handle);
-			} else
-
-			if(count > maxCount){
+			if (count > maxCount) {
 				maxCount = count;
-
-				maxHandles.clear();
-				maxHandles.add(handle);
+				bestHandle = handle;
+			} else if (count == maxCount) {
+				bestHandle = null;
 			}
 		}
 
-		if(maxHandles.size() == 1){
-			BibTeXEntryHandle maxHandle = (maxHandles.iterator()).next();
-
-			return maxHandle.getEntry();
-		}
-
-		return null;
+		return bestHandle != null ? bestHandle.getEntry() : null;
 	}
 
 	static
-	private void collectEntries(FrequencyMap<BibTeXEntryHandle> map, java.util.Collection<? extends Container<?, ?>> containers){
+	private void collectEntries(FrequencyMap<BibTeXEntryHandle> map, java.util.Collection<? extends Container<?, ?>> containers, int weight){
 
 		for(Container<?, ?> container : containers){
 
@@ -533,9 +518,10 @@ public class QdbUtil {
 			try {
 				BibTeXDatabase database = cargo.loadBibTeX();
 
-				java.util.Collection<BibTeXEntry> entries = (database.getEntries()).values();
-				for(BibTeXEntry entry : entries){
-					map.add(new BibTeXEntryHandle(entry));
+				for(BibTeXEntry entry : database.getEntries().values()){
+					for (int i=0; i<weight; i++) {
+						map.add(new BibTeXEntryHandle(entry));
+					}
 
 					// Keep the first entry only
 					break;
