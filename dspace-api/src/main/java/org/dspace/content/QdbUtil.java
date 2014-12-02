@@ -429,7 +429,7 @@ public class QdbUtil {
 
 		ModelRegistry models = qdb.getModelRegistry();
 		for(Model model : models){
-			modelTypes.add(loadType(model));
+			modelTypes.add(QdbModelUtil.detectType(model));
 		}
 
 		if(modelTypes.size() > 0){
@@ -547,28 +547,6 @@ public class QdbUtil {
 	}
 
 	static
-	private String loadType(Model model){
-
-		try {
-			Evaluator evaluator = getEvaluator(model);
-
-			if(evaluator != null){
-				evaluator.init();
-
-				try {
-					return evaluator.getSummary();
-				} finally {
-					evaluator.destroy();
-				}
-			}
-		} catch(Exception e){
-			// Ignored
-		}
-
-		return null;
-	}
-
-	static
 	private List<LaTeXObject> parseLaTeX(String string) throws IOException, ParseException {
 		Reader reader = new StringReader(string);
 
@@ -626,7 +604,7 @@ public class QdbUtil {
 
 		public void add(String value){
 
-			if(value == null){
+			if(value == null || value.trim().isEmpty()){
 				return;
 			}
 

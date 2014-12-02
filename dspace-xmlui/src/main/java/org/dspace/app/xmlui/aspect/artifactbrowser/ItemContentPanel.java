@@ -289,27 +289,8 @@ class ItemContentPanel {
 
 	static
 	private String loadSummary(Model model){
-
-		try {
-			Evaluator evaluator = QdbUtil.getEvaluator(model);
-
-			if(evaluator != null){
-				evaluator.init();
-
-				try {
-					String summary = evaluator.getSummary();
-					if(summary != null){
-						return summary;
-					}
-				} finally {
-					evaluator.destroy();
-				}
-			}
-		} catch(Exception e){
-			// Ignored
-		}
-
-		return "(Unknown model type)";
+		String type = QdbModelUtil.detectType(model);
+		return type.isEmpty() ? "(Unknown model type)" : type;
 	}
 
 	static
