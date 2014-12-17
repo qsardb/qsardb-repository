@@ -241,19 +241,18 @@ class ItemContentPanel {
 		return Collections.<String, BibTeXEntry>emptyMap();
 	}
 
-	static
-	private String createSortableEntryKey (BibTeXEntry e) {
-		org.jbibtex.Value yearField = e.getField(BibTeXEntry.KEY_YEAR);
-		org.jbibtex.Value authorField = e.getField(BibTeXEntry.KEY_AUTHOR);
+	private static String createSortableEntryKey (BibTeXEntry e) {
+		String year = getKey(e, BibTeXEntry.KEY_YEAR, "0000");
+		String author = getKey(e, BibTeXEntry.KEY_AUTHOR, "unknown").split(",")[0];
+		String pages = getKey(e, BibTeXEntry.KEY_PAGES, "");
+		String doi = getKey(e, BibTeXEntry.KEY_DOI, "");
 
-		String year = (yearField != null) ? yearField.toUserString() : "0000";
+		return year + author + pages + doi;
+	}
 
-		String author = "unknown";
-		if (authorField != null) {
-			author = authorField.toUserString().split(",")[0];
-		}
-
-		return year + author + e.hashCode();
+	private static String getKey(BibTeXEntry entry, Key key, String missing) {
+		org.jbibtex.Value value = entry.getField(key);
+		return value != null ? value.toUserString() : missing;
 	}
 
 	static
