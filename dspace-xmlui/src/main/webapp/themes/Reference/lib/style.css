@@ -564,6 +564,17 @@ table.ds-gloss-list td ul {
         margin: 0px;
 }
 
+/* QsarDB: information labels with tooltips */
+.info-label {
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-size: 0.8em;
+	font-weight: normal;
+	font-family: sans-serif;
+	background: #c7e8de;
+}
+
+
 /* Formatting associated with the "Files in this item" table in the item view */
 *.file-list td {
         text-align: center;

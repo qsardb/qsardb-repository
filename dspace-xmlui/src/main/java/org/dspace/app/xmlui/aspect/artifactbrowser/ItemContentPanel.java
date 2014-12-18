@@ -75,7 +75,9 @@ class ItemContentPanel {
 		PredictionRegistry predictions = qdb.getPredictionRegistry();
 
 		Division propertyDivision = division.addDivision("property-" + property.getId(), "secondary");
-		propertyDivision.setHead(T_property_head.parameterize(property.getId(), property.getName()));
+		Head propertyHead = propertyDivision.setHead();
+		propertyHead.addContent(T_property_head.parameterize(property.getId(), property.getName()));
+		addDescriptionInfo(property, propertyHead);
 
 		Values<?> propertyValues = loadValues(property);
 		boolean isClassification = propertyValues instanceof StringValues;
@@ -113,7 +115,9 @@ class ItemContentPanel {
 
 			for(Model propertyModel : propertyModels){
 				Division modelDivision = propertyModelsDivision.addDivision("model-" + propertyModel.getId(), "secondary");
-				modelDivision.setHead(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
+				Head modelHead = modelDivision.setHead();
+				modelHead.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
+				addDescriptionInfo(propertyModel, modelHead);
 
 				Para summaryPara = modelDivision.addPara("model-summary", "side-left");
 				summaryPara.addContent(loadSummary(propertyModel));
@@ -164,7 +168,9 @@ class ItemContentPanel {
 
 					Row predictionRow = modelTable.addRow(Row.ROLE_DATA);
 
-					predictionRow.addCellContent(modelPrediction.getName());
+					Cell nameCell = predictionRow.addCell();
+					nameCell.addContent(modelPrediction.getName());
+					addDescriptionInfo(modelPrediction, nameCell);
 					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));
 					predictionRow.addCellContent(String.valueOf(predictionValues.size()));
 					if (isClassification) {
@@ -192,6 +198,13 @@ class ItemContentPanel {
 				Item referencePara = bibliographyList.addItem();
 				referencePara.addHtmlContent(formatter.format(entry, true));
 			}
+		}
+	}
+
+	private static void addDescriptionInfo(Container container, TextContainer target) throws WingException {
+		String description = container.getDescription();
+		if (description != null) {
+			target.addInfo("Description", description);
 		}
 	}
 

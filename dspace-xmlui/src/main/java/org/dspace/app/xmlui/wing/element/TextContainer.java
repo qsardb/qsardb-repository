@@ -8,6 +8,7 @@
 package org.dspace.app.xmlui.wing.element;
 
 
+import org.dspace.app.xmlui.wing.AttributeMap;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingContext;
 import org.dspace.app.xmlui.wing.WingException;
@@ -109,4 +110,17 @@ public abstract class TextContainer extends Container
 
         contents.add(data);
     }
+
+	public void addInfo(final String label, String characters) throws WingException {
+		contents.add(new Data(context, characters){
+			@Override
+			public void toSAX(ContentHandler contentHandler, LexicalHandler lexicalHandler, NamespaceSupport namespaces) throws SAXException {
+				AttributeMap attributes = new AttributeMap();
+				attributes.put("label", label);
+				startElement(contentHandler, namespaces, "info", attributes);
+				super.toSAX(contentHandler, lexicalHandler, namespaces);
+				endElement(contentHandler, namespaces, "info");
+			}
+		});
+	}
 }

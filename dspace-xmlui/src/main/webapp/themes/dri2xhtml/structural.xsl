@@ -1713,7 +1713,15 @@
         </h3>
     </xsl:template>
     
-    
+	<!-- QsarDB: information labels with tooltips -->
+    <xsl:template match="dri:info">
+		<xsl:text> </xsl:text>
+		<span>
+			<xsl:attribute name="class">info-label</xsl:attribute>
+			<xsl:attribute name="title"><xsl:value-of select="text()"/></xsl:attribute>
+			<xsl:value-of select="@label"/>
+		</span>
+    </xsl:template>
     
     
     <!-- Next come the components of rich text containers, namely: hi, xref, figure and, in case of interactive
