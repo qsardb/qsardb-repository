@@ -103,6 +103,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 		table.setId(model.getId());
 		table.setName(model.getName());
+		table.setDescription(model.getDescription());
 
 		Set<String> keys = new LinkedHashSet<String>();
 
@@ -317,6 +318,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		PredictionColumn column = new PredictionColumn();
 		column.setId(prediction.getId());
 		column.setName(prediction.getName());
+		column.setDescription(prediction.getDescription());
 
 		Map<String, Object> values = loadValues(prediction);
 		column.setValues(values);
@@ -330,6 +332,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		PropertyColumn column = new PropertyColumn();
 		column.setId(property.getId());
 		column.setName(property.getName());
+		column.setDescription(property.getDescription());
 
 		Map<String, Object> values = loadValues(property, keys);
 		column.setValues(values);
@@ -344,6 +347,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		DescriptorColumn column = new DescriptorColumn();
 		column.setId(descriptor.getId());
 		column.setName(descriptor.getName());
+		column.setDescription(descriptor.getDescription());
 
 		Map<String, Object> values = truncateValues(loadValues(descriptor, keys));
 		column.setValues(values);

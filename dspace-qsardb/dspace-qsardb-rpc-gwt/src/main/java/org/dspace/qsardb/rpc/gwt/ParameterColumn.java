@@ -3,10 +3,9 @@ package org.dspace.qsardb.rpc.gwt;
 abstract
 public class ParameterColumn extends ValuesColumn {
 
-	private String id = null;
-
-	private String name = null;
-
+	private String id;
+	private String name;
+	private String description;
 
 	public String getId(){
 		return this.id;
@@ -22,5 +21,13 @@ public class ParameterColumn extends ValuesColumn {
 
 	public void setName(String name){
 		this.name = name;
+	}
+
+	public String getDescription(){
+		return this.description;
+	}
+
+	public void setDescription(String description){
+		this.description = description;
 	}
 }
