@@ -25,9 +25,7 @@ public class StatisticsUtil {
 			try {
 				FlexBigDecimalFormat valueFormat = new FlexBigDecimalFormat();
 				Map<String, BigDecimal> values = valuesCargo.loadMap(valueFormat);
-				if (valueFormat.isValid()) {
-					return new BigDecimalValues(values);
-				}
+				return new BigDecimalValues(values);
 			} catch (Exception e) {
 				// Ignored
 			}
@@ -173,33 +171,18 @@ public class StatisticsUtil {
 		}
 	}
 
-	static
-	private class FlexBigDecimalFormat extends BigDecimalFormat {
-
-		private boolean valid = false;
-
+	private static class FlexBigDecimalFormat extends BigDecimalFormat {
 
 		@Override
 		public BigDecimal parseString(String string){
-
 			if(isText(string)){
 				return null;
 			}
 
-			BigDecimal result = super.parseString(string);
-
-			this.valid |= true;
-
-			return result;
+			return super.parseString(string);
 		}
 
-		private boolean isValid(){
-			return this.valid;
-		}
-
-		static
-		private boolean isText(String string){
-
+		private static boolean isText(String string){
 			for(int i = 0; string != null && i < string.length(); i++){
 				char c = string.charAt(i);
 
@@ -211,5 +194,4 @@ public class StatisticsUtil {
 			return true;
 		}
 	}
-
 }
