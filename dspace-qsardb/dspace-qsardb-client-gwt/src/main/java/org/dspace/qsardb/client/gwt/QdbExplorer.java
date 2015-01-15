@@ -32,27 +32,22 @@ public class QdbExplorer extends QdbApplication {
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
-		final
-		SeriesMenuBar seriesMenu = new SeriesMenuBar(predictions);
+		final PredictionSelection predictionSelection = new PredictionSelection(predictions);
 
 		ExplorerContext context = new ExplorerContext(){
-
 			@Override
 			public HandlerRegistration addSeriesDisplayEventHandler(SeriesDisplayEventHandler handler, boolean notify){
-				HandlerRegistration result = seriesMenu.addSeriesDisplayEventHandler(handler);
+				HandlerRegistration result = predictionSelection.addSeriesDisplayEventHandler(handler);
 
 				if(notify){
-					handler.onSeriesVisibilityChanged(seriesMenu.createSeriesDisplayEvent());
+					handler.onSeriesVisibilityChanged(predictionSelection.createSeriesDisplayEvent());
 				}
 
 				return result;
 			}
 		};
 
-		MenuBar menu = new MenuBar();
-		menu.addItem("Select predictions", seriesMenu);
-
-		panel.add(menu);
+		panel.add(predictionSelection);
 
 		TableExplorerPanel tableExplorer = new TableExplorerPanel(context, table);
 		panel.add(tableExplorer);
