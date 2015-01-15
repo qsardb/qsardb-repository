@@ -35,7 +35,7 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 			style.setMarginRight(3, Style.Unit.PX);
 		}
 
-		Label left = createLeft();
+		Widget left = createLeft();
 		if(left != null){
 			panel.add(left);
 
@@ -56,7 +56,7 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 		return panel;
 	}
 
-	public Label createLeft(){
+	public Widget createLeft(){
 		return null;
 	}
 

@@ -33,31 +33,45 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 	}
 
 	private Widget createPropertyPlotPanel(final QdbTable table){
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-		String title = property.getId()+": "+property.getName();
 		PlotPanel plotPanel = new PropertyPlotPanel(table);
-		return createDisclosurePanel(title, plotPanel, true);
+		Widget header = createPropertyHeaderWidget(table);
+		return createDisclosurePanel(header, plotPanel, true);
 	}
 
 	private Widget createResidualErrorPlotPanel(final QdbTable table){
 		PlotPanel plotPanel = new ResidualErrorPlotPanel(table);
-		return createDisclosurePanel("Residual error", plotPanel, false);
+		Widget header = createResidualHeaderWidget(table);
+		return createDisclosurePanel(header, plotPanel, false);
 	}
 
 	private Widget createPropertyClassesPanel(final QdbTable table){
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-		String title = property.getId()+": "+property.getName();
 		PropertyClassesPanel classesPanel = new PropertyClassesPanel(table);
-		return createDisclosurePanel(title, classesPanel, true);
+		Widget header = createPropertyHeaderWidget(table);
+		return createDisclosurePanel(header, classesPanel, true);
 	}
 
-	private <W extends Widget & SeriesDisplayEventHandler> DisclosurePanel createDisclosurePanel(final String title, final W contentPanel, boolean startOpen) {
+	private Widget createPropertyHeaderWidget(final QdbTable table){
+		PropertyColumn property = table.getColumn(PropertyColumn.class);
+		String title = property.getId()+": "+property.getName();
+		FlowPanel titlePanel = new FlowPanel();
+		titlePanel.add(new InlineLabel(title));
+		if (property.getDescription() != null) {
+			titlePanel.add(new DescriptionLabel(property));
+		}
+		return titlePanel;
+	}
+
+	private Widget createResidualHeaderWidget(final QdbTable table){
+		return new Label("Residual error");
+	}
+
+	private <W extends Widget & SeriesDisplayEventHandler> DisclosurePanel createDisclosurePanel(final Widget headerWidget, final W contentPanel, boolean startOpen) {
 		DisclosurePanel panel = new DisclosurePanel();
 
 		LazyHeader header = new LazyHeader(panel){
 			@Override
-			public Label createLeft(){
-				return new Label(title);
+			public Widget createLeft(){
+				return headerWidget;
 			}
 		};
 		panel.setHeader(header);
