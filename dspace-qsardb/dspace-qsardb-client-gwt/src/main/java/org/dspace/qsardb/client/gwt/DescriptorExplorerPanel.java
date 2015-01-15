@@ -37,8 +37,13 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 		LazyHeader header = new LazyHeader(panel){
 
 			@Override
-			public Label createLeft(){
-				return new Label(descriptor.getId()+": "+descriptor.getName());
+			public Widget createLeft(){
+				FlowPanel headerPanel = new FlowPanel();
+				headerPanel.add(new InlineLabel(descriptor.getId()+": "+descriptor.getName()));
+				if (descriptor.getDescription() != null){
+					headerPanel.add(new DescriptionLabel(descriptor));
+				}
+				return headerPanel;
 			}
 		};
 		panel.setHeader(header);
