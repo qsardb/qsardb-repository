@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
+import org.dspace.qsardb.rpc.gwt.ModelTable;
 import org.dspace.qsardb.rpc.gwt.ParameterColumn;
 
 class DescriptionLabel extends Composite {
@@ -18,6 +19,15 @@ class DescriptionLabel extends Composite {
 
 	public DescriptionLabel(ParameterColumn parameter) {
 		tooltip = new DescriptionTooltip(parameter);
+		init();
+	}
+
+	public DescriptionLabel(ModelTable table) {
+		tooltip = new DescriptionTooltip(table);
+		init();
+	}
+
+	private void init() {
 		InlineLabel label = new InlineLabel("Description");
 		label.setStylePrimaryName("info-label");
 		label.addMouseOverHandler(handler);

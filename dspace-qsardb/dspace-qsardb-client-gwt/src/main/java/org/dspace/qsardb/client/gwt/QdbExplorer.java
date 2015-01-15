@@ -23,6 +23,13 @@ public class QdbExplorer extends QdbApplication {
 	public Widget createWidget(ModelTable table){
 		Panel panel = new FlowPanel();
 
+		String modelName = "Model " + table.getId() + ": " + table.getName();
+		HTMLPanel modelHead = new HTMLPanel("h2", modelName);
+		panel.add(modelHead);
+		if (table.getDescription() != null){
+			modelHead.add(new DescriptionLabel(table));
+		}
+
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 
 		final
@@ -43,7 +50,7 @@ public class QdbExplorer extends QdbApplication {
 		};
 
 		MenuBar menu = new MenuBar();
-		menu.addItem("Series", seriesMenu);
+		menu.addItem("Select predictions", seriesMenu);
 
 		panel.add(menu);
 
