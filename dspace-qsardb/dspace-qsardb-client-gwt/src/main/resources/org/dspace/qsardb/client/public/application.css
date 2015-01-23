@@ -34,6 +34,17 @@ table.distances hr {
 	white-space: normal;
 	word-wrap: break-word;
 }
+.resolver-tooltip .depict {
+	position: relative;
+}
+.resolver-tooltip .depict img {
+	margin-top: 0.75em;
+}
+.resolver-tooltip .depict span {
+	position: absolute;
+	right: 0px;
+	font-size: 0.75em;
+}
 
 table.confusion-matrix {
 	width: initial;
