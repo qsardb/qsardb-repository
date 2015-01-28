@@ -104,6 +104,15 @@ public class ResolverTooltip extends Tooltip {
 		}
 
 		this.table.setWidget(0, 0, w);
+
+		if (image != null) {
+			int top = getPopupTop();
+			int height = getOffsetHeight();
+			if ((top + height) > (Window.getScrollTop() + Window.getClientHeight())) {
+				top = Window.getScrollTop() + Window.getClientHeight() - height;
+			}
+			setPopupPosition(getPopupLeft(), top);
+		}
 	}
 
 	public void schedule(String id, final int x, final int y){

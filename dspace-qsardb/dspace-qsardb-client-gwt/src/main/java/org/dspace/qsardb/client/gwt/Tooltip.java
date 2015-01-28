@@ -64,7 +64,7 @@ public class Tooltip extends PopupPanel {
 				int left = x + this.spacing;
 				int top = y + this.spacing;
 				if ((top + height) > (Window.getScrollTop() + Window.getClientHeight())) {
-					top = Math.max(y - this.spacing - height, Window.getScrollTop());
+					top = Window.getScrollTop() + Window.getClientHeight() - height;
 				}
 				if (left + width > (Window.getScrollLeft() + Window.getClientWidth())) {
 					left = Math.max(x - this.spacing - width, Window.getScrollLeft());
