@@ -3,12 +3,17 @@
 package org.dspace.app.xmlui.aspect.artifactbrowser;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.util.HashUtil;
+import org.apache.excalibur.source.SourceValidity;
+import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
@@ -30,7 +35,12 @@ import org.qsardb.model.Property;
 import org.qsardb.model.PropertyRegistry;
 import org.qsardb.model.Qdb;
 
-public class QdbCompounds extends ApplicationTransformer {
+public class QdbCompounds extends ApplicationTransformer implements CacheableProcessingComponent {
+
+	private static final String ID = "id";
+	private static final String PROPERTY = "property";
+
+	private SourceValidity validity;
 
 	@Override
 	protected Message getTitle(Item item){
@@ -43,7 +53,6 @@ public class QdbCompounds extends ApplicationTransformer {
 
 	@Override
 	public void addBody(Body body) throws SQLException, WingException, ProcessingException {
-
 		Division div = body.addDivision("compounds");
 
 		Item item = obtainItem();
@@ -56,7 +65,7 @@ public class QdbCompounds extends ApplicationTransformer {
 			div.setHead(title);
 		}
 
-		String compoundId = getParameter("id");
+		String compoundId = getParameter(ID);
 		if (compoundId == null) {
 			process(item, div);
 		} else {
@@ -66,7 +75,7 @@ public class QdbCompounds extends ApplicationTransformer {
 	}
 
 	public String process(Item item, final Division div) throws WingException, ProcessingException {
-		final String propId = getParameter("property");
+		final String propId = getParameter(PROPERTY);
 
 		QdbCallable<String> callable = new QdbCallable<String>(){
 			@Override
@@ -250,6 +259,52 @@ public class QdbCompounds extends ApplicationTransformer {
 		sb.append(structure.replace("#", "%23").replace("?", "%3f"));
 		sb.append("/image").append("?format=png&crop=2&bgcolor=transparent");
 		return sb.toString();
+	}
+
+	@Override
+	public void recycle() {
+		validity = null;
+		super.recycle();
+	}
+
+	@Override
+	public void dispose() {
+		validity = null;
+		super.dispose();
+	}
+
+	@Override
+	public Serializable getKey() {
+		try {
+			Item item = obtainItem();
+			if (item == null) {
+				return "0";
+			}
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("compounds/").append(item.getHandle());
+			sb.append(getParameter(PROPERTY));
+			sb.append(getParameter(ID));
+			return HashUtil.hash(sb.toString());
+		} catch (SQLException ex) {
+			return "0";
+		}
+	}
+
+	@Override
+	public SourceValidity getValidity() {
+		if (this.validity == null) {
+			try {
+				DSpaceValidity newValidity = new DSpaceValidity();
+				newValidity.add(obtainItem());
+				this.validity =  newValidity.complete();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+
+		}
+		return validity;
 	}
 
 	private static final Message T_trail = message("xmlui.ArtifactBrowser.QdbCompounds.trail");
