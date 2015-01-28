@@ -202,7 +202,7 @@ class ItemContentPanel {
 
 	private static void addDescriptionInfo(Container container, TextContainer target) throws WingException {
 		String description = container.getDescription();
-		if (description != null) {
+		if (description != null && !description.trim().isEmpty()) {
 			target.addInfo("Description", description);
 		}
 	}

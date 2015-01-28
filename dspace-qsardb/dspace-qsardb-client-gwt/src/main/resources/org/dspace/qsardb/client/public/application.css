@@ -46,6 +46,11 @@ table.distances hr {
 	font-size: 0.75em;
 }
 
+.description-tooltip {
+	width: 300px;
+	text-align: left;
+}
+
 table.confusion-matrix {
 	width: initial;
 	margin-bottom: 6px;

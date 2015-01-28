@@ -7,11 +7,17 @@ import org.dspace.qsardb.rpc.gwt.ParameterColumn;
 public class DescriptionTooltip extends Tooltip {
 
 	public DescriptionTooltip(ParameterColumn parameter){
-		setWidget(new Label(parameter.getDescription()));
+		setDescription(parameter.getDescription());
 	}
 
 	public DescriptionTooltip(ModelTable table) {
-		setWidget(new Label(table.getDescription()));
+		setDescription(table.getDescription());
+	}
+
+	private void setDescription(String description) {
+		Label label = new Label(description);
+		label.setStylePrimaryName("description-tooltip");
+		setWidget(label);
 	}
 
 	@Override
