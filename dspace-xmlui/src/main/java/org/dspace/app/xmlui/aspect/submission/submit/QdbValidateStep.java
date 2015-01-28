@@ -53,7 +53,7 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			// Ignored
 		}
 
-		renderValidationForm(division, messages, level, super.contextPath); // XXX: SS: refactor??
+		renderValidationForm(division, messages, level, super.contextPath);
 
 		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
 

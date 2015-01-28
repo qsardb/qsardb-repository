@@ -104,8 +104,9 @@ class ItemContentPanel {
 			summaryDivision.setHead(T_property_summary);
 
 			Para valuesPara = summaryDivision.addPara("property-values", null);
-			valuesPara.addContent(T_property_values.parameterize(propertyValues.size()));
-		} // End if
+			String target = viewer.getContextPath() + "/compounds/" + item.getHandle() + "?property=" + property.getId();
+			valuesPara.addXref(target, T_property_values.parameterize(propertyValues.size()));
+		}
 
 		if(propertyModels.size() > 0 && propertyPredictions.size() > 0){
 			Division propertyModelsDivision = propertyDivision.addDivision("property-models-summary-" + property.getId(), "secondary");

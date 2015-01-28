@@ -31,6 +31,7 @@ and searching the repository.
 			<map:transformer name="QdbExplorer" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbExplorer"/>
 			<map:transformer name="QdbPredictor" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbPredictor"/>
 			<map:transformer name="QdbValidator" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbValidator"/>
+			<map:transformer name="QdbCompounds" src="org.dspace.app.xmlui.aspect.artifactbrowser.QdbCompounds"/>
 			<map:transformer name="ItemViewer" src="org.dspace.app.xmlui.aspect.artifactbrowser.ItemViewer" />
 			<map:transformer name="ItemRequestForm" src="org.dspace.app.xmlui.aspect.artifactbrowser.ItemRequestForm" />
 			<map:transformer name="ItemRequestSent" src="org.dspace.app.xmlui.aspect.artifactbrowser.ItemRequestSent" />
@@ -126,7 +127,7 @@ and searching the repository.
 
 
 			<!-- Handle specific features -->
-			<map:match type="regexp" pattern="(handle)|(explorer)|(predictor)/(.*)/(.*)">
+			<map:match type="regexp" pattern="(handle)|(explorer)|(predictor)|(compounds)/(.*)/(.*)">
 
 				<!-- Inform the user that the item they are viewing is a restricted resource -->
 				<map:match pattern="handle/*/*/restricted-resource">
@@ -150,7 +151,7 @@ and searching the repository.
 					<map:serialize type="xml"/> 
 				</map:match>
 
-				<map:match type="regexp" pattern="(explorer)|(predictor)/(.*)/(.*)">
+				<map:match type="regexp" pattern="(explorer)|(predictor)|()compounds/(.*)/(.*)">
 					<map:match type="HandleAuthorizedMatcher" pattern="READ">
 						<map:match type="HandleTypeMatcher" pattern="item">
 							<map:match pattern="explorer/*/*">
@@ -159,6 +160,10 @@ and searching the repository.
 							</map:match>
 							<map:match pattern="predictor/*/*">
 								<map:transform type="QdbPredictor"/>
+								<map:serialize type="xml"/>
+							</map:match>
+							<map:match pattern="compounds/*/*">
+								<map:transform type="QdbCompounds"/>
 								<map:serialize type="xml"/>
 							</map:match>
 						</map:match>

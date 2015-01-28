@@ -1,6 +1,7 @@
 package org.dspace.app.xmlui.aspect.artifactbrowser;
 
 import java.sql.*;
+import org.apache.cocoon.ProcessingException;
 
 import org.dspace.app.xmlui.cocoon.*;
 import org.dspace.app.xmlui.utils.*;
@@ -37,7 +38,7 @@ public class ApplicationTransformer extends AbstractDSpaceTransformer {
 	}
 
 	@Override
-	public void addBody(Body body) throws SQLException, WingException {
+	public void addBody(Body body) throws SQLException, WingException, ProcessingException {
 		Item item = obtainItem();
 		if(item == null || item.isWithdrawn()){
 			return;

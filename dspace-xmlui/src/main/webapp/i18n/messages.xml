@@ -291,6 +291,9 @@
 	<message key="xmlui.ArtifactBrowser.QdbPredictor.trail">QDB Predictor</message>
 	<message key="xmlui.ArtifactBrowser.QdbPredictor.handle_trail">{0} - QDB Predictor</message>
 
+	<message key="xmlui.ArtifactBrowser.QdbCompounds.trail">QDB Compounds</message>
+	<message key="xmlui.ArtifactBrowser.QdbCompounds.handle_trail">{0} - QDB Compounds</message>
+
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
 	<message key="xmlui.ArtifactBrowser.Navigation.head_browse">Browse</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_all_of_dspace">All of DSpace</message>
