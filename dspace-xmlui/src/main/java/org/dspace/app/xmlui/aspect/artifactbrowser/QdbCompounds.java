@@ -2,6 +2,7 @@
 
 package org.dspace.app.xmlui.aspect.artifactbrowser;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -147,7 +148,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					return "";
 				}
 
-				int rows = 5;
+				int rows = 6;
 
 				Division compDiv = div.addDivision("compound");
 				compDiv.setHead("Compound");
@@ -166,6 +167,10 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				Row descRow = t.addRow();
 				descRow.addCellContent("Description:");
 				descRow.addCellContent(fmt(c.getDescription()));
+
+				Row labelsRow = t.addRow();
+				labelsRow.addCellContent("Labels:");
+				labelsRow.addCellContent(Joiner.on(", ").join(c.getLabels()));
 
 				Row casRow = t.addRow();
 				casRow.addCellContent("CAS:");
@@ -230,7 +235,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 	}
 
 	private String fmt(String value) {
-		return value != null ? value : "N/A";
+		return value != null ? value : "";
 	}
 
 	private String getParameter(String name) {
