@@ -566,11 +566,12 @@ table.ds-gloss-list td ul {
 
 /* QsarDB: information labels with tooltips */
 .info-label {
-	padding: 2px 4px;
-	border-radius: 4px;
-	font-size: 0.8em;
-	font-weight: normal;
-	font-family: sans-serif;
+	padding: 1px 6px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: normal;
+	font-family: monospace;
 	background: #c7e8de;
 }
 

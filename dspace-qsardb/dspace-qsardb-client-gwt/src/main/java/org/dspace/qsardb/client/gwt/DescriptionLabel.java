@@ -28,7 +28,7 @@ class DescriptionLabel extends Composite {
 	}
 
 	private void init() {
-		InlineLabel label = new InlineLabel("Description");
+		InlineLabel label = new InlineLabel("i");
 		label.setStylePrimaryName("info-label");
 		label.addMouseOverHandler(handler);
 		label.addMouseOutHandler(handler);

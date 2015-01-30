@@ -81,30 +81,28 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		QdbCallable<String> callable = new QdbCallable<String>(){
 			@Override
 			public String call(Qdb qdb) throws Exception {
-				ArrayList<String> cidList = new ArrayList<String>();
-				for (Compound c: qdb.getCompoundRegistry()) {
-					cidList.add(c.getId());
-				}
-
 				Property property = qdb.getProperty(propId);
 				Map<String, String> pvals = loadValues(property);
 
+				ArrayList<String> cidList = new ArrayList<String>();
+				for (Compound c: qdb.getCompoundRegistry()) {
+					if (!pvals.isEmpty() && !pvals.containsKey(c.getId())) {
+						continue;
+					}
+					cidList.add(c.getId());
+				}
+
+				Para para = div.addPara();
+				para.addContent(cidList.size());
+				para.addContent(" compounds");
 				if (!pvals.isEmpty()) {
-					Para para = div.addPara();
+					para.addContent(" | Property ");
 					para.addContent(property.getId()+": "+property.getName());
 					String description = property.getDescription();
 					if (description != null) {
-						para.addInfo("Description", description);
+						para.addInfo("i", description);
 					}
 				}
-
-				StringBuilder summary = new StringBuilder();
-				summary.append(cidList.size()).append(" compounds");
-				if (!pvals.isEmpty() && pvals.size() != cidList.size()) {
-					summary.append(" with ").append(pvals.size());
-					summary.append(" property values");
-				}
-				div.addPara(summary.toString());
 
 				int nrows = cidList.size()+1;
 				int ncols = pvals.isEmpty() ? 3 : 4;
