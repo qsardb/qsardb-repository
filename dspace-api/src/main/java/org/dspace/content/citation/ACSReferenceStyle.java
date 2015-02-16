@@ -24,9 +24,8 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new AuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
 			new JournalFormat(null),
-			new FieldFormat(BibTeXEntry.KEY_YEAR, ","),
+			new YearFormat(","),
 			new VolumeFormat(","),
-			new FieldFormat(BibTeXEntry.KEY_NUMBER, ","),
 			new FieldFormat(BibTeXEntry.KEY_PAGES, "."),
 			new DOIFormat(null)
 		);
@@ -42,7 +41,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new EditorFormat(";"),
 			new FieldFormat(BibTeXEntry.KEY_PUBLISHER, ":"),
 			new FieldFormat(BibTeXEntry.KEY_ADDRESS, ";"),
-			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
+			new YearFormat("."),
 			new DOIFormat(null)
 		);
 
@@ -57,7 +56,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new InBookTitleFormat(";"),
 			new EditorFormat(";"),
 			new FieldFormat(BibTeXEntry.KEY_PUBLISHER, ";"),
-			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
+			new YearFormat("."),
 			new DOIFormat(null)
 		);
 
@@ -72,7 +71,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new InBookTitleFormat(";"),
 			new EditorFormat(";"),
 			new FieldFormat(BibTeXEntry.KEY_ORGANIZATION, ";"),
-			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
+			new YearFormat("."),
 			new DOIFormat(null)
 		);
 
@@ -84,7 +83,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		List<FieldFormat> fields = Arrays.asList(
 			new AuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
-			new FieldFormat(BibTeXEntry.KEY_YEAR, "."),
+			new YearFormat("."),
 			new URLFormat(null)
 		);
 
@@ -230,6 +229,21 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	}
 
 	static
+	private class YearFormat extends FieldFormat {
+
+		public YearFormat(String separator){
+			super(BibTeXEntry.KEY_YEAR, separator);
+		}
+
+		@Override
+		public String format(Value value, boolean latex, boolean html){
+			String string = super.format(value, latex, html);
+
+			return bold(string, html);
+		}
+	}
+
+	static
 	private class VolumeFormat extends FieldFormat {
 
 		public VolumeFormat(String separator){
@@ -240,7 +254,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		public String format(Value value, boolean latex, boolean html){
 			String string = super.format(value, latex, html);
 
-			return bold(string, html);
+			return italic(string, html);
 		}
 	}
 
