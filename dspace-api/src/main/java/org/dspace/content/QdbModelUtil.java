@@ -33,8 +33,8 @@ public class QdbModelUtil {
 
 	private static final Map<String,String> map =
 		ImmutableMap.<String,String>builder()
-		.put("RegressionModel",           "Linear model")
-		.put("GeneralRegressionModel",    "Linear model")
+		.put("RegressionModel",           "Regression model")
+		.put("GeneralRegressionModel",    "Regression model")
 		.put("SupportVectorMachineModel", "Support vector machine")
 		.put("NaiveBayesModel",           "Naive Bayes")
 		.put("TreeModel",                 "Decision tree")
@@ -51,12 +51,20 @@ public class QdbModelUtil {
 			PMMLCargo pmmlCargo = qdbModel.getCargo(PMMLCargo.class);
 			try {
 				PMML pmml = pmmlCargo.loadPmml();
+
+				String modelType = "";
 				Map<FieldName, DataField> dataDictionary = Maps.newLinkedHashMap();
 				for (DataField df: pmml.getDataDictionary().getDataFields()) {
 					dataDictionary.put(df.getName(), df);
+
+					String id = df.getName().getValue().replace("properties/", "");
+					if (qdbModel.getProperty().getId().equals(id)){
+						modelType = (df.getOptype() == OpType.CONTINUOUS) ? " (regression)" : " (classification)";
+					}
 				}
+
 				org.dmg.pmml.Model m = pmml.getModels().get(0);
-				return pmmlModelAsString(m, dataDictionary);
+				return pmmlModelAsString(m, dataDictionary) + modelType;
 			} catch (Exception ignored) {
 				logger.warn("Unable to recognize PMML model type", ignored);
 				return "";
@@ -72,8 +80,6 @@ public class QdbModelUtil {
 	}
 
 	private static String pmmlModelAsString(org.dmg.pmml.Model pmmlModel, Map<FieldName, DataField> dataDictionary) {
-		String function = pmmlModel.getFunctionName().name().toLowerCase();
-
 		if (pmmlModel instanceof MiningModel) {
 			MiningModel miningModel = (MiningModel) pmmlModel;
 			Segmentation segmentation = miningModel.getSegmentation();
@@ -89,15 +95,15 @@ public class QdbModelUtil {
 			Set<Class> classes = freq.getKeys();
 			if (freq.getKeys().size() == 1) {
 				if (classes.contains(TreeModel.class) && freq.getCountSum() > 10) {
-					return "Random forest ("+function+")";
+					return "Random forest";
 				}
 
 				for (Segment segment: segmentation.getSegments()) {
-					return pmmlModelAsString(segment.getModel(), dataDictionary).replace(" (", " ensemble (");
+					return pmmlModelAsString(segment.getModel(), dataDictionary) + " ensemble";
 				}
 			}
 			
-			return "Ensemble model ("+function+")";
+			return "Ensemble model";
 		}
 		
 		if (pmmlModel instanceof ClusteringModel) {
@@ -113,20 +119,14 @@ public class QdbModelUtil {
 			
 			KohonenMap kohonen = clusteringModel.getClusters().get(0).getKohonenMap();
 			if (havePredictedField != null && kohonen != null) {
-				OpType opType = havePredictedField.getOptype();
-				if (opType == OpType.CONTINUOUS) {
-					return "Counter-propagation neural network (regression)";
-				} else {
-					return "Counter-propagation neural network (classification)";
-				}
+				return "Counter-propagation neural network";
 			}
 			
 			return "Clustering model";
 		}
 		
 		String name = pmmlModel.getClass().getSimpleName();
-		String type = map.get(name) != null ? map.get(name) : name;
-		return type + " (" + function + ")";
+		return map.get(name) != null ? map.get(name) : name;
 	}
 
 	private static String rdsModelAsString(Qdb qdb, RDSCargo rdsCargo) {
