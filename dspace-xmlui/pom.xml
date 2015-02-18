@@ -145,6 +145,11 @@
 			<artifactId>dspace-qsardb-service-http</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.qsardb</groupId>
+			<artifactId>statistics</artifactId>
+		</dependency>
+
         <!-- Custom build DSpace cocoon -->
         <dependency>
             <groupId>jdom</groupId>

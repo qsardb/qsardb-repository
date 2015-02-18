@@ -19,9 +19,11 @@ import org.dspace.content.QdbUtil;
 import org.dspace.content.citation.ACSReferenceStyle;
 import org.dspace.content.citation.ReferenceFormatter;
 import org.dspace.core.*;
-import org.dspace.qsardb.service.StatisticsUtil;
-import org.dspace.qsardb.service.StatisticsUtil.StringValues;
-import org.dspace.qsardb.service.StatisticsUtil.Values;
+import org.qsardb.cargo.map.ValuesCargo;
+import org.qsardb.statistics.ClassificationStatistics;
+import org.qsardb.statistics.RegressionStatistics;
+import org.qsardb.statistics.Statistics;
+import org.qsardb.statistics.StatisticsUtil;
 
 class ItemContentPanel {
 
@@ -64,7 +66,6 @@ class ItemContentPanel {
 				generatePropertyDivision(viewer, item, qdb, property, division);
 			}
 		}
-
 	}
 
 	static
@@ -76,9 +77,6 @@ class ItemContentPanel {
 		Head propertyHead = propertyDivision.setHead();
 		propertyHead.addContent(T_property_head.parameterize(property.getId(), property.getName()));
 		addDescriptionInfo(property, propertyHead);
-
-		Values<?> propertyValues = StatisticsUtil.loadValues(property);
-		boolean isClassification = propertyValues instanceof StringValues;
 
 		Map<String, BibTeXEntry> bibliography = new LinkedHashMap<String, BibTeXEntry>();
 
@@ -105,7 +103,7 @@ class ItemContentPanel {
 
 			Para valuesPara = summaryDivision.addPara("property-values", null);
 			String target = viewer.getContextPath() + "/compounds/" + item.getHandle() + "?property=" + property.getId();
-			valuesPara.addXref(target, T_property_values.parameterize(propertyValues.size()));
+			valuesPara.addXref(target, T_property_values.parameterize(loadStringMap(property).size()));
 		}
 
 		if(propertyModels.size() > 0 && propertyPredictions.size() > 0){
@@ -113,78 +111,14 @@ class ItemContentPanel {
 			propertyModelsDivision.setHead(T_property_models_summary.parameterize(propertyModels.size(), propertyPredictions.size())); // XXX
 
 			for(Model propertyModel : propertyModels){
-				Division modelDivision = propertyModelsDivision.addDivision("model-" + propertyModel.getId(), "secondary");
-				Head modelHead = modelDivision.setHead();
-				modelHead.addContent(T_model_summary.parameterize(propertyModel.getId(), propertyModel.getName()));
-				addDescriptionInfo(propertyModel, modelHead);
-
-				Para summaryPara = modelDivision.addPara("model-summary", "side-left");
-				summaryPara.addContent(loadSummary(propertyModel));
-
-				Para applicationPara = modelDivision.addPara("model-application", "side-right");
-				applicationPara.addContent("Open in:");
-				applicationPara.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + propertyModel.getId(), "QDB Explorer", "application-link");
-				applicationPara.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + propertyModel.getId(), "QDB Predictor", "application-link");
-
-				java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
-
-
-				int columns = isClassification ? 4 : 5;
-				Table modelTable = modelDivision.addTable("model-summary-" + propertyModel.getId(), modelPredictions.size(), columns);
-
-				if(true){
-					Row headerRow = modelTable.addRow(Row.ROLE_HEADER);
-
-					Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
-					nameCell.addContent("Name");
-
-					Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-					typeCell.addContent("Type");
-
-					Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-					sizeCell.addContent("n");
-
-					if (isClassification) {
-						Cell accCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-						accCell.addContent("Accuracy");
-					} else {
-						Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-						rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
-
-						Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
-						stdevCell.addHtmlContent("<p>&#x3c3;</p>");
-					}
-				}
-
-				Values<?> trainingValues = null;
-
-				for(Prediction modelPrediction : modelPredictions){
-					Values<?> predictionValues = StatisticsUtil.loadValues(modelPrediction);
-
-					if((modelPrediction.getType()).equals(Prediction.Type.TRAINING)){
-						trainingValues = predictionValues;
-					}
-
-					Row predictionRow = modelTable.addRow(Row.ROLE_DATA);
-
-					Cell nameCell = predictionRow.addCell();
-					nameCell.addContent(modelPrediction.getName());
-					addDescriptionInfo(modelPrediction, nameCell);
-					predictionRow.addCellContent(formatPredictionType(modelPrediction.getType(), trainingValues, predictionValues));
-					predictionRow.addCellContent(String.valueOf(predictionValues.size()));
-					if (isClassification) {
-						predictionRow.addCellContent(formatStats(predictionValues.accuracy(propertyValues)));
-					} else {
-						predictionRow.addCellContent(formatStats(predictionValues.rsq(propertyValues)));
-						predictionRow.addCellContent(formatStats(predictionValues.stdev(propertyValues)));
-					}
-				}
+				generateModelDivision(viewer, item, propertyModel, propertyModelsDivision);
 			}
 		} // End if
 
 		if(bibliography.size() > 0){
-			List bibliographyList = propertyDivision.addList("property-bibliography-" + property.getId(), null);
-			bibliographyList.setHead(T_property_bibliography);
+			Division biblioDivision = propertyDivision.addDivision("property-bibliography-" + property.getId(), "secondary");
+			biblioDivision.setHead(T_property_bibliography);
+			List bibliographyList = biblioDivision.addList("property-bibliography-" + property.getId(), null);
 
 			ArrayList<String> keys = new ArrayList<String>(bibliography.keySet());
 			Collections.sort(keys);
@@ -196,6 +130,76 @@ class ItemContentPanel {
 
 				Item referencePara = bibliographyList.addItem();
 				referencePara.addHtmlContent(formatter.format(entry, true));
+			}
+		}
+	}
+
+	private static void generateModelDivision(ItemViewer viewer, org.dspace.content.Item item, Model model, Division division) throws WingException {
+
+		PredictionRegistry predictions = model.getQdb().getPredictionRegistry();
+
+		Division modelDivision = division.addDivision("model-" + model.getId(), "secondary");
+		Head modelHead = modelDivision.setHead();
+		modelHead.addContent(T_model_summary.parameterize(model.getId(), model.getName()));
+		addDescriptionInfo(model, modelHead);
+
+		Para summaryPara = modelDivision.addPara("model-summary", "side-left");
+		summaryPara.addContent(loadSummary(model));
+
+		Para applicationPara = modelDivision.addPara("model-application", "side-right");
+		applicationPara.addContent("Open in:");
+		applicationPara.addXref(viewer.getContextPath() + "/explorer/" + item.getHandle() + "?model=" + model.getId(), "QDB Explorer", "application-link");
+		applicationPara.addXref(viewer.getContextPath() + "/predictor/" + item.getHandle() + "?model=" + model.getId(), "QDB Predictor", "application-link");
+
+		java.util.Collection<Prediction> modelPredictions = predictions.getByModel(model);
+
+		Table modelTable = null;
+		for(Prediction prediction : modelPredictions){
+			Statistics statistics = StatisticsUtil.evaluate(model, prediction);
+
+			boolean isClassification = statistics instanceof ClassificationStatistics;
+
+			if (modelTable == null){
+				int columns = isClassification ? 4 : 5;
+				modelTable = modelDivision.addTable("model-summary-" + model.getId(), modelPredictions.size(), columns);
+
+				Row headerRow = modelTable.addRow(Row.ROLE_HEADER);
+
+				Cell nameCell = headerRow.addCell(null, Cell.ROLE_HEADER, null);
+				nameCell.addContent("Name");
+
+				Cell typeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+				typeCell.addContent("Type");
+
+				Cell sizeCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+				sizeCell.addContent("n");
+
+				if (isClassification) {
+					Cell accCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					accCell.addContent("Accuracy");
+				} else {
+					Cell rsqCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					rsqCell.addHtmlContent("<p>R<sup>2</sup></p>");
+
+					Cell stdevCell = headerRow.addCell(null, Cell.ROLE_HEADER, "short");
+					stdevCell.addHtmlContent("<p>&#x3c3;</p>");
+				}
+			}
+
+			Row predictionRow = modelTable.addRow(Row.ROLE_DATA);
+
+			Cell nameCell = predictionRow.addCell();
+			nameCell.addContent(prediction.getName());
+			addDescriptionInfo(prediction, nameCell);
+			predictionRow.addCellContent(formatPredictionType(model, prediction));
+			predictionRow.addCellContent(String.valueOf(statistics.size()));
+			if (isClassification) {
+				double acc = ((ClassificationStatistics)statistics).accuracy();
+				predictionRow.addCellContent(formatStats(acc));
+			} else {
+				RegressionStatistics stats = (RegressionStatistics)statistics;
+				predictionRow.addCellContent(formatStats(stats.rsq()));
+				predictionRow.addCellContent(formatStats(stats.stdev()));
 			}
 		}
 	}
@@ -244,21 +248,19 @@ class ItemContentPanel {
 	}
 
 	static
-	private String formatPredictionType(Prediction.Type type, Values<?> trainingValues, Values<?> values){
+	private String formatPredictionType(Model model, Prediction prediction){
 
-		switch(type){
+		switch(prediction.getType()){
 			case TRAINING:
 				return "training";
 			case VALIDATION:
-				if(trainingValues != null){
-					Set<String> trainingKeys = trainingValues.keySet();
-					Set<String> keys = values.keySet();
+				for (Prediction training: prediction.getRegistry().getByModelAndType(model, Prediction.Type.TRAINING)){
+					Set<String> trainingKeys = loadStringMap(training).keySet();
+					Set<String> keys = loadStringMap(prediction).keySet();
 
 					if((trainingKeys).containsAll(keys)){
 						return "internal validation";
-					} else
-
-					if(Collections.disjoint(trainingKeys, keys)){
+					} else if (Collections.disjoint(trainingKeys, keys)){
 						return "external validation";
 					}
 				}
@@ -270,14 +272,26 @@ class ItemContentPanel {
 		return null;
 	}
 
-	private static String formatStats(BigDecimal val) {
-		return val != null ? String.valueOf(val) : "N/A";
+	private static String formatStats(double val) {
+		return Double.isNaN(val) ? "N/A" : String.format("%.3f", val);
 	}
 
 	static
 	private String loadSummary(Model model){
 		String type = QdbModelUtil.detectType(model);
 		return type.isEmpty() ? "(Unknown model type)" : type;
+	}
+
+	static
+	private Map<String, String> loadStringMap(Parameter<?,?> parameter) {
+		if (parameter.hasCargo(ValuesCargo.class)){
+			try {
+				ValuesCargo cargo = parameter.getCargo(ValuesCargo.class);
+				return cargo.loadStringMap();
+			} catch (IOException ignore) {
+			}
+		}
+		return Collections.emptyMap();
 	}
 
 	private static final Message T_property_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property");
