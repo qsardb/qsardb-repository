@@ -1,0 +1,42 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:q='urn:import:org.dspace.qsardb.client.gwt'>
+  <ui:style>
+      .panel { 
+      margin-bottom: 0px; 
+      margin-top: 0px;
+      padding: 0px;
+      border: none;
+      outline: none;
+      }
+      
+      .toggle-button {
+      outline: none;
+      border: none;
+      margin: 0px; /* border size */
+      margin-left: 0px;
+      margin-right: auto;
+      cursor: pointer;
+      }
+      
+      td {
+      padding: 2px;
+      }
+
+  </ui:style>
+
+  <g:HTMLPanel styleName='{style.panel}'>
+
+      <g:HorizontalPanel styleName='{style.panel}'>
+          <g:cell horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE">
+              <g:ToggleButton styleName='{style.toggle-button}' ui:field='collapseButton'></g:ToggleButton>
+          </g:cell>
+          <g:cell horizontalAlignment="ALIGN_RIGHT" verticalAlignment="ALIGN_MIDDLE">
+              <q:DescriptorValueTextbox ui:field='descriptorValue'></q:DescriptorValueTextbox>
+          </g:cell>
+    </g:HorizontalPanel>
+
+    <g:FlowPanel ui:field='collapsiblePanel'>
+    </g:FlowPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

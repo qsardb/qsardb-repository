@@ -96,4 +96,8 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		this.values = values;
 	}
 
+	public void cleanCompoundData() {
+		compoundSelectionPanel.suggestBox.setValue("", false);
+		compoundInputPanel.textBox.setValue("", false);
+	}
 }

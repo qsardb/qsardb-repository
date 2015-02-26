@@ -9,6 +9,9 @@ import com.google.gwt.user.client.ui.*;
 import org.dspace.qsardb.rpc.gwt.*;
 
 public class ModelInputPanel extends Composite implements InputChangeEventHandler {
+	
+	private final List<DescriptorInputComponent> descriptorInputList = new ArrayList<DescriptorInputComponent>();
+	
 
 	public ModelInputPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
@@ -36,11 +39,10 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-			DescriptorInputPanel descriptorPanel = new DescriptorInputPanel(property, descriptor, training);
-			panel.add(descriptorPanel);
-
-			// Receive notifications about subsequent value changes
-			descriptorPanel.addDescriptorValueChangeEventHandler(changeHandler);
+                    DescriptorInputComponent descriptorInput = new DescriptorInputComponent(property, descriptor, training);
+		    descriptorInputList.add(descriptorInput);
+                    descriptorInput.addDescriptorValueChangeEventHandler(changeHandler);
+                    panel.add(descriptorInput);
 		}
 
 		Timer timer = new Timer(){
@@ -51,7 +53,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			}
 		};
 		timer.schedule(1000);
-
+		
 		initWidget(panel);
 	}
 
@@ -65,43 +67,51 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 	@Override
 	public void onInputChanged(InputChangeEvent event){
+		//need to turn it off atm to prevent clearing combobox
+		for(DescriptorInputComponent dip : descriptorInputList) {
+			dip.setEnableSlideEvents(false);
+		}
 		setDescriptorValues(event.getValues());
+		for(DescriptorInputComponent dip : descriptorInputList) {
+			dip.setEnableSlideEvents(true);
+		}
 	}
 
 	public Map<String, String> getDescriptorValues(){
-		List<DescriptorInputPanel> descriptorPanels = getDescriptorPanels();
 
 		Map<String, String> values = new LinkedHashMap<String, String>();
 
-		for(DescriptorInputPanel descriptorPanel : descriptorPanels){
-			values.put(descriptorPanel.getId(), String.valueOf(descriptorPanel.getValue()));
+		List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
+		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
+			values.put(descriptorInput.getId(), String.valueOf(descriptorInput.getValue()));
 		}
-
+		
 		return values;
 	}
 
 	public void setDescriptorValues(Map<String, String> values){
-		List<DescriptorInputPanel> descriptorPanels = getDescriptorPanels();
-
-		for(DescriptorInputPanel descriptorPanel : descriptorPanels){
-			String value = values.get(descriptorPanel.getId());
+                
+                List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
+		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
+			String value = values.get(descriptorInput.getId());
 
 			if(value != null){
-				descriptorPanel.setValue(value);
+				descriptorInput.setValue(value);
 			}
 		}
+                
 	}
 
-	private List<DescriptorInputPanel> getDescriptorPanels(){
-		List<DescriptorInputPanel> result = new ArrayList<DescriptorInputPanel>();
+	private List<DescriptorInputComponent> getDescriptorInputPanels(){
+		List<DescriptorInputComponent> result = new ArrayList<DescriptorInputComponent>();
 
 		ComplexPanel panel = (ComplexPanel)getWidget();
 
 		for(int i = 0; i < panel.getWidgetCount(); i++){
 			Widget widget = panel.getWidget(i);
 
-			if(widget instanceof DescriptorInputPanel){
-				result.add((DescriptorInputPanel)widget);
+			if(widget instanceof DescriptorInputComponent){
+				result.add((DescriptorInputComponent)widget);
 			}
 		}
 

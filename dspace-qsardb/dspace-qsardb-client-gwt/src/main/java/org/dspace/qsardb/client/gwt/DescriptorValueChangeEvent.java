@@ -12,7 +12,7 @@ public class DescriptorValueChangeEvent extends GwtEvent<DescriptorValueChangeEv
 	public DescriptorValueChangeEvent(DescriptorColumn descriptor){
 		setDescriptor(descriptor);
 	}
-
+        
 	@Override
 	public void dispatch(DescriptorValueChangeEventHandler handler){
 		handler.onDescriptorValueChanged(this);
@@ -30,6 +30,6 @@ public class DescriptorValueChangeEvent extends GwtEvent<DescriptorValueChangeEv
 	private void setDescriptor(DescriptorColumn descriptor){
 		this.descriptor = descriptor;
 	}
-
+        
 	public static final Type<DescriptorValueChangeEventHandler> TYPE = new Type<DescriptorValueChangeEventHandler>();
 }

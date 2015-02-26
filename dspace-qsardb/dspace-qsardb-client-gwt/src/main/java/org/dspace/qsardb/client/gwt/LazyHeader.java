@@ -10,11 +10,11 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 
 	private Image image = null;
 
-
 	public LazyHeader(DisclosurePanel panel){
 		panel.addOpenHandler(this);
 		panel.addCloseHandler(this);
 	}
+
 
 	@Override
 	public Widget createWidget(){
@@ -52,6 +52,21 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 
 			style.setFloat(Style.Float.RIGHT);
 		}
+                
+                TextBox rightbox = createRightTextBox();
+		if(rightbox != null){
+                    
+                        rightbox.setAlignment(ValueBoxBase.TextAlignment.RIGHT);
+
+			rightbox.getElement().setAttribute( "border", "none" );
+                    
+			panel.add(rightbox);
+
+			Style style = (rightbox.getElement()).getStyle();
+
+			style.setFloat(Style.Float.RIGHT);
+		}
+                
 
 		return panel;
 	}
@@ -61,6 +76,10 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 	}
 
 	public Label createRight(){
+		return null;
+	}
+        
+	public TextBox createRightTextBox(){
 		return null;
 	}
 
