@@ -21,7 +21,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createArticleFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
 			new JournalFormat(null),
 			new YearFormat(","),
@@ -36,7 +36,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createBookFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new BookTitleFormat(";"),
 			new EditorFormat(";"),
 			new FieldFormat(BibTeXEntry.KEY_PUBLISHER, ":"),
@@ -51,7 +51,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createInCollectionFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
 			new InBookTitleFormat(";"),
 			new EditorFormat(";"),
@@ -66,7 +66,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createInProceedingsFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
 			new InBookTitleFormat(";"),
 			new EditorFormat(";"),
@@ -81,10 +81,12 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createMiscFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
+			new FieldFormat(BibTeXEntry.KEY_HOWPUBLISHED, ","),
 			new YearFormat("."),
-			new URLFormat(null)
+			new URLFormat(null),
+			new DOIFormat(null)
 		);
 
 		return new EntryFormat(fields);
@@ -93,7 +95,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 	static
 	private EntryFormat createUnpublishedFormat(){
 		List<FieldFormat> fields = Arrays.asList(
-			new AuthorFormat(null),
+			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, ".")
 		);
 
@@ -120,22 +122,6 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		return string;
 	}
 
-	static
-	private class AuthorFormat extends FieldFormat {
-
-		public AuthorFormat(String separator){
-			super(BibTeXEntry.KEY_AUTHOR, separator);
-		}
-
-		@Override
-		public String format(Value value, boolean latex, boolean html){
-			String string = super.format(value, latex, html);
-
-			string = string.replace(" and ", "; ");
-
-			return string;
-		}
-	}
 
 	static
 	private class BookTitleFormat extends FieldFormat {

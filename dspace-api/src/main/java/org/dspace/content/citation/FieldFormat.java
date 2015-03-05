@@ -22,6 +22,16 @@ public class FieldFormat {
 	}
 
 	public String format(Value value, boolean latex, boolean html){
+		String string = userString(value, latex);
+
+		if(html){
+			string = StringEscapeUtils.escapeXml(string);
+		}
+
+		return string;
+	}
+
+	public static String userString(Value value, boolean latex){
 		String string = value.toUserString();
 
 		if(latex){
@@ -32,12 +42,7 @@ public class FieldFormat {
 			} catch (Exception e) {
 				// ignore, show string as is
 			}
-		} // End if
-
-		if(html){
-			string = StringEscapeUtils.escapeXml(string);
 		}
-
 		return string;
 	}
 

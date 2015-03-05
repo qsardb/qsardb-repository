@@ -10,7 +10,9 @@ import org.apache.log4j.*;
 import org.dspace.authorize.*;
 import org.dspace.core.*;
 import org.dspace.core.Context;
+import org.dspace.content.citation.ACSAuthorFormat;
 import org.dspace.content.citation.ACSReferenceStyle;
+import org.dspace.content.citation.FieldFormat;
 import org.dspace.content.citation.ReferenceFormatter;
 import org.jbibtex.*;
 
@@ -367,6 +369,7 @@ public class QdbUtil {
 			} // End if
 
 			if((BibTeXEntry.KEY_AUTHOR).equals(field) || (BibTeXEntry.KEY_EDITOR).equals(field)){
+				string = ACSAuthorFormat.normalize(string);
 				item.addMetadata("bibtex", "entry", (field.getValue()).toLowerCase(), null, string.split(" and "));
 			} else
 
@@ -533,39 +536,12 @@ public class QdbUtil {
 	}
 
 	static
-	private List<LaTeXObject> parseLaTeX(String string) throws IOException, ParseException {
-		Reader reader = new StringReader(string);
-
-		try {
-			LaTeXParser parser = new LaTeXParser();
-
-			return parser.parse(reader);
-		} finally {
-			reader.close();
-		}
-	}
-
-	static
-	private String printLaTeX(List<LaTeXObject> objects){
-		LaTeXPrinter printer = new LaTeXPrinter();
-
-		return printer.print(objects);
-	}
-
-	static
 	private String toString(Value value){
 		if (value == null) {
 			return null;
 		}
 
-		String string = value.toUserString();
-		try {
-			return printLaTeX(parseLaTeX(string));
-		} catch (TokenMgrError e) {
-			return string;
-		} catch (Exception e) {
-			return string;
-		}
+		return FieldFormat.userString(value, true);
 	}
 
 	static
