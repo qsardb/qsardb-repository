@@ -52,6 +52,7 @@ public class CompoundBrowseDialog {
 		ArrayList<String> compIds = new ArrayList<String>(table.getKeys());
 		cellList.setRowCount(compIds.size(), true);
 		cellList.setRowData(compIds);
+		cellList.getSelectionModel().setSelected(compIds.get(0), true);
 	}
 
 	@UiHandler({"cancelButton", "okButton"}) 
