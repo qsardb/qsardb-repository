@@ -47,7 +47,7 @@ public class ACSAuthorFormat extends FieldFormat {
 				sb.append(',');
 			}
 			for (String name: names){
-				String initial = name.replaceAll("(\\w)\\w*", "$1.");
+				String initial = name.replaceAll("(?U)(\\w)\\w*", "$1.");
 				if (!initial.startsWith("-")) { // avoid space for: "A.-B."
 					sb.append(' ');
 				}
