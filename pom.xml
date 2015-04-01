@@ -662,27 +662,27 @@
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-client-gwt</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-rpc-gwt</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service-gwt</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
             <artifactId>dspace-qsardb-service-http</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
          </dependency>
          <dependency>
             <groupId>org.dspace</groupId>
