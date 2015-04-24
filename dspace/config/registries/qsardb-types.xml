@@ -39,4 +39,11 @@
 		<qualifier>type</qualifier>
 		<scope_note>Model type</scope_note>
 	</dc-type>
+        
+	<dc-type>
+		<schema>qdb</schema>
+		<element>model</element>
+		<qualifier>qmrf</qualifier>
+		<scope_note>QMRF reference</scope_note>
+	</dc-type>
 </dspace-dc-types>
