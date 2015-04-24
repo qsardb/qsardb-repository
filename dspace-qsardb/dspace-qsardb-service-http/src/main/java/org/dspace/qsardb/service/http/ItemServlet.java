@@ -12,13 +12,13 @@ import org.dspace.qsardb.service.*;
 import org.apache.log4j.*;
 
 abstract
-public class ItemServlet extends DSpaceHttpServlet {
+public class ItemServlet extends HttpServlet {
 
 	abstract
 	protected QdbCallable<? extends Result> createCallable(HttpServletRequest request, HttpServletResponse response, String path) throws IOException;
 
 	public void doService(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		Context context = getThreadLocalContext();
+		Context context = QdbContext.getContext();
 
 		HttpSession session = request.getSession();
 

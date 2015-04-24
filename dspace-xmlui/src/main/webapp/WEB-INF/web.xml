@@ -110,6 +110,10 @@
     </init-param>
   </filter>
 
+  <filter>
+    <filter-name>QdbContextFilter</filter-name>
+    <filter-class>org.dspace.app.xmlui.utils.QdbContextFilter</filter-class>
+  </filter>
 
   <!-- Filter mappings ================================================ -->
 
@@ -135,6 +139,11 @@
   <filter-mapping>
     <filter-name>SetCharacterEncoding</filter-name>
     <servlet-name>spring</servlet-name>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>QdbContextFilter</filter-name>
+	<url-pattern>/service/*</url-pattern>
   </filter-mapping>
   
   <!--
@@ -192,21 +201,11 @@
 	<servlet>
 		<servlet-name>QdbServiceServlet</servlet-name>
 		<servlet-class>org.dspace.qsardb.service.gwt.QdbServiceServlet</servlet-class>
-
-		<init-param>
-			<param-name>contextProvider</param-name>
-			<param-value>org.dspace.app.xmlui.utils.XMLUIContextProvider</param-value>
-		</init-param>
 	</servlet>
 
 	<servlet>
 		<servlet-name>PredictorServiceServlet</servlet-name>
 		<servlet-class>org.dspace.qsardb.service.http.PredictorServiceServlet</servlet-class>
-
-		<init-param>
-			<param-name>contextProvider</param-name>
-			<param-value>org.dspace.app.xmlui.utils.XMLUIContextProvider</param-value>
-		</init-param>
 	</servlet>
 
     <!--servlet>

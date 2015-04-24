@@ -2,6 +2,7 @@ package org.dspace.qsardb.service.gwt;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.io.*;
 import java.math.*;
 import java.util.*;
@@ -19,11 +20,11 @@ import org.dspace.core.*;
 import org.dspace.qsardb.rpc.gwt.*;
 import org.dspace.qsardb.service.*;
 
-public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements QdbService {
+public class QdbServiceServlet extends RemoteServiceServlet implements QdbService {
 
 	@Override
 	public ModelTable loadModelTable(final String handle, final String modelId) throws DSpaceException {
-		Context context = getThreadLocalContext();
+		Context context = QdbContext.getContext();
 
 		try {
 			Item item = obtainValidItem(context, handle);
@@ -44,7 +45,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 	@Override
 	public Map<String, String> calculateModelDescriptors(final String handle, final String modelId, final String string) throws DSpaceException {
-		Context context = getThreadLocalContext();
+		Context context = QdbContext.getContext();
 
 		try {
 			Item item = obtainValidItem(context, handle);
@@ -65,7 +66,7 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 
 	@Override
 	public String evaluateModel(final String handle, final String modelId, final Map<String, String> parameters) throws DSpaceException {
-		Context context = getThreadLocalContext();
+		Context context = QdbContext.getContext();
 
 		try {
 			Item item = obtainValidItem(context, handle);
@@ -82,6 +83,16 @@ public class QdbServiceServlet extends DSpaceRemoteServiceServlet implements Qdb
 		} catch(Exception e){
 			throw formatException(e);
 		}
+	}
+
+	private DSpaceException formatException(Exception e){
+		log(e.getMessage(), e);
+
+		if(e instanceof DSpaceException){
+			return (DSpaceException)e;
+		}
+
+		return new DSpaceException(e.getMessage());
 	}
 
 	private Item obtainValidItem(Context context, String handle) throws Exception {
