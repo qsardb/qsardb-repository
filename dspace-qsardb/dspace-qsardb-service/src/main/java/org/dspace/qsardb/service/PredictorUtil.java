@@ -103,7 +103,7 @@ public class PredictorUtil {
 	}
 
 	static
-	private IAtomContainer prepareMolecule(String string) throws CDKException {
+	public IAtomContainer prepareMolecule(String string) throws CDKException {
 		IAtomContainer molecule = parseMolecule(string);
 
 		molecule = DescriptorUtil.prepareMolecule(molecule);

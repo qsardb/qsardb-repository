@@ -16,13 +16,13 @@
         <root.basedir>${basedir}/..</root.basedir>
     </properties>
 
-	<modules>
-		<module>dspace-qsardb-client-gwt</module>
-		<module>dspace-qsardb-rpc-gwt</module>
-		<module>dspace-qsardb-service</module>
-		<module>dspace-qsardb-service-gwt</module>
-		<module>dspace-qsardb-service-http</module>
-	</modules>
+    <modules>
+        <module>dspace-qsardb-client-gwt</module>
+        <module>dspace-qsardb-rpc-gwt</module>
+        <module>dspace-qsardb-service</module>
+        <module>dspace-qsardb-service-gwt</module>
+        <module>dspace-qsardb-service-http</module>
+    </modules>
 
     <build>
     </build>
