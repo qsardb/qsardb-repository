@@ -55,8 +55,8 @@ public class PredictorResource {
 
 		org.dspace.core.Context context = QdbContext.getContext();
 		Item item = ItemUtil.obtainItem(context, handle);
-		if (item == null) {
-			throw new NotFoundException(handle + " not found");
+		if (item == null || item.isWithdrawn()) {
+			throw new NotFoundException(handle + " not found or unavailable");
 		}
 		return QdbUtil.invokeInternal(context, item, cb);
 	}
