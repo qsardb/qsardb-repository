@@ -12,6 +12,8 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.qsardb.rpc.gwt.*;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 public class DataInputPanel extends Composite implements InputChangeEventHandler {
 
@@ -72,23 +74,18 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	}
 
 	public void evaluate(){
-		QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-
-		AsyncCallback<String> callback = new ServiceCallback<String>(){
+		PredictorRequest request = new PredictorRequest(getValues());
+		PredictorClient.predict(request, new MethodCallback<PredictorResponse>() {
+			@Override
+			public void onFailure(Method method, Throwable ex) {
+				Window.alert("Evaluation failed: " + ex.getMessage());
+			}
 
 			@Override
-			public void onSuccess(String string){
-				fireEvent(new EvaluationEvent(string));
+			public void onSuccess(Method method, PredictorResponse response) {
+				fireEvent(new EvaluationEvent(response.getResult()));
 			}
-		};
-
-		QdbServiceAsync service = (QdbServiceAsync.MANAGER).getInstance();
-
-		try {
-			service.evaluateModel(predictor.getHandle(), predictor.getModelId(), getValues(), callback);
-		} catch(DSpaceException de){
-			Window.alert("Evaluation failed: " + de.getMessage());
-		}
+		});
 	}
 
 	public Map<String, String> getValues(){

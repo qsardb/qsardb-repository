@@ -43,48 +43,6 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 		}
 	}
 
-	@Override
-	public Map<String, String> calculateModelDescriptors(final String handle, final String modelId, final String string) throws DSpaceException {
-		Context context = QdbContext.getContext();
-
-		try {
-			Item item = obtainValidItem(context, handle);
-
-			QdbCallable<Map<String, String>> callable = new QdbCallable<Map<String, String>>(){
-
-				@Override
-				public Map<String, String> call(Qdb qdb) throws Exception {
-					return calculateModelDescriptors(qdb, modelId, string);
-				}
-			};
-
-			return QdbUtil.invokeInternal(context, item, callable);
-		} catch(Exception e){
-			throw formatException(e);
-		}
-	}
-
-	@Override
-	public String evaluateModel(final String handle, final String modelId, final Map<String, String> parameters) throws DSpaceException {
-		Context context = QdbContext.getContext();
-
-		try {
-			Item item = obtainValidItem(context, handle);
-
-			QdbCallable<String> callable = new QdbCallable<String>(){
-
-				@Override
-				public String call(Qdb qdb) throws Exception {
-					return evaluateModel(qdb, modelId, parameters);
-				}
-			};
-
-			return QdbUtil.invokeInternal(context, item, callable);
-		} catch(Exception e){
-			throw formatException(e);
-		}
-	}
-
 	private DSpaceException formatException(Exception e){
 		log(e.getMessage(), e);
 
@@ -305,24 +263,6 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 		table.setColumns(columns);
 
 		return table;
-	}
-
-	private Map<String, String> calculateModelDescriptors(Qdb qdb, String modelId, String string) throws Exception {
-		Model model = qdb.getModel(modelId);
-		if(model == null){
-			throw new DSpaceException("Model \'" + modelId + "\' not found");
-		}
-
-		return PredictorUtil.calculateDescriptors(model, string);
-	}
-
-	private String evaluateModel(Qdb qdb, String modelId, Map<String, String> parameters) throws Exception {
-		Model model = qdb.getModel(modelId);
-		if(model == null){
-			throw new DSpaceException("Model \'" + modelId + "\' not found");
-		}
-
-		return PredictorUtil.evaluate(model, parameters);
 	}
 
 	static

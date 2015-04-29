@@ -20,6 +20,10 @@
 			<groupId>org.dspace</groupId>
 			<artifactId>dspace-qsardb-service</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-rpc-gwt</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.qsardb</groupId>

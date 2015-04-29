@@ -9,6 +9,8 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.qsardb.rpc.gwt.*;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 public class CompoundInputPanel extends Composite {
 
@@ -94,22 +96,17 @@ public class CompoundInputPanel extends Composite {
 			return;
 		}
 
-		QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-
-		AsyncCallback<Map<String, String>> callback = new ServiceCallback<Map<String, String>>(){
+		PredictorRequest request = new PredictorRequest(string);
+		PredictorClient.predict(request, new MethodCallback<PredictorResponse>() {
+			@Override
+			public void onFailure(Method method, Throwable ex) {
+				Window.alert("Calculation failed: " + ex.getMessage());
+			}
 
 			@Override
-			public void onSuccess(Map<String, String> values){
-				fireEvent(new InputChangeEvent(values));
+			public void onSuccess(Method method, PredictorResponse response) {
+				fireEvent(new InputChangeEvent(response.getParameters()));
 			}
-		};
-
-		QdbServiceAsync service = (QdbServiceAsync.MANAGER).getInstance();
-
-		try {
-			service.calculateModelDescriptors(predictor.getHandle(), predictor.getModelId(), string, callback);
-		} catch(DSpaceException de){
-			Window.alert("Calculation failed: " + de.getMessage());
-		}
+		});
 	}
 }
