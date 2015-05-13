@@ -34,7 +34,7 @@ public class GramaticaPlotPanel extends PlotPanel {
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
 		scatterPlot.addXAxisOptions(distanceBounds, distance.getName());
-		scatterPlot.addYAxisOptions(predictionBounds, property.getName() + " (calc.)");
+		scatterPlot.addYAxisOptions(predictionBounds, "Calculated property");
 
 		scatterPlot.addDistanceMarkings(criticalDistance);
 
