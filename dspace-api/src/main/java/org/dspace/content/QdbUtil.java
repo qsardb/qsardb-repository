@@ -316,19 +316,34 @@ public class QdbUtil {
 
 	static
 	private void clearMetadata(Item item){
+		clearDcMetadata(item);
 		clearBibTeXMetadata(item);
 		clearQdbMetadata(item);
 	}
 
 	static
 	private void collectMetadata(Item item, Qdb qdb){
-		DCValue[] issued = item.getDC("date", "issued", Item.ANY);
-		if (issued.length == 0) {
-			item.addMetadata("dc", "date", "issued", Item.ANY, "today");
-		}
-
+		collectDcMetadata(item, qdb);
 		collectBibTeXMetadata(item, qdb);
 		collectQdbMetadata(item, qdb);
+	}
+
+	static
+	private void clearDcMetadata(Item item){
+		item.clearMetadata("dc", "description", "abstract", Item.ANY);
+	}
+
+	static
+	private void collectDcMetadata(Item item, Qdb qdb){
+		DCValue[] issued = item.getDC("date", "issued", Item.ANY);
+		if (issued.length == 0) {
+			item.addMetadata("dc", "date", "issued", null, "today");
+		}
+
+		String desc = qdb.getArchive().getDescription();
+		if (desc != null) {
+			item.addMetadata("dc", "description", "abstract", null, desc);
+		}
 	}
 
 	static
