@@ -23,6 +23,7 @@ public class PredictorUtil {
 	}
 
 	static
+	synchronized
 	public Map<String, String> calculateDescriptors(Model model, String structure) throws Exception {
 		IAtomContainer molecule = prepareMolecule(structure);
 

@@ -67,7 +67,11 @@ public class PredictorResource {
 		}
 	}
 
-	private PredictorResponse evaluate(String handle, final String modelId, final PredictorRequest req) throws Exception {
+	protected Map<String, String> calculateDescriptors(String handle, Model model, String structure) throws Exception {
+		return PredictorUtil.calculateDescriptors(model, structure);
+	}
+
+	private PredictorResponse evaluate(final String handle, final String modelId, final PredictorRequest req) throws Exception {
 		QdbCallable<PredictorResponse> cb = new QdbCallable<PredictorResponse>() {
 			@Override
 			public PredictorResponse call(Qdb qdb) throws Exception {
@@ -75,16 +79,16 @@ public class PredictorResource {
 				if (model == null) {
 					throw new NotFoundException("Model not found");
 				}
-				PredictorResponse r = new PredictorResponse();
 				Map<String, String> params = getDescriptors(req, qdb);
 				String structure = getStructure(req, params);
-				if (structure == null) {
-					r.setResult(PredictorUtil.evaluate(model, params));
-				} else {
-					r.setResult(PredictorUtil.evaluate(model, params, structure));
-				}
-				r.setParameters(params);
 
+				if (structure != null) {
+					params.putAll(calculateDescriptors(handle, model, structure));
+				}
+
+				PredictorResponse r = new PredictorResponse();
+				r.setParameters(params);
+				r.setResult(PredictorUtil.evaluate(model, params));
 				return r;
 			}
 		};
