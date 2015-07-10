@@ -82,7 +82,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 			@Override
 			public String call(Qdb qdb) throws Exception {
 				Property property = qdb.getProperty(propId);
-				Map<String, String> pvals = loadValues(property);
+				Map<String, String> pvals = QdbParameterUtil.loadStringValues(property);
 
 				ArrayList<String> cidList = new ArrayList<String>();
 				for (Compound c: qdb.getCompoundRegistry()) {
@@ -216,19 +216,8 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		}
 	}
 
-	private Map<String, String> loadValues(Parameter<?,?> p) {
-		if (p != null && p.hasCargo(ValuesCargo.class)) {
-			try {
-				return p.getCargo(ValuesCargo.class).loadStringMap();
-			} catch (IOException e) {
-				// ignored
-			}
-		}
-		return Collections.emptyMap();
-	}
-
 	private String loadValue(Parameter<?,?> p, String cid) {
-		Map<String, String> map = loadValues(p);
+		Map<String, String> map = QdbParameterUtil.loadStringValues(p);
 		return !map.isEmpty() ? map.get(cid) : null;
 	}
 

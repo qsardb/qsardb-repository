@@ -103,7 +103,7 @@ class ItemContentPanel {
 
 			Para valuesPara = summaryDivision.addPara("property-values", null);
 			String target = viewer.getContextPath() + "/compounds/" + item.getHandle() + "?property=" + property.getId();
-			valuesPara.addXref(target, T_property_values.parameterize(loadStringMap(property).size()));
+			valuesPara.addXref(target, T_property_values.parameterize(QdbParameterUtil.loadStringValues(property).size()));
 		}
 
 		if(propertyModels.size() > 0 && propertyPredictions.size() > 0){
@@ -255,8 +255,8 @@ class ItemContentPanel {
 				return "training";
 			case VALIDATION:
 				for (Prediction training: prediction.getRegistry().getByModelAndType(model, Prediction.Type.TRAINING)){
-					Set<String> trainingKeys = loadStringMap(training).keySet();
-					Set<String> keys = loadStringMap(prediction).keySet();
+					Set<String> trainingKeys = QdbParameterUtil.loadStringValues(training).keySet();
+					Set<String> keys = QdbParameterUtil.loadStringValues(prediction).keySet();
 
 					if((trainingKeys).containsAll(keys)){
 						return "internal validation";
@@ -280,18 +280,6 @@ class ItemContentPanel {
 	private String loadSummary(Model model){
 		String type = QdbModelUtil.detectType(model);
 		return type.isEmpty() ? "(Unknown model type)" : type;
-	}
-
-	static
-	private Map<String, String> loadStringMap(Parameter<?,?> parameter) {
-		if (parameter.hasCargo(ValuesCargo.class)){
-			try {
-				ValuesCargo cargo = parameter.getCargo(ValuesCargo.class);
-				return cargo.loadStringMap();
-			} catch (IOException ignore) {
-			}
-		}
-		return Collections.emptyMap();
 	}
 
 	private static final Message T_property_head = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.head_property");
