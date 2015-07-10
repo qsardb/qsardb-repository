@@ -1,6 +1,7 @@
 package org.dspace.ctask.general;
 
 import java.util.*;
+import org.dspace.content.QdbModelUtil;
 
 import org.qsardb.cargo.matrix.*;
 import org.qsardb.cargo.pmml.*;
@@ -22,7 +23,7 @@ public class QdbMahalanobisDistanceCalculator extends QdbModelTask {
 
 	@Override
 	public boolean curate(Model model, Prediction training, Collection<Prediction> validations) throws Exception {
-		Evaluator evaluator = org.dspace.content.QdbUtil.getEvaluator(model);
+		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
 
 		if(evaluator != null){
 			evaluator.init();

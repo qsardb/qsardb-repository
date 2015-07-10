@@ -142,7 +142,7 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 			columns.add(column);
 		}
 
-		Evaluator evaluator = QdbUtil.getEvaluator(model);
+		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
 
 		if(evaluator != null){
 			evaluator.init();

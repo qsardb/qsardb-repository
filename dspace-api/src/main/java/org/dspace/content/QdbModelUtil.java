@@ -24,6 +24,8 @@ import org.qsardb.cargo.map.FrequencyMap;
 import org.qsardb.cargo.pmml.PMMLCargo;
 import org.qsardb.cargo.rds.RDSCargo;
 import org.qsardb.cargo.rds.RDSObject;
+import org.qsardb.evaluation.Evaluator;
+import org.qsardb.evaluation.PMMLEvaluator;
 import org.qsardb.model.Model;
 import org.qsardb.model.Qdb;
 
@@ -31,7 +33,7 @@ public class QdbModelUtil {
 
 	private static final Logger logger = Logger.getLogger(QdbModelUtil.class);
 
-	private static final Map<String,String> map =
+	private static final Map<String,String> modelTypeMap =
 		ImmutableMap.<String,String>builder()
 		.put("RegressionModel",           "Regression model")
 		.put("GeneralRegressionModel",    "Regression model")
@@ -45,6 +47,17 @@ public class QdbModelUtil {
 		.put("RuleSetModel",              "Ruleset")
 		.build();
 
+	public static Evaluator getEvaluator(Model model) throws Exception {
+		Qdb qdb = model.getQdb();
+		if (model.hasCargo(PMMLCargo.class)) {
+			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
+			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
+		} else if (model.hasCargo(RDSCargo.class)) {
+			RDSCargo rdsCargo = model.getCargo(RDSCargo.class);
+			return new QdbRDSEvaluator(qdb, rdsCargo.loadRdsObject());
+		}
+		throw new IllegalArgumentException();
+	}
 
 	public static String detectType(Model qdbModel) {
 		if (qdbModel.hasCargo(PMMLCargo.class)){
@@ -126,7 +139,7 @@ public class QdbModelUtil {
 		}
 		
 		String name = pmmlModel.getClass().getSimpleName();
-		return map.get(name) != null ? map.get(name) : name;
+		return modelTypeMap.get(name) != null ? modelTypeMap.get(name) : name;
 	}
 
 	private static String rdsModelAsString(Qdb qdb, RDSCargo rdsCargo) {

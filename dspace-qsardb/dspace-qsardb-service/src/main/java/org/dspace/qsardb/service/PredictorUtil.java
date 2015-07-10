@@ -8,6 +8,7 @@ import org.qsardb.model.*;
 
 import net.sf.blueobelisk.*;
 import net.sf.jniinchi.*;
+import org.dspace.content.QdbModelUtil;
 
 import org.dspace.content.QdbUtil;
 import org.openscience.cdk.*;
@@ -114,7 +115,7 @@ public class PredictorUtil {
 
 	static
 	private Evaluator prepareEvaluator(Model model) throws Exception {
-		Evaluator evaluator = QdbUtil.getEvaluator(model);
+		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
 
 		if(evaluator == null){
 			throw new IllegalArgumentException("Model \'" + model.getId() + "\' is not evaluateable");

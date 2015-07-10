@@ -285,25 +285,6 @@ public class QdbUtil {
 	}
 
 	static
-	public Evaluator getEvaluator(Model model) throws Exception {
-		Qdb qdb = model.getQdb();
-
-		if(model.hasCargo(PMMLCargo.class)){
-			PMMLCargo pmmlCargo = model.getCargo(PMMLCargo.class);
-
-			return new PMMLEvaluator(qdb, pmmlCargo.loadPmml());
-		} else
-
-		if(model.hasCargo(RDSCargo.class)){
-			RDSCargo rdsCargo = model.getCargo(RDSCargo.class);
-
-			return new QdbRDSEvaluator(qdb, rdsCargo.loadRdsObject());
-		}
-
-		throw new IllegalArgumentException();
-	}
-
-	static
 	public File createTempFile() throws IOException {
 		return File.createTempFile("bitstream", ".qdb");
 	}
