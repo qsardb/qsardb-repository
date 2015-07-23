@@ -282,8 +282,6 @@
 	<message key="xmlui.ArtifactBrowser.ItemViewer.property_models_summary">{0} Model(s) with {1} Prediction(s)</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
 
-	<message key="xmlui.ArtifactBrowser.ItemViewer.property_bibliography">Bibliography</message>
-
 	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
 	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>
 	<message key="xmlui.ArtifactBrowser.QdbExplorer.handle_trail">{0} - QDB Explorer</message>

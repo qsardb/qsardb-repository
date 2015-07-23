@@ -20,6 +20,7 @@ import org.dspace.content.citation.ACSReferenceStyle;
 import org.dspace.content.citation.ReferenceFormatter;
 import org.dspace.core.*;
 import org.qsardb.cargo.map.ValuesCargo;
+import org.qsardb.cargo.ucum.UCUMCargo;
 import org.qsardb.statistics.ClassificationStatistics;
 import org.qsardb.statistics.RegressionStatistics;
 import org.qsardb.statistics.Statistics;
@@ -76,7 +77,8 @@ class ItemContentPanel {
 		Division propertyDivision = division.addDivision("property-" + property.getId(), "secondary");
 		Head propertyHead = propertyDivision.setHead();
 		propertyHead.addContent(T_property_head.parameterize(property.getId(), property.getName()));
-		addDescriptionInfo(property, propertyHead);
+		QdbFormat.unit(property, propertyHead);
+		QdbFormat.descriptionAttribute(property, propertyHead);
 
 		Map<String, BibTeXEntry> bibliography = new LinkedHashMap<String, BibTeXEntry>();
 
@@ -141,7 +143,7 @@ class ItemContentPanel {
 		Division modelDivision = division.addDivision("model-" + model.getId(), "secondary");
 		Head modelHead = modelDivision.setHead();
 		modelHead.addContent(T_model_summary.parameterize(model.getId(), model.getName()));
-		addDescriptionInfo(model, modelHead);
+		QdbFormat.descriptionAttribute(model, modelHead);
 
 		Para summaryPara = modelDivision.addPara("model-summary", "side-left");
 		summaryPara.addContent(loadSummary(model));
@@ -190,7 +192,7 @@ class ItemContentPanel {
 
 			Cell nameCell = predictionRow.addCell();
 			nameCell.addContent(prediction.getName());
-			addDescriptionInfo(prediction, nameCell);
+			QdbFormat.descriptionAttribute(prediction, nameCell);
 			predictionRow.addCellContent(formatPredictionType(model, prediction));
 			predictionRow.addCellContent(String.valueOf(statistics.size()));
 			if (isClassification) {
@@ -201,13 +203,6 @@ class ItemContentPanel {
 				predictionRow.addCellContent(formatStats(stats.rsq()));
 				predictionRow.addCellContent(formatStats(stats.stdev()));
 			}
-		}
-	}
-
-	private static void addDescriptionInfo(Container container, TextContainer target) throws WingException {
-		String description = container.getDescription();
-		if (description != null && !description.trim().isEmpty()) {
-			target.addInfo("i", description);
 		}
 	}
 
@@ -291,6 +286,4 @@ class ItemContentPanel {
 	private static final Message T_property_models_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_models_summary");
 
 	private static final Message T_model_summary = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.model_summary");
-
-	private static final Message T_property_bibliography = ItemViewer.message("xmlui.ArtifactBrowser.ItemViewer.property_bibliography");
 }

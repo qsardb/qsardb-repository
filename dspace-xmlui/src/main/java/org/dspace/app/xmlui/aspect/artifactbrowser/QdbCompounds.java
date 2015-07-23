@@ -25,6 +25,7 @@ import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
+import org.dspace.content.QdbParameterUtil;
 import org.dspace.content.QdbUtil;
 import org.qsardb.cargo.map.ValuesCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
@@ -98,10 +99,8 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				if (!pvals.isEmpty()) {
 					para.addContent(" | Property ");
 					para.addContent(property.getId()+": "+property.getName());
-					String description = property.getDescription();
-					if (description != null) {
-						para.addInfo("i", description);
-					}
+					QdbFormat.unit(property, para);
+					QdbFormat.descriptionAttribute(property, para);
 				}
 
 				int nrows = cidList.size()+1;
@@ -197,7 +196,10 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 			div.addPara("This archive contains no properties");
 		} else {
 			for(Property property: properties){
-				div.addPara("property-line", null).addContent(property.getId()+": "+property.getName());
+				Para para = div.addPara("property-line", null);
+				para.addContent(property.getId()+": "+property.getName());
+				QdbFormat.unit(property, para);
+				QdbFormat.descriptionAttribute(property, para);
 
 				String pval = loadValue(property, c.getId());
 				if (pval != null) {
