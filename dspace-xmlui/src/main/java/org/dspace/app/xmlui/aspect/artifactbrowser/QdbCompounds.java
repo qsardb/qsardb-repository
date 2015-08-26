@@ -20,6 +20,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Cell;
 import org.dspace.app.xmlui.wing.element.Division;
+import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
@@ -27,6 +28,14 @@ import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
 import org.dspace.content.QdbParameterUtil;
 import org.dspace.content.QdbUtil;
+import org.dspace.content.citation.ACSReferenceStyle;
+import org.dspace.content.citation.ReferenceFormatter;
+import org.jbibtex.BibTeXDatabase;
+import org.jbibtex.BibTeXEntry;
+import org.jbibtex.Key;
+import org.jbibtex.Value;
+import org.qsardb.cargo.bibtex.BibTeXCargo;
+import org.qsardb.cargo.map.ReferencesCargo;
 import org.qsardb.cargo.map.ValuesCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
 import org.qsardb.model.Compound;
@@ -124,6 +133,19 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					}
 					row.addCell().addXref("?id="+c.getId(), "View");
 				}
+
+				if (property != null && property.hasCargo(BibTeXCargo.class)) {
+					BibTeXCargo cargo = property.getCargo(BibTeXCargo.class);
+					BibTeXDatabase db = cargo.loadBibTeX();
+					Division biblio = div.addDivision("bibliography");
+					biblio.setHead("Bibliography");
+					List bibList = biblio.addList("bib-list", List.TYPE_BULLETED);
+					ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
+					for (Map.Entry<Key, BibTeXEntry> e: db.getEntries().entrySet()) {
+						String reference = formatter.format(e.getValue(), true, true);
+						bibList.addItem().addHtmlContent(reference);
+					}
+				}
 				return "";
 			}
 		};
@@ -188,7 +210,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		}
 	}
 
-	private void generatePropertyInfo(Qdb qdb, Compound c, Division div) throws WingException {
+	private void generatePropertyInfo(Qdb qdb, Compound c, Division div) throws Exception {
 		div.setHead("Properties");
 		PropertyRegistry properties = qdb.getPropertyRegistry();
 
@@ -201,21 +223,51 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				QdbFormat.unit(property, para);
 				QdbFormat.descriptionAttribute(property, para);
 
+				Table table = div.addTable("property-table", 1, 2);
+
 				String pval = loadValue(property, c.getId());
 				if (pval != null) {
-					div.addPara(pval +" \u2013 experimental value");
+					Row row = table.addRow();
+					row.addCellContent(pval);
+					row.addCell().addHtmlContent(loadPropertyReference(property, c.getId()));
 				}
 
 				for (Model m: qdb.getModelRegistry().getByProperty(property)) {
 					for (Prediction p: qdb.getPredictionRegistry().getByModel(m)) {
 						pval = loadValue(p, c.getId());
 						if (pval != null) {
-							div.addPara(pval+" \u2013 "+m.getId()+": "+m.getName()+" ("+p.getName()+")");
+							Row row = table.addRow();
+							row.addCellContent(pval);
+							row.addCell().addHtmlContent(m.getId()+": "+m.getName()+" ("+p.getName()+")");
 						}
 					}
 				}
 			}
 		}
+	}
+
+	private String loadPropertyReference(Property p, String cid) throws Exception {
+		Key referenceKey = null;
+		if (p.hasCargo(ReferencesCargo.class)) {
+			ReferencesCargo cargo = p.getCargo(ReferencesCargo.class);
+			Map<String, String> references = cargo.loadReferences();
+			referenceKey = new Key(references.get(cid));
+		}
+
+		if (p.hasCargo(BibTeXCargo.class)) {
+			BibTeXCargo cargo = p.getCargo(BibTeXCargo.class);
+			Map<Key, BibTeXEntry> entries = cargo.loadBibTeX().getEntries();
+			ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
+
+			if (entries.containsKey(referenceKey)) {
+				return formatter.format(entries.get(referenceKey), true, true);
+			}
+			if (entries.size() == 1) {
+				return formatter.format(entries.values().iterator().next(), true, true);
+			}
+		}
+
+		return "experimental value";
 	}
 
 	private String loadValue(Parameter<?,?> p, String cid) {

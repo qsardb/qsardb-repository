@@ -17,7 +17,7 @@ public class ACSAuthorFormat extends FieldFormat {
 
 	@Override
 	public String format(Value value, boolean latex, boolean html) {
-		String string = super.format(value, latex, html);
+		String string = super.format(value, latex, false);
 		string = normalize(string); // TODO: handle braces 
 		string = string.replace(" and ", "; ");
 		return string;
