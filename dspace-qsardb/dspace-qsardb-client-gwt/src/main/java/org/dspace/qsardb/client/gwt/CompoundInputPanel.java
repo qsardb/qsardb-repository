@@ -13,6 +13,8 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 public class CompoundInputPanel extends Composite {
+    
+        final TextBox textBox;
 
 	public CompoundInputPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
@@ -26,8 +28,7 @@ public class CompoundInputPanel extends Composite {
 
 		panel.add(new HTML("<u>Chemical structure input</u> (InChI or SMILES format):"));
 
-		final
-		TextBox textBox = new TextBox();
+		textBox = new TextBox();
 		textBox.setVisibleLength(60);
 		textBox.setEnabled(calculable);
 
@@ -70,6 +71,8 @@ public class CompoundInputPanel extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event){
+                                final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
+                                predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
 				calculate(textBox.getText());
 			}
 		};

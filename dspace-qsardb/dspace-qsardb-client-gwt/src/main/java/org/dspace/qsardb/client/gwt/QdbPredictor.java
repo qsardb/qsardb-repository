@@ -6,6 +6,9 @@ import org.dspace.qsardb.rpc.gwt.*;
 
 public class QdbPredictor extends QdbApplication {
 
+    private DataInputPanel inputPanel;
+    private CompoundDistancePanel similarityPanel;
+    
 	@Override
 	public String getId(){
 		return "aspect_artifactbrowser_QdbPredictor_div_main";
@@ -22,7 +25,7 @@ public class QdbPredictor extends QdbApplication {
 
 		panel.add(new Heading("Model input", 3));
 
-		DataInputPanel inputPanel = new DataInputPanel(table);
+                inputPanel = new DataInputPanel(table);
 		panel.add(inputPanel);
 
 		panel.add(new Heading("Model output", 3));
@@ -34,11 +37,20 @@ public class QdbPredictor extends QdbApplication {
 
 		panel.add(new Heading("Similar predictions", 3));
 
-		CompoundDistancePanel similarityPanel = new CompoundDistancePanel(table);
+		similarityPanel = new CompoundDistancePanel(table);
 		panel.add(similarityPanel);
 
 		inputPanel.addEvaluationEventHandler(similarityPanel);
 
 		return panel;
 	}
+        
+        public DataInputPanel getDataInputPanel() {
+            return inputPanel;
+        }
+        
+        public CompoundDistancePanel getSimilarityPanel() {
+            return similarityPanel;
+        }
+        
 }
