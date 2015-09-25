@@ -218,6 +218,11 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 			div.addPara("This archive contains no properties");
 		} else {
 			for(Property property: properties){
+				String pval = loadValue(property, c.getId());
+				if (pval == null) {
+					continue;
+				}
+
 				Para para = div.addPara("property-line", null);
 				para.addContent(property.getId()+": "+property.getName());
 				QdbFormat.unit(property, para);
@@ -225,18 +230,15 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 
 				Table table = div.addTable("property-table", 1, 2);
 
-				String pval = loadValue(property, c.getId());
-				if (pval != null) {
-					Row row = table.addRow();
-					row.addCellContent(pval);
-					row.addCell().addHtmlContent(loadPropertyReference(property, c.getId()));
-				}
+				Row row = table.addRow();
+				row.addCellContent(pval);
+				row.addCell().addHtmlContent(loadPropertyReference(property, c.getId()));
 
 				for (Model m: qdb.getModelRegistry().getByProperty(property)) {
 					for (Prediction p: qdb.getPredictionRegistry().getByModel(m)) {
 						pval = loadValue(p, c.getId());
 						if (pval != null) {
-							Row row = table.addRow();
+							row = table.addRow();
 							row.addCellContent(pval);
 							row.addCell().addHtmlContent(m.getId()+": "+m.getName()+" ("+p.getName()+")");
 						}
