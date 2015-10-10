@@ -26,11 +26,16 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 
 	@Override
 	public void onEvaluate(EvaluationEvent event){
-		String result = event.getResult();
+		String result = event.getResponse().getResult();
 
 		String[] parts = result.split("=");
 
-		this.table.setHTML(0, 0, parts[0]);
+		String descriptorUnits = event.getResponse().getResultUnits();
+		if (descriptorUnits != null && !descriptorUnits.trim().equals("")) {
+			this.table.setHTML(0, 0, parts[0] + " [" + descriptorUnits + "]");
+		} else {
+			this.table.setHTML(0, 0, parts[0]);
+		}
 
 		FlexTable.RowFormatter formatter = this.table.getRowFormatter();
 

@@ -6,7 +6,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -33,9 +32,6 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 	@UiField(provided = true)
 	SuggestBox suggestBox;
 	
-	@UiField
-	Button predictButton;
-
 	CompoundSelectionPanel(QdbTable table) {
 		this.table = table;
 		this.names = table.getColumn(NameColumn.class).getValues();
@@ -58,7 +54,12 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 		for (DescriptorColumn d: table.getAllColumns(DescriptorColumn.class)) {
 			descValues.put(d.getId(), d.getValue(compoundId).toString());
 		}
-			
+
+		QdbPredictor predictor = (QdbPredictor)Application.getInstance();
+		if (predictor.getDataInputPanel().compoundInputPanel.textBox.isEnabled()) {
+			predictor.getDataInputPanel().compoundInputPanel.textBox.setValue("", false);
+		}
+
 		fireEvent(new InputChangeEvent(descValues));
 	}
 
@@ -71,28 +72,6 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 		dialog.showRelativeTo(browseButton);
 	}
 	
-	@UiHandler("predictButton")
-	void handlePredict(ClickEvent evt) {
-		String selection = suggestBox.getText();
-
-		String input = names.containsKey(selection) ? selection : "";
-
-		if (input.isEmpty()) {
-			for (Map.Entry<String, String> e: names.entrySet()) {
-				if (e.getValue().equalsIgnoreCase(selection)) {
-					input = e.getKey();
-					break;
-				}
-			}
-		}
-
-		if (input.isEmpty()) {
-			Window.alert("Compound not found: "+selection);
-		} else {
-			updateSelection(input);
-		}
-	}
-
 	@Override
 	public void onEvent(CompoundBrowseEvent e) {
 		String name = table.getColumn(NameColumn.class).getValue(e.compoundId);

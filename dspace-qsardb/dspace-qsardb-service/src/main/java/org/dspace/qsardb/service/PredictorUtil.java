@@ -10,7 +10,6 @@ import net.sf.blueobelisk.*;
 import net.sf.jniinchi.*;
 import org.dspace.content.QdbModelUtil;
 
-import org.dspace.content.QdbUtil;
 import org.openscience.cdk.*;
 import org.openscience.cdk.exception.*;
 import org.openscience.cdk.inchi.*;
@@ -25,7 +24,7 @@ public class PredictorUtil {
 
 	static
 	synchronized
-	public Map<String, String> calculateDescriptors(Model model, String structure) throws Exception {
+	public Map<Descriptor, String> calculateDescriptors(Model model, String structure) throws Exception {
 		IAtomContainer molecule = prepareMolecule(structure);
 
 		Evaluator evaluator = prepareEvaluator(model);
@@ -33,24 +32,6 @@ public class PredictorUtil {
 
 		try {
 			return calculateDescriptors(evaluator, molecule);
-		} finally {
-			evaluator.destroy();
-		}
-	}
-
-	static
-	synchronized
-	public String evaluate(Model model, Map<String, String> parameters, String structure) throws Exception {
-		IAtomContainer molecule = prepareMolecule(structure);
-
-		Evaluator evaluator = prepareEvaluator(model);
-
-		evaluator.init();
-
-		try {
-			parameters.putAll(calculateDescriptors(evaluator, molecule));
-
-			return evaluate(evaluator, parameters);
 		} finally {
 			evaluator.destroy();
 		}
@@ -71,8 +52,8 @@ public class PredictorUtil {
 	}
 
 	static
-	private Map<String, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
-		Map<String, String> result = new LinkedHashMap<String, String>();
+	private Map<Descriptor, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
+		Map<Descriptor, String> result = new LinkedHashMap<Descriptor, String>();
 
 		DescriptorValueCache cache = new DescriptorValueCache();
 
@@ -91,7 +72,8 @@ public class PredictorUtil {
 
 			Object value = cache.calculate(cdkDescriptor, molecule);
 
-			result.put(descriptor.getId(), String.valueOf(value));
+			result.put(descriptor, String.valueOf(value));
+
 		}
 
 		return result;

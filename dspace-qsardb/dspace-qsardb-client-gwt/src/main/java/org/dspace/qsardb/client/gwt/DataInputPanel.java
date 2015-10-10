@@ -8,7 +8,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.qsardb.rpc.gwt.*;
@@ -83,7 +82,7 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 			@Override
 			public void onSuccess(Method method, PredictorResponse response) {
-				fireEvent(new EvaluationEvent(response.getResult()));
+				fireEvent(new EvaluationEvent(response));
 			}
 		});
 	}
@@ -98,6 +97,8 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 	public void cleanCompoundData() {
 		compoundSelectionPanel.suggestBox.setValue("", false);
-		compoundInputPanel.textBox.setValue("", false);
+		if (compoundInputPanel.textBox.isEnabled()) {
+			compoundInputPanel.textBox.setValue("", false);
+		}
 	}
 }

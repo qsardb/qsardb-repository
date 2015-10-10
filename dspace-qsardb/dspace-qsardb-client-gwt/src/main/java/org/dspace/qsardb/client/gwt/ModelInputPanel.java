@@ -9,9 +9,8 @@ import com.google.gwt.user.client.ui.*;
 import org.dspace.qsardb.rpc.gwt.*;
 
 public class ModelInputPanel extends Composite implements InputChangeEventHandler {
-	
+
 	private final List<DescriptorInputComponent> descriptorInputList = new ArrayList<DescriptorInputComponent>();
-	
 
 	public ModelInputPanel(QdbTable table){
 		Panel panel = new VerticalPanel();
@@ -53,7 +52,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			}
 		};
 		timer.schedule(1000);
-		
+
 		initWidget(panel);
 	}
 
@@ -74,7 +73,46 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		setDescriptorValues(event.getValues());
 		for(DescriptorInputComponent dip : descriptorInputList) {
 			dip.setEnableSlideEvents(true);
+			if (dip.getSlider() != null) {
+				dip.getSlider().normaliseMoreAndLess();
+			}
 		}
+
+		if (event.getSource().getClass() == CompoundInputPanel.class) {
+
+			final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
+			predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
+
+			for(DescriptorInputComponent dip : descriptorInputList) {
+				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor(), event.getResponse()));
+			}
+		} else if (event.getSource().getClass() == CompoundSelectionPanel.class) {
+			for(DescriptorInputComponent dip : descriptorInputList) {
+				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor().getApplication()));
+			}
+		}
+
+	}
+
+	private String getLabelText(DescriptorColumn d, PredictorResponse response) {
+		String result;
+		String application = response.getImplementations().get(d.getId());
+		if (application == null || application.trim().equals("")) {
+			result = "Prediction value calculated with <N/A>";
+		} else  {
+			result = "Current prediction is made with value calculated with " + application;
+		}
+		return result;
+	}
+
+	private String getLabelText(String application) {
+		String result;
+		if (application == null || application.trim().equals("")) {
+			result = "Prediction value calculated with <N/A>";
+		} else  {
+			result = "Current prediction is made with value calculated with " + application;
+		}
+		return result;
 	}
 
 	public Map<String, String> getDescriptorValues(){
@@ -85,7 +123,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
 			values.put(descriptorInput.getId(), String.valueOf(descriptorInput.getValue()));
 		}
-		
+
 		return values;
 	}
 

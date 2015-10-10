@@ -7,6 +7,7 @@ import java.io.*;
 import java.math.*;
 import java.util.*;
 import java.util.Collection;
+import net.sf.blueobelisk.BODODescriptor.Implementation;
 
 import org.qsardb.cargo.bodo.*;
 import org.qsardb.cargo.map.*;
@@ -19,6 +20,7 @@ import org.dspace.content.*;
 import org.dspace.core.*;
 import org.dspace.qsardb.rpc.gwt.*;
 import org.dspace.qsardb.service.*;
+import org.qsardb.cargo.ucum.UCUMCargo;
 
 public class QdbServiceServlet extends RemoteServiceServlet implements QdbService {
 
@@ -299,6 +301,35 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 		DescriptorColumn column = new DescriptorColumn();
 		column.setId(descriptor.getId());
 		column.setName(descriptor.getName());
+		column.setApplication(descriptor.getApplication());
+
+		//add units to column
+		boolean hasUnits = descriptor.hasCargo(UCUMCargo.class);
+		if (hasUnits) {
+			String units;
+			try {
+				units = descriptor.getCargo(UCUMCargo.class).loadString();
+			} catch (IOException ex) {
+				units = "";
+			}
+			column.setUnits(units);
+		}
+
+		//add local descriptor calculation soft column
+		boolean hasCargo = descriptor.hasCargo(BODOCargo.class);
+		if (hasCargo) {
+			String predictionApplication = "";
+
+			BODOCargo bodoCargo = descriptor.getCargo(BODOCargo.class);
+
+			List<Implementation> implementations = bodoCargo.loadBodoDescriptor().getImplementations();
+
+			if (implementations.size() > 0) {
+				predictionApplication = implementations.get(0).getTitle();
+			}
+			column.setPredictionApplication(predictionApplication);
+		}
+
 		column.setDescription(Strings.emptyToNull(descriptor.getDescription()));
 
 		Map<String, Object> values = truncateValues(loadValues(descriptor, keys));

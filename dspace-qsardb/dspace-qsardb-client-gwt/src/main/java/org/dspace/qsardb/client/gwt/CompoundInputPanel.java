@@ -5,7 +5,6 @@ import java.util.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.qsardb.rpc.gwt.*;
@@ -30,6 +29,10 @@ public class CompoundInputPanel extends Composite {
 
 		textBox = new TextBox();
 		textBox.setVisibleLength(60);
+		if (!calculable) {
+			textBox.setText("Descriptors in this model require proprietary software and can not be calculated");
+			textBox.getElement().setAttribute("style", "color:gray");
+		}
 		textBox.setEnabled(calculable);
 
 		panel.add(textBox);
@@ -71,8 +74,6 @@ public class CompoundInputPanel extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event){
-                                final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-                                predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
 				calculate(textBox.getText());
 			}
 		};
@@ -108,7 +109,7 @@ public class CompoundInputPanel extends Composite {
 
 			@Override
 			public void onSuccess(Method method, PredictorResponse response) {
-				fireEvent(new InputChangeEvent(response.getParameters()));
+				fireEvent(new InputChangeEvent(response));
 			}
 		});
 	}

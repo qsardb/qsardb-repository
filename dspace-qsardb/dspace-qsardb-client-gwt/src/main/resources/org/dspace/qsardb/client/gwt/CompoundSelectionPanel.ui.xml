@@ -17,9 +17,6 @@
       <g:SuggestBox ui:field='suggestBox'/>
     </div>
 
-    <div>
-      <g:Button ui:field='predictButton'>Predict</g:Button>
-    </div>
   </g:HTMLPanel>
 
 </ui:UiBinder>

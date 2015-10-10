@@ -19,6 +19,12 @@
       cursor: pointer;
       }
       
+      .label {
+      outline: none;
+      border: none;
+      padding: 2px;
+      }
+
       td {
       padding: 2px;
       }
@@ -37,6 +43,8 @@
     </g:HorizontalPanel>
 
     <g:FlowPanel ui:field='collapsiblePanel'>
+        <g:Label ui:field='modelSoftLabel' styleName='{style.label}'></g:Label>
+        <g:Label ui:field='predictionSoftLabel' styleName='{style.label}'></g:Label>
     </g:FlowPanel>
   </g:HTMLPanel>
 </ui:UiBinder>

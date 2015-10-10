@@ -3,6 +3,7 @@
  */
 package org.dspace.qsardb.service.http;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import net.sf.blueobelisk.BODODescriptor;
 import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
 import org.dspace.content.QdbUtil;
@@ -25,6 +27,9 @@ import org.dspace.qsardb.rpc.gwt.PredictorResponse;
 import org.dspace.qsardb.service.ItemUtil;
 import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
+import org.qsardb.cargo.bodo.BODOCargo;
+import org.qsardb.cargo.ucum.UCUMCargo;
+import org.qsardb.model.Descriptor;
 import org.qsardb.model.Model;
 import org.qsardb.model.Qdb;
 
@@ -36,6 +41,8 @@ public class PredictorResource {
 
 	@Context
 	UriInfo uriInfo;
+
+	private static final org.apache.log4j.Logger logg = org.apache.log4j.Logger.getLogger(PredictorResource.class);
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -67,7 +74,7 @@ public class PredictorResource {
 		}
 	}
 
-	protected Map<String, String> calculateDescriptors(String handle, Model model, String structure) throws Exception {
+	protected Map<Descriptor, String> calculateDescriptors(String handle, Model model, String structure) throws Exception {
 		return PredictorUtil.calculateDescriptors(model, structure);
 	}
 
@@ -79,16 +86,50 @@ public class PredictorResource {
 				if (model == null) {
 					throw new NotFoundException("Model not found");
 				}
+				PredictorResponse r = new PredictorResponse();
 				Map<String, String> params = getDescriptors(req, qdb);
+
 				String structure = getStructure(req, params);
 
+				logg.debug("structure: " + structure);
 				if (structure != null) {
-					params.putAll(calculateDescriptors(handle, model, structure));
+					Map<Descriptor, String> result = calculateDescriptors(handle, model, structure);
+					params = new LinkedHashMap<String, String>();  //to calc descs
+					for(Descriptor descriptor : result.keySet()) {
+
+						if(!descriptor.hasCargo(BODOCargo.class)){
+							continue;
+						}
+
+						BODODescriptor bodoDescriptor = descriptor.getCargo(BODOCargo.class).loadBodoDescriptor();
+
+						params.put(descriptor.getId(), result.get(descriptor));
+
+						if (bodoDescriptor.getImplementations().size() > 0) {
+							String app = bodoDescriptor.getImplementations().get(0).getTitle();
+							if (app.contains("org.openscience.cdk")) {
+								app = "CDK, version " + org.openscience.cdk.CDK.getVersion();
+							}
+
+							r.getImplementations().put(descriptor.getId(), app);
+
+						}
+					}
+					r.setParameters(params);
 				}
 
-				PredictorResponse r = new PredictorResponse();
-				r.setParameters(params);
-				r.setResult(PredictorUtil.evaluate(model, params));
+				String units = "";
+				boolean hasUnits = model.getProperty().hasCargo(UCUMCargo.class);
+				if (hasUnits) {
+					try {
+						units = model.getProperty().getCargo(UCUMCargo.class).loadString();
+					} catch (IOException ex) {
+						logg.debug("units, " + ex.getMessage());
+					}
+				}
+
+				r.setResultUnits(units);
+				r.setResult(PredictorUtil.evaluate(model, params));  
 				return r;
 			}
 		};
@@ -111,20 +152,20 @@ public class PredictorResource {
 		if (query == null) {
 			return null;
 		}
-		
+
 		for (Map.Entry<String, String> pe: params.entrySet()){
 			if (query.startsWith(pe.getKey())) {
 				return null;
 			}
 		}
-		
+
 		int ampersand = query.indexOf("&");
 		return ampersand != -1 ? query.substring(0, ampersand) : query;
 	}
-	
+
 	private Map<String, String> getDescriptors(PredictorRequest postRequest, Qdb qdb){
 		if (postRequest != null) {
-			return new LinkedHashMap<String, String>(postRequest.getParameters());
+			return postRequest.getParameters();
 		}
 
 		Map<String, String> descs = new LinkedHashMap<String, String>();
@@ -137,4 +178,5 @@ public class PredictorResource {
 		}
 		return descs;
 	}
+
 }

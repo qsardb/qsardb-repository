@@ -37,13 +37,14 @@ public class DescriptorInputComponent extends Composite {
 	@UiField(provided = true) DescriptorValueTextbox descriptorValue;
 	@UiField(provided = true) ToggleButton collapseButton;
 	@UiField(provided = true) FlowPanel collapsiblePanel;
+	@UiField(provided = true) Label modelSoftLabel;
+	@UiField(provided = true) Label predictionSoftLabel;
 	
 	private DescriptorValueSliderBarHorizontal slider;
 	private DescriptorColumn descriptor = null;
 	private MathContext context = null;
 	private BigDecimal value = null;
 	private boolean enableSlideEvents = false;
-
 	
 	private final PredictionColumn training;
 	private final Map<String, ?> trainingDescriptorValues;
@@ -53,14 +54,11 @@ public class DescriptorInputComponent extends Composite {
 	
 	private final HorizontalPanel expandFace;
 	private final HorizontalPanel collapseFace;
-
 	
 	private static final Binder binder = GWT.create(Binder.class);
 
-
 	interface Binder extends UiBinder<Widget, DescriptorInputComponent> {}
 	final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-	
 	
 	public DescriptorInputComponent(final PropertyColumn property, final DescriptorColumn descriptor, final PredictionColumn training) {
 		
@@ -83,9 +81,15 @@ public class DescriptorInputComponent extends Composite {
 		collapseFace.add(cl);
 		expandFace.add(ex);
 		
+		String descriptorUnits = descriptor.getUnits();
+		if (descriptorUnits != null && !descriptorUnits.trim().equals("")) {
+			descriptorUnits = " [" + descriptorUnits + "]";
+		} else {
+			descriptorUnits = "";
+		}
 		
-		Label expandLabel = new Label(descriptor.getId() + ": " + descriptor.getName());
-		Label collapseLabel = new Label(descriptor.getId() + ": " + descriptor.getName());
+		Label expandLabel = new Label(descriptor.getId() + ": " + descriptor.getName() + descriptorUnits);
+		Label collapseLabel = new Label(descriptor.getId() + ": " + descriptor.getName() + descriptorUnits);
 		
 		expandFace.add(expandLabel);
 		collapseFace.add(collapseLabel);
@@ -116,14 +120,23 @@ public class DescriptorInputComponent extends Composite {
 		descriptorValue.getElement().getStyle().setProperty("float", "right");
 		descriptorValue.setUserValue(value);
 		
-		
+		modelSoftLabel = new Label();
+		if ((descriptor.getApplication() == null || descriptor.getApplication().trim().equals(""))) {
+			modelSoftLabel.setText("Descriptor in original model calculated with <N/A>");
+		} else {
+			modelSoftLabel.setText("Descriptor in original model calculated with " + descriptor.getApplication());
+		}
+		predictionSoftLabel = new Label("Current prediction is made with mean value");
+
+		predictionSoftLabel.getElement().setAttribute("style", "white-space: normal;");
+		modelSoftLabel.getElement().setAttribute("style", "white-space: normal;");
+
 		collapsiblePanel = new FlowPanel();
 		initWidget(binder.createAndBindUi(this));
 		collapsiblePanel.setVisible(false);
-		
 	}
 	
-    
+
     	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
 		return addHandler(handler, InputChangeEvent.TYPE);
 	}
@@ -132,6 +145,9 @@ public class DescriptorInputComponent extends Composite {
 	private Widget createPanel() {
 		Panel panel = new FlowPanel();
 		
+		panel.add(modelSoftLabel);
+		panel.add(predictionSoftLabel);
+
 		xBounds = QdbPlot.bounds(trainingDescriptorValues);
 		
 		BigDecimal range = xBounds.getRange();
@@ -162,9 +178,8 @@ public class DescriptorInputComponent extends Composite {
 		sliderStyle.setMarginBottom(3, Style.Unit.PX);
 		
 		slider.setUserValue(value);
-		
+
 		HistogramPlot histogramPlot;
-		
 		
 		if(categories > 0){
 			Double min = Double.valueOf((xBounds.getMin()).intValue() - 0.5);
@@ -213,6 +228,7 @@ public class DescriptorInputComponent extends Composite {
 			fireDescriptorValueChangedEvent();
 		} finally {
 			enableSlideEvents = true;
+			predictionSoftLabel.setText("Current prediction is made with value entered by user");
 		}
 		
 	}
@@ -244,6 +260,8 @@ public class DescriptorInputComponent extends Composite {
 							descriptorValue.setUserValue(value);
 							predictor.getDataInputPanel().cleanCompoundData();
 							
+							predictionSoftLabel.setText("Current prediction is made with value entered by user");
+
 							//TODO: move inside slider, should handle this by itself
 							slider.normaliseMoreAndLess();
 							fireDescriptorValueChangedEvent();
@@ -348,6 +366,9 @@ public class DescriptorInputComponent extends Composite {
 		this.enableSlideEvents = enableSlideEvents;
 	}
 	
+	public DescriptorValueSliderBarHorizontal getSlider() {
+		return slider;
+	}
 	
 	
 	interface Images extends ClientBundle {
@@ -364,5 +385,4 @@ public class DescriptorInputComponent extends Composite {
 	}
 	
 	private static final Images images = com.google.gwt.core.client.GWT.create(Images.class);
-	
 }
