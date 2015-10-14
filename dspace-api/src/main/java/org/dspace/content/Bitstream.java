@@ -594,9 +594,9 @@ public class Bitstream extends DSpaceObject
     public GeneralFile getFile() throws IOException, SQLException, 
             AuthorizeException
     {
-        AuthorizeManager.authorizeAction(bContext, this, Constants.READ);
+        AuthorizeManager.authorizeAction(ourContext, this, Constants.READ);
 
-        return BitstreamStorageManager.getFile(bContext, bRow
+        return BitstreamStorageManager.getFile(ourContext, bRow
                 .getIntColumn("bitstream_id"));
     }
 

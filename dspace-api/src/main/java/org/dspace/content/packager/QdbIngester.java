@@ -11,6 +11,7 @@ import org.dspace.authorize.*;
 import org.dspace.content.*;
 import org.dspace.content.Collection;
 import org.dspace.content.QdbUtil;
+import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.core.*;
 import org.dspace.event.*;
 
@@ -52,7 +53,7 @@ public class QdbIngester implements PackageIngester {
 	}
 
 	@Override
-	public List<DSpaceObject> ingestAll(Context context, DSpaceObject parent, File file, PackageParameters parameters, String license){
+	public List<String> ingestAll(Context context, DSpaceObject parent, File file, PackageParameters parameters, String license){
 		throw new UnsupportedOperationException();
 	}
 
@@ -79,7 +80,7 @@ public class QdbIngester implements PackageIngester {
 	}
 
 	@Override
-	public List<DSpaceObject> replaceAll(Context context, DSpaceObject object, File file, PackageParameters parameters){
+	public List<String> replaceAll(Context context, DSpaceObject object, File file, PackageParameters parameters){
 		throw new UnsupportedOperationException();
 	}
 
@@ -117,4 +118,5 @@ public class QdbIngester implements PackageIngester {
 			throw new PackageException(qe);
 		}
 	}
+
 }

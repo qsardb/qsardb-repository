@@ -31,9 +31,9 @@ public class BibTeXUtil {
 	static
 	public Key getType(Item item){
 
-		DCValue[] entries = item.getMetadata("bibtex", "entry", null, Item.ANY);
+		Metadatum[] entries = item.getMetadata("bibtex", "entry", null, Item.ANY);
 		if(entries.length == 1){
-			DCValue entry = entries[0];
+			Metadatum entry = entries[0];
 
 			return new Key(entry.value);
 		}
@@ -45,8 +45,8 @@ public class BibTeXUtil {
 	public Map<Key, Value> getFields(Item item){
 		KeyMap<Value> result = new KeyMap<Value>();
 
-		DCValue[] entries = item.getMetadata("bibtex", "entry", Item.ANY, Item.ANY);
-		for(DCValue entry : entries){
+		Metadatum[] entries = item.getMetadata("bibtex", "entry", Item.ANY, Item.ANY);
+		for(Metadatum entry : entries){
 
 			// XXX
 			if(entry.qualifier == null || entry.value == null){

@@ -316,7 +316,7 @@ public class QdbUtil {
 
 	static
 	private void collectDcMetadata(Item item, Qdb qdb){
-		DCValue[] issued = item.getDC("date", "issued", Item.ANY);
+		Metadatum[] issued = item.getDC("date", "issued", Item.ANY);
 		if (issued.length == 0) {
 			item.addMetadata("dc", "date", "issued", null, "today");
 		}
