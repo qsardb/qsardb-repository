@@ -700,6 +700,9 @@ ul.ds-artifact-list li div.artifact-preview {
 }
 
 
+div.license-info {
+	margin-top: 0.6em;
+}
 
 /* The composite field voodoo */
 span.ds-composite-field {

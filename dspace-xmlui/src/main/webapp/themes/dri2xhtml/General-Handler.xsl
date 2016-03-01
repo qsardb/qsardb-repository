@@ -24,7 +24,8 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:jstring="java.lang.String"
     xmlns:rights="http://cosimo.stanford.edu/sdr/metsrights/"
-    exclude-result-prefixes="i18n dri mets xlink xsl jstring rights">
+    xmlns:dim="http://www.dspace.org/xmlns/dspace/dim"
+    exclude-result-prefixes="i18n dri mets xlink xsl jstring rights dim">
     
     <xsl:output indent="yes"/>
     
@@ -267,15 +268,28 @@
     <!-- Generate the license information from the file section -->
     <xsl:template match="mets:fileGrp[@USE='CC-LICENSE' or @USE='LICENSE']">
         <div class="license-info">
-            <p><i18n:text>xmlui.dri2xhtml.METS-1.0.license-text</i18n:text></p>
-            <ul>
-                <xsl:if test="@USE='CC-LICENSE'">
-                    <li><a href="{mets:file/mets:FLocat[@xlink:title='license_text']/@xlink:href}"><i18n:text>xmlui.dri2xhtml.structural.link_cc</i18n:text></a></li>
-                </xsl:if>
-                <xsl:if test="@USE='LICENSE'">
+            <xsl:variable name="license_uri" select="string(//dim:field[@element='rights' and @qualifier='uri'])"/>
+            <xsl:if test="@USE='CC-LICENSE' and $license_uri">
+                <xsl:variable name="license_logo" select="jstring:replaceAll($license_uri, 'http://creativecommons.org/(licenses|publicdomain)/', 'cc-')"/>
+                <xsl:variable name="license_logo" select="jstring:replaceAll($license_logo, '/.*', '.png')"/>
+                <xsl:variable name="license_logo" select="jstring:replaceAll($license_logo, '^[^c][^c][^-].*$', 'cc-generic.png')"/>
+                <xsl:variable name="license_logo" select="concat(jstring:replaceAll($theme-path, 'Reference', 'Mirage'), '/images/creativecommons/', $license_logo)"/>
+                <img style="float:left; margin-right: 0.7em;">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$license_logo"/>
+                    </xsl:attribute>
+                </img>
+                <div>
+                    Files associated with this item are distributed<br/>
+                    under Creative Commons <a href="{$license_uri}">license</a>.
+                </div>
+            </xsl:if>
+            <xsl:if test="@USE='LICENSE'">
+                <p><i18n:text>xmlui.dri2xhtml.METS-1.0.license-text</i18n:text></p>
+                <ul>
                     <li><a href="{mets:file/mets:FLocat[@xlink:title='license.txt']/@xlink:href}"><i18n:text>xmlui.dri2xhtml.structural.link_original_license</i18n:text></a></li>
-                </xsl:if>
-            </ul>
+                </ul>
+            </xsl:if>
         </div>
     </xsl:template>
     
