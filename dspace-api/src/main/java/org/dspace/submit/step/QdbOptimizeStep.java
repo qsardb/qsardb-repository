@@ -24,10 +24,6 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 	@Override
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, SQLException, IOException {
 
-		if(SubmissionUtil.isComplete(this, submissionInfo)){
-			return STATUS_COMPLETE;
-		}
-
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
 		File tempFile = ItemMessageCollector.getFile(item);

@@ -190,9 +190,6 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
-			<processing-class>org.dspace.submit.step.QdbOptimizeStep</processing-class>
-		</step>
-		<step>
 			<processing-class>org.dspace.submit.step.QdbCrosswalkStep</processing-class>
 		</step>
 		<step>
@@ -202,13 +199,16 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
-			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
-		</step>
-		<step>
 			<heading>submit.progressbar.CClicense</heading>
 			<processing-class>org.dspace.submit.step.CCLicenseStep</processing-class>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.CCLicenseStep</xmlui-binding>
 			<workflow-editable>false</workflow-editable>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
+		</step>
+		<step>
+			<processing-class>org.dspace.submit.step.QdbOptimizeStep</processing-class>
 		</step>
 	</submission-process>
 
