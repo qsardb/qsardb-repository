@@ -306,6 +306,8 @@
 	<message key="xmlui.ArtifactBrowser.ItemViewer.property_models_summary">{0} Model(s) with {1} Prediction(s)</message>
 	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
 
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_bibliography">Bibliography</message>
+
 	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
 	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>
 	<message key="xmlui.ArtifactBrowser.QdbExplorer.handle_trail">{0} - QDB Explorer</message>
@@ -980,13 +982,13 @@
 	<!-- org.dspace.app.xmlui.Submission.submit.CCLicenseStep -->
         <message key="xmlui.Submission.submit.CCLicenseStep.ccws_error">An error occurred ... {0}</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.head">License Your Work</message>
-        <message key="xmlui.Submission.submit.CCLicenseStep.info1">If you wish, you may add a <a href="http://creativecommons.org/">Creative Commons</a> License to your item. <strong>Creative Commons licenses govern what people who read your work may then do with it.</strong></message>
+		<message key="xmlui.Submission.submit.CCLicenseStep.info1"><p>If you wish, you may add a <a href="http://creativecommons.org/">Creative Commons</a> license to your item. <strong>Creative Commons licenses govern what people who read your work may then do with it.</strong></p><p>The following licenses are encouraged for making your scientific contribution easly reusable and citable:</p><ul><li>Public domain (<a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li><li>Creative Commons Attribution (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a>)</li><li>Creative Commons Attribution-ShareAlike (<a href="https://creativecommons.org/licenses/by-sa/4.0/">BY-SA</a>)</li></ul><p>All other Creative Commons options are also available, but they expose restrictions that make your data unfit to <a href="http://opendefinition.org/">Open Data</a> concept.</p></message>
         <message key="xmlui.Submission.submit.CCLicenseStep.submit_choose_creative_commons">Choose a license</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.submit_to_creative_commons">Proceed to Creative Commons website to select a license</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.license">License Type</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.select_change">Select or modify your license ...</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.no_license">No Creative Commons License</message>
-        <message key="xmlui.Submission.submit.CCLicenseStep.save_changes">You must click Next to save your changes.</message>
+        <message key="xmlui.Submission.submit.CCLicenseStep.save_changes">You must click "Complete submission" to finish your submission.</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.LicenseStep -->
 	<message key="xmlui.Submission.submit.LicenseStep.head">Distribution License</message>

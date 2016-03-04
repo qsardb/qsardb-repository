@@ -701,7 +701,7 @@ ul.ds-artifact-list li div.artifact-preview {
 
 
 div.license-info {
-	margin-top: 0.6em;
+	margin: 0.6em 0;
 }
 
 /* The composite field voodoo */

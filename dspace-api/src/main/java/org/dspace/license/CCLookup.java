@@ -228,6 +228,16 @@ public class CCLookup {
 					String id = ((Attribute)xp_LicenseID.selectSingleNode(enumOptions.get(j))).getValue();
 					String label =((Element)xp_Label.selectSingleNode(enumOptions.get(j))).getText();
 
+					if (cclicensefield.getId().equals("commercial") && id.equals("y")) {
+						label = label + "  (is the recommended option)";
+					} else if (cclicensefield.getId().equals("derivatives")) {
+						if (id.equals("y")) {
+							label = label + "  (is the recommended option)";
+						} else if (id.equals("sa")) {
+							label = label + "  (is fine)";
+						}
+					}
+
 					cclicensefield.getEnum().put( id, label);
 
 				} // for each enum option
