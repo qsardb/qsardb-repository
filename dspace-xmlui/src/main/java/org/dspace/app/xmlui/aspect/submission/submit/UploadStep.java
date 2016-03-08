@@ -74,6 +74,8 @@ public class UploadStep extends AbstractSubmissionStep
             message("xmlui.Submission.submit.UploadStep.file_help");
     protected static final Message T_file_error =
             message("xmlui.Submission.submit.UploadStep.file_error");
+    protected static final Message T_multiple_qdb_error =
+            message("xmlui.Submission.submit.UploadStep.multiple_qdb_error");
     protected static final Message T_upload_error =
             message("xmlui.Submission.submit.UploadStep.upload_error");
 
@@ -223,6 +225,12 @@ public class UploadStep extends AbstractSubmissionStep
             if (this.errorFlag==org.dspace.submit.step.UploadStep.STATUS_NO_FILES_ERROR)
             {
                 file.addError(T_file_error);
+            }
+
+            // if uploading of multiple QDB files was attempted
+            if (this.errorFlag == org.dspace.submit.step.UploadStep.STATUS_MULTIPLE_QDB_FILES)
+            {
+                file.addError(T_multiple_qdb_error);
             }
 
             // if an upload error was thrown by processing class, display it!
