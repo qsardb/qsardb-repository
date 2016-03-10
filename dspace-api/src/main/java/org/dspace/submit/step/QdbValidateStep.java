@@ -1,5 +1,6 @@
 package org.dspace.submit.step;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.http.*;
@@ -36,14 +37,20 @@ public class QdbValidateStep extends AbstractProcessingStep {
 		}
 	}
 
-	static
-	public int getStatus(ItemMessageCollector collector){
+	public static int getStatus(ItemMessageCollector collector){
 
 		if(collector.hasErrors()){
 			return STATUS_VALIDATION_ERROR;
 		}
 
 		return STATUS_COMPLETE;
+	}
+
+	public static void cleanup(Item item) {
+		File tempFile = ItemMessageCollector.getFile(item);
+		if(tempFile.isFile()){
+			tempFile.delete();
+		}
 	}
 
 	public static final int STATUS_QDB_ERROR = 1;

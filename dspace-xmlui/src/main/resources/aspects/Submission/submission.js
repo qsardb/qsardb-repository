@@ -404,6 +404,16 @@ function submissionControl(collectionHandle, workspaceID, initStepAndPage)
 	            }//end if submit_jump pressed
 	        }//end while more elements
         }//end if no errors
+
+		// Allow moving back to UploadPanel from QdbValidateStep in case there
+		// are validation errors by clicking the back button or the "Upload" button 
+		// at the progress bar 
+		if (step == 2 && response_flag!=AbstractProcessingStep.STATUS_COMPLETE && (cocoon.request.get("submit_jump_1.1") || cocoon.request.get(AbstractProcessingStep.PREVIOUS_BUTTON)))
+		{
+			state.stepAndPage = stepsInSubmission[0];
+			state.progressIterator = 0;
+			response_flag = 0; // reset the status code from QdbValidateStep before moving back
+		}
     } while ( 1 == 1)
 
 }

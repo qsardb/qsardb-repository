@@ -26,10 +26,7 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
-		File tempFile = ItemMessageCollector.getFile(item);
-		if(tempFile.isFile()){
-			tempFile.delete();
-		}
+		QdbValidateStep.cleanup(item);
 
 		Bitstream original = QdbUtil.getOriginalBitstream(context, item);
 

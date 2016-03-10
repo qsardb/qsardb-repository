@@ -407,6 +407,11 @@ public class UploadStep extends AbstractProcessingStep
         // delete bundle if it's now empty
         Bundle[] bundles = bitstream.getBundles();
 
+        // cleanup from QdbValidateStep if user tries to replace the QDB file
+        if ("QsarDB".equals(bitstream.getFormat().getShortDescription())) {
+            QdbValidateStep.cleanup(item);
+        }
+
         bundles[0].removeBitstream(bitstream);
 
         Bitstream[] bitstreams = bundles[0].getBitstreams();
