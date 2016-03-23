@@ -30,6 +30,15 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 
 		Bitstream original = QdbUtil.getOriginalBitstream(context, item);
 
+		try {
+			Bitstream internal = QdbUtil.getInternalBitstream(context, item);
+			if (original.getFile().lastModified() < internal.getFile().lastModified()) {
+				return STATUS_COMPLETE;
+			}
+		} catch (QdbConfigurationException e) {
+			// INTERNAL bitstream is missing and will be generated
+		}
+
 		File file = QdbUtil.loadFile(original);
 
 		try {
