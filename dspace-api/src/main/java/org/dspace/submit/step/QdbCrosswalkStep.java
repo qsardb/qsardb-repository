@@ -24,12 +24,13 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 	@Override
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, IOException, SQLException {
 
-		if(SubmissionUtil.isComplete(this, submissionInfo)){
-			return STATUS_COMPLETE;
-		}
 
 		final
 		Item item = submissionInfo.getSubmissionItem().getItem();
+
+		if (isComplete(item)) {
+			return STATUS_COMPLETE;
+		}
 
 		QdbCallable<Object> callable = new QdbCallable<Object>(){
 
@@ -54,5 +55,11 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 		context.commit();
 
 		return STATUS_COMPLETE;
+	}
+
+	private boolean isComplete(Item item){
+		Metadatum[] bibtex = item.getMetadata("bibtex", "entry", Item.ANY, Item.ANY);
+		Metadatum[] qdb = item.getMetadata("qdb", Item.ANY, Item.ANY, Item.ANY);
+		return bibtex.length > 0 || qdb.length > 0;
 	}
 }
