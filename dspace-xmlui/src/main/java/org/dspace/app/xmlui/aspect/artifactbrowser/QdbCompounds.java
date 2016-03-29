@@ -303,7 +303,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("http://cactus.nci.nih.gov/chemical/structure/");
+		sb.append("https://cactus.nci.nih.gov/chemical/structure/");
 		sb.append(structure.replace("#", "%23").replace("?", "%3f"));
 		sb.append("/image").append("?format=png&crop=2&bgcolor=transparent");
 		return sb.toString();

@@ -37,7 +37,7 @@ public class Resolver {
 	public String resolveURL(Map<String, String> values) {
 		String structure = values.get(resolveMethod(values));
 		StringBuilder sb = new StringBuilder();
-		sb.append("http://cactus.nci.nih.gov/chemical/structure/");
+		sb.append("https://cactus.nci.nih.gov/chemical/structure/");
 		sb.append(structure.replace("#", "%23").replace("?", "%3f"));
 		sb.append("/image").append("?format=png");
 
