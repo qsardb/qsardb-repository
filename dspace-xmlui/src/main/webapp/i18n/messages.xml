@@ -171,7 +171,8 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.column_heading">Title</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.subject.column_heading">Subject</message>
 
-	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_endpoint.column_heading">Endpoint</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.journal.column_heading">Journals</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_endpoint.column_heading">Endpoints</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_species.column_heading">Species</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.descriptor_application.column_heading">Descriptor calculation software</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.prediction_application.column_heading">Modeling software</message>
@@ -185,6 +186,9 @@
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.subject">Browsing {0} by Subject {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.subject">Browsing {0} by Subject</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.journal">Browsing {0} by Journal {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.journal">Browsing {0} by Journal</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_endpoint">Browsing {0} by Endpoint {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_endpoint">Browsing {0} by Endpoint</message>
@@ -327,6 +331,7 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_subject">Subjects</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateissued">By Issue Date</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateaccessioned">By Submit Date</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_journal">Journals</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_endpoint">Endpoints</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_species">Species</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_descriptor_application">Descriptor calculation software</message>
