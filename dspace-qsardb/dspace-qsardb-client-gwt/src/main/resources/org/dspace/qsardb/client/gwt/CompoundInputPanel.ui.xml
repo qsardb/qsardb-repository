@@ -10,6 +10,7 @@
 
     <div>
       <g:TextBox ui:field='textBox' visibleLength="60"/>
+      <g:Button ui:field='drawButton'>Draw</g:Button>
     </div>
 	<div>
       <g:Button ui:field='calculateButton'>Calculate</g:Button>

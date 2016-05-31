@@ -22,8 +22,11 @@ public class QdbPredictor extends ApplicationTransformer {
 	public void addPageMeta(PageMeta pageMeta) throws SQLException, WingException {
 		super.addPageMeta(pageMeta);
 
-		Metadata script = pageMeta.addMetadata("javascript", "static");
-		script.addContent("static/org.dspace.qsardb.client.Predictor/org.dspace.qsardb.client.Predictor.nocache.js");
+		Metadata jsmeScript = pageMeta.addMetadata("javascript", "static");
+		jsmeScript.addContent("static/jsme/jsme.nocache.js");
+
+		Metadata predictorScript = pageMeta.addMetadata("javascript", "static");
+		predictorScript.addContent("static/org.dspace.qsardb.client.Predictor/org.dspace.qsardb.client.Predictor.nocache.js");
 	}
 
 	private static final Message T_trail = message("xmlui.ArtifactBrowser.QdbPredictor.trail");

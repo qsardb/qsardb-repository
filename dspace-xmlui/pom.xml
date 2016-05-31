@@ -37,7 +37,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<tasks>
+					<target>
 						<copy
 							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Explorer"
 						>
@@ -52,7 +52,24 @@
 								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Predictor"
 							/>
 						</copy>
-					</tasks>
+
+						<get
+							src="http://peter-ertl.com/jsme/download/JSME_2016-07-31.zip"
+							dest="${basedir}/target/JSME.zip"
+							skipexisting="true"
+							/>
+						<unzip
+							src="${basedir}/target/JSME.zip"
+							dest="${basedir}/target/${pom.artifactId}-${pom.version}/static"
+							>
+							<patternset>
+								<include name="*/jsme/"/>
+							</patternset>
+							<mapper>
+								<cutdirsmapper dirs="1" />
+							</mapper>
+						</unzip>
+					</target>
 				</configuration>
 			</plugin>
             <plugin>

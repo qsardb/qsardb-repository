@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui' >
+
+  <ui:style>
+    .buttonbar { float: right; }
+
+    @external .gwt-DialogBox;
+    .gwt-DialogBox table { border: none; }
+    .gwt-DialogBox td { padding: 0; }
+    .gwt-DialogBox { text-align: left; }
+  </ui:style>
+
+  <g:DialogBox ui:field='dialogBox' glassEnabled='true' modal='false'>
+    <g:caption>
+      <b>Draw structure</b>
+    </g:caption>
+    <g:HTMLPanel>
+      <div id="jsmeContainer">
+      </div>
+      <div class='{style.buttonbar}'>
+        <g:Button ui:field='cancelButton'>Cancel</g:Button>
+        <g:Button ui:field='okButton'>OK</g:Button>
+      </div>
+    </g:HTMLPanel>
+  </g:DialogBox>
+</ui:UiBinder>

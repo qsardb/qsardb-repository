@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -18,9 +19,12 @@ import org.fusesource.restygwt.client.MethodCallback;
 public class CompoundInputPanel extends Composite {
 	interface Binder extends UiBinder<Widget, CompoundInputPanel> {}
 	private final static Binder binder = GWT.create(Binder.class);
-    
+
 	@UiField TextBox textBox;
+	@UiField Button drawButton;
 	@UiField Button calculateButton;
+
+	private DrawStructureDialog drawDialog;
 
 	public CompoundInputPanel(QdbTable table){
 		Widget panel = binder.createAndBindUi(this);
@@ -36,6 +40,8 @@ public class CompoundInputPanel extends Composite {
 			textBox.getElement().setAttribute("style", "color:gray");
 		}
 		textBox.setEnabled(calculable);
+
+		drawButton.setEnabled(calculable);
 
 		calculateButton.setEnabled(false);
 
@@ -62,8 +68,21 @@ public class CompoundInputPanel extends Composite {
 		calculateButton.setEnabled(!textBox.getValue().isEmpty());
 	}
 
+	@UiHandler("textBox")
+	public void handleValueChangeEvent(ValueChangeEvent<String> event) {
+		calculateButton.setEnabled(!textBox.getValue().isEmpty());
+	}
+
+	@UiHandler("drawButton")
+	public void handleEditButton(ClickEvent event) {
+		if (drawDialog == null) {
+			drawDialog = new DrawStructureDialog();
+		}
+		drawDialog.showEditor(textBox);
+	}
+
 	@UiHandler("calculateButton")
-	public void handleClick(ClickEvent event) {
+	public void handleCalculateButton(ClickEvent event) {
 		calculate();
 	}
 
