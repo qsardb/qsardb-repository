@@ -253,10 +253,12 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		if (p.hasCargo(ReferencesCargo.class)) {
 			ReferencesCargo cargo = p.getCargo(ReferencesCargo.class);
 			Map<String, String> references = cargo.loadReferences();
-			referenceKey = new Key(references.get(cid));
+			if (references.containsKey(cid)) {
+				referenceKey = new Key(references.get(cid));
+			}
 		}
 
-		if (p.hasCargo(BibTeXCargo.class)) {
+		if (referenceKey != null && p.hasCargo(BibTeXCargo.class)) {
 			BibTeXCargo cargo = p.getCargo(BibTeXCargo.class);
 			Map<Key, BibTeXEntry> entries = cargo.loadBibTeX().getEntries();
 			ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());

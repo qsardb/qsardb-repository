@@ -1586,3 +1586,7 @@ div.vocabulary-container li.error{
 	overflow: auto;
 	margin-bottom: 6px;
 }
+
+#aspect_artifactbrowser_QdbCompounds_table_property-table td.ds-table-cell.odd {
+	width: 4em;
+}
