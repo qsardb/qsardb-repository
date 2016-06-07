@@ -15,6 +15,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
+import java.util.LinkedHashMap;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
@@ -94,6 +95,13 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				Property property = qdb.getProperty(propId);
 				Map<String, String> pvals = QdbParameterUtil.loadStringValues(property);
 
+				Map<String, String> references = new LinkedHashMap<String, String>();
+				if (property != null && property.hasCargo(ReferencesCargo.class)) {
+					ReferencesCargo cargo = property.getCargo(ReferencesCargo.class);
+					references = cargo.loadReferences();
+				}
+				Map<String, String> referenceNumbers = new LinkedHashMap<String, String>();
+
 				ArrayList<String> cidList = new ArrayList<String>();
 				for (Compound c: qdb.getCompoundRegistry()) {
 					if (!pvals.isEmpty() && !pvals.containsKey(c.getId())) {
@@ -114,6 +122,9 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 
 				int nrows = cidList.size()+1;
 				int ncols = pvals.isEmpty() ? 3 : 4;
+				if (!references.isEmpty()) {
+					ncols++;
+				}
 				Table table = div.addTable("compounds", nrows, ncols);
 
 				Row header = table.addRow(Row.ROLE_HEADER);
@@ -121,6 +132,9 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				header.addCell().addContent("Name");
 				if (!pvals.isEmpty()) {
 					header.addCell(null, Cell.ROLE_HEADER, "short").addContent(propId);
+				}
+				if (!references.isEmpty()) {
+					header.addCell(null, Cell.ROLE_HEADER, "short").addContent("Ref");
 				}
 				header.addCell(null, Cell.ROLE_HEADER, "short").addContent("Details");
 				for (String cid: cidList) {
@@ -131,6 +145,9 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					if (!pvals.isEmpty()) {
 						row.addCell().addContent(pvals.get(c.getId()));
 					}
+					if (!references.isEmpty()) {
+						row.addCell().addContent(fmtReference(references.get(cid), referenceNumbers));
+					}
 					row.addCell().addXref("?id="+c.getId(), "View");
 				}
 
@@ -139,12 +156,22 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					BibTeXDatabase db = cargo.loadBibTeX();
 					Division biblio = div.addDivision("bibliography");
 					biblio.setHead("Bibliography");
-					List bibList = biblio.addList("bib-list", List.TYPE_BULLETED);
+					List bibList = biblio.addList("bib-list", List.TYPE_ORDERED);
 					ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
-					for (Map.Entry<Key, BibTeXEntry> e: db.getEntries().entrySet()) {
+
+					Map<Key, BibTeXEntry> entries = new LinkedHashMap(db.getEntries());
+					int n = 1;
+					for (String k: referenceNumbers.keySet()) {
+						BibTeXEntry e = entries.remove(new Key(k));
+						String reference = formatter.format(e, true, true);
+						bibList.addItem().addHtmlContent(reference);
+					}
+
+					for (Map.Entry<Key, BibTeXEntry> e: entries.entrySet()) {
 						String reference = formatter.format(e.getValue(), true, true);
 						bibList.addItem().addHtmlContent(reference);
 					}
+
 				}
 				return "";
 			}
@@ -154,6 +181,18 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		} catch (Exception ex) {
 			throw new ProcessingException(ex.getMessage(), ex);
 		}
+	}
+
+	private String fmtReference(String ref, Map<String, String> refs) {
+		if (ref != null) {
+			if (refs.containsKey(ref)) {
+				return refs.get(ref);
+			} else {
+				refs.put(ref, "[" + (refs.size()+1) + "]");
+				return refs.get(ref);
+			}
+		}
+		return "";
 	}
 
 	public String process(Item item, final String compoundId, final Division div) throws WingException, ProcessingException {
