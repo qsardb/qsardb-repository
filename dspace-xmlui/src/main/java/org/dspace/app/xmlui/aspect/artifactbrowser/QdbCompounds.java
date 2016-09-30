@@ -141,7 +141,9 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					Compound c = qdb.getCompound(cid);
 					Row row = table.addRow();
 					row.addCell().addContent(c.getId());
-					row.addCell().addContent(c.getName());
+					Cell nameCell = row.addCell();
+					nameCell.addContent(c.getName());
+					QdbFormat.descriptionAttribute(c, nameCell);
 					if (!pvals.isEmpty()) {
 						row.addCell().addContent(pvals.get(c.getId()));
 					}
