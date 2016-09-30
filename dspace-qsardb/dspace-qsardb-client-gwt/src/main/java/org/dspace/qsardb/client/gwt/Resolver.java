@@ -17,6 +17,7 @@ public class Resolver {
 		Map<String, String> result = new LinkedHashMap<String, String>();
 		result.put(ID, key);
 		result.put(NAME, getName(key));
+		result.put(DESCRIPTION, getDescription(key));
 		result.put(LABELS, getLabels(key));
 		result.put(CAS, getCas(key));
 		result.put(INCHI, getInChI(key));
@@ -50,6 +51,10 @@ public class Resolver {
 
 	public String getName(String key){
 		return getValue(NameColumn.class, key);
+	}
+
+	public String getDescription(String key){
+		return getValue(DescriptionColumn.class, key);
 	}
 
 	public String getCas(String key){
@@ -89,6 +94,8 @@ public class Resolver {
 	public static final String ID = "Id";
 
 	public static final String NAME = "Name";
+
+	public static final String DESCRIPTION = "Description";
 
 	public static final String LABELS = "Labels";
 

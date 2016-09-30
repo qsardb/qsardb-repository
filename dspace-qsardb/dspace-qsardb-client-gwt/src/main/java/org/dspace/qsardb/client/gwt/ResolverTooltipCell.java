@@ -6,10 +6,12 @@ import com.google.gwt.text.shared.*;
 
 public class ResolverTooltipCell extends TooltipCell<String> {
 
-	private ResolverTooltip tooltip = null;
+	private final Resolver resolver;
+	private final ResolverTooltip tooltip;
 
 
 	public ResolverTooltipCell(Resolver resolver){
+		this.resolver = resolver;
 		this.tooltip = new ResolverTooltip(resolver);
 	}
 
@@ -18,6 +20,11 @@ public class ResolverTooltipCell extends TooltipCell<String> {
 
 		if(value != null){
 			ResolverTooltipCell.renderer.render(value, sb);
+		}
+		Compound compound = (Compound)context.getKey();
+
+		if (resolver.getDescription(compound.getId()) != null) {
+			sb.appendHtmlConstant("<span class=\"info-label\">i</span>");
 		}
 	}
 

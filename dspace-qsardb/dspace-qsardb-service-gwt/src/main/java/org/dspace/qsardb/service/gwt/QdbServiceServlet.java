@@ -183,6 +183,14 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 			}
 		};
 
+		AttributeCollector descriptionValues = new AttributeCollector(){
+
+			@Override
+			public String collect(Compound compound){
+				return Strings.emptyToNull(compound.getDescription());
+			}
+		};
+
 		AttributeCollector labelsValues = new AttributeCollector(){
 
 			@Override
@@ -213,6 +221,7 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 
 			idValues.add(compound);
 			nameValues.add(compound);
+			descriptionValues.add(compound);
 			labelsValues.add(compound);
 			casValues.add(compound);
 			inChIValues.add(compound);
@@ -233,6 +242,13 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 
 			columns.add(column);
 		} // End if
+
+		if(descriptionValues.size() > 0) {
+			DescriptionColumn column = new DescriptionColumn();
+			descriptionValues.init(column);
+
+			columns.add(column);
+		}
 
 		if (labelsValues.size() > 0) {
 			LabelsColumn column = new LabelsColumn();
