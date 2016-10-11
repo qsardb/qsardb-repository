@@ -2,6 +2,7 @@ package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -10,6 +11,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -70,6 +72,26 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 			dialog.addEventHandler(this);
 		}
 		dialog.showRelativeTo(browseButton);
+	}
+
+	@UiHandler("suggestBox")
+	void handleSuggestBox(SelectionEvent<SuggestOracle.Suggestion> evt) {
+		String suggestion = evt.getSelectedItem().getReplacementString();
+		String cid = null;
+		if (names.containsKey(suggestion)) {
+			cid = suggestion;
+		}
+		if (cid == null) {
+			for (Map.Entry<String, String> e: names.entrySet()) {
+				if (e.getValue().equals(suggestion)) {
+					cid = e.getKey();
+					break;
+				}
+			}
+		}
+		if (cid != null) {
+			updateSelection(cid);
+		}
 	}
 	
 	@Override
