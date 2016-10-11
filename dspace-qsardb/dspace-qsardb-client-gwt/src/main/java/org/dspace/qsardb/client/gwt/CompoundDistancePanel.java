@@ -9,11 +9,11 @@ import org.dspace.qsardb.rpc.gwt.*;
 public class CompoundDistancePanel extends Composite implements EvaluationEventHandler {
 	private final ModelTable table;
 	private final CompoundDistances distances;
-	private final VerticalPanel panel;
+	private final FlowPanel panel;
 
 	CompoundDistancePanel(ModelTable table) {
 		this.table = table;
-		this.panel = new VerticalPanel();
+		this.panel = new FlowPanel();
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		Set<String> compIds = property.getValues().keySet();
 		this.distances = new CompoundDistances(table, compIds);
@@ -33,6 +33,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 		final FlexTable flexTable = new FlexTable();
 		flexTable.setStylePrimaryName("distances");
 
+		DescriptionColumn description = table.getColumn(DescriptionColumn.class);
 		LabelsColumn labels = table.getColumn(LabelsColumn.class);
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
@@ -53,7 +54,12 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 					}
 				}
 			});
-			flexTable.getFlexCellFormatter().setRowSpan(row, 0, 5);
+
+			int spanRows = 4;
+			spanRows += hasAttribute(description, compId) ? 1 : 0;
+			spanRows += hasAttribute(labels, compId) ? 1 : 0;
+
+			flexTable.getFlexCellFormatter().setRowSpan(row, 0, spanRows);
 			flexTable.getRowFormatter().addStyleName(row, "start");
 
 			flexTable.setText(row, 1, "Id:");
@@ -79,15 +85,28 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 				if (p.getValues().containsKey(compId)) {
 					flexTable.setText(row+2, 3, fmtParameter(p,compId));
 					flexTable.setText(row+3, 1, p.getId());
+					break;
 				}
 			}
 
-			flexTable.setText(row+4, 0, "Labels:");
-			flexTable.setText(row+4, 1, labels.getValue(compId));
+			spanRows = 4;
+			if (hasAttribute(description, compId)) {
+				flexTable.setText(row+spanRows, 0, "Description:");
+				flexTable.setText(row+spanRows, 1, description.getValue(compId));
+				flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 1, 3);
+				spanRows++;
+			}
 
-			flexTable.getRowFormatter().addStyleName(row+4, "end");
-			flexTable.setHTML(row+5, 0, "<hr>");
-			flexTable.getFlexCellFormatter().setColSpan(row+5, 0, 5);
+			if (hasAttribute(labels, compId)) {
+				flexTable.setText(row+spanRows, 0, "Labels:");
+				flexTable.setText(row+spanRows, 1, labels.getValue(compId));
+				flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 1, 3);
+				spanRows++;
+			}
+
+			flexTable.getRowFormatter().addStyleName(row+5, "end");
+			flexTable.setHTML(row+spanRows, 0, "<hr>");
+			flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 0, 5);
 		}
 
 		panel.add(flexTable);
@@ -98,4 +117,11 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 		return v != null ? v.toString() : "N/A";
 	}
 
+	private boolean hasAttribute(AttributeColumn col, String key) {
+		if (col != null) {
+			String v = col.getValue(key);
+			return v == null ? false : !v.isEmpty();
+		}
+		return false;
+	}
 }
