@@ -22,7 +22,6 @@ import org.dspace.qsardb.rpc.gwt.QdbTable;
 class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Handler {
 
 	private final QdbTable table;
-	private final Map<String, String> names;
 	private CompoundBrowseDialog dialog;
 
 	interface Binder extends UiBinder<Widget, CompoundSelectionPanel> {}
@@ -36,15 +35,16 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 	
 	CompoundSelectionPanel(QdbTable table) {
 		this.table = table;
-		this.names = table.getColumn(NameColumn.class).getValues();
 		initWidget(createUI());
 	}
 
 	private Widget createUI() {
 		MultiWordSuggestOracle compoundOracle = new MultiWordSuggestOracle(" ,.-()[]");
-		compoundOracle.addAll(names.values());
-		compoundOracle.addAll(names.keySet());
-                
+		Map<String, String> names = table.getColumn(NameColumn.class).getValues();
+		for (Map.Entry<String, String> e: names.entrySet()) {
+			compoundOracle.add(e.getKey()+": "+e.getValue());
+		}
+
 		suggestBox = new SuggestBox(compoundOracle);
 		suggestBox.getElement().setAttribute("placeholder", "Compound name or ID.");
 
@@ -77,21 +77,9 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 	@UiHandler("suggestBox")
 	void handleSuggestBox(SelectionEvent<SuggestOracle.Suggestion> evt) {
 		String suggestion = evt.getSelectedItem().getReplacementString();
-		String cid = null;
-		if (names.containsKey(suggestion)) {
-			cid = suggestion;
-		}
-		if (cid == null) {
-			for (Map.Entry<String, String> e: names.entrySet()) {
-				if (e.getValue().equals(suggestion)) {
-					cid = e.getKey();
-					break;
-				}
-			}
-		}
-		if (cid != null) {
-			updateSelection(cid);
-		}
+		String cid = suggestion.replaceAll(": .*", "");
+		suggestBox.setFocus(false);
+		onEvent(new CompoundBrowseEvent(cid));
 	}
 	
 	@Override
