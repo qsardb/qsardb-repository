@@ -6,6 +6,22 @@
     @external .gwt-TabPanel;
     .gwt-TabPanel, .gwt-TabPanel table { border: none; }
     .gwt-TabPanel td { padding: 0; }
+
+    @external .gwt-TabBar .gwt-TabBarItem;
+    .gwt-TabBar .gwt-TabBarItem {
+      background: #f5f5ee;
+      font-weight: normal;
+    }
+    @external .gwt-TabBar .gwt-TabBarItem-selected;
+    .gwt-TabBar .gwt-TabBarItem-selected {
+      background: #f0f0d2;
+      font-weight: bold;
+    }
+    @external .gwt-TabPanelBottom;
+    .gwt-TabPanelBottom {
+      border-color: #f0f0d2;
+      border-width: 4px 2px 2px;
+    }
   </ui:style>
 
   <g:HTMLPanel>

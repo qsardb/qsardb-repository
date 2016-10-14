@@ -40,6 +40,12 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 		NumberFormat fmt = NumberFormat.getFormat("0.0000");
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
 		for (int i=0; i<Math.min(5, distances.size()); i++) {
+			if (i > 0) {
+				int separatorRow = flexTable.getRowCount();
+				flexTable.setHTML(separatorRow, 0, "<hr/>");
+				flexTable.getFlexCellFormatter().setColSpan(separatorRow, 0, 5);
+			}
+
 			String compId = distances.getId(i);
 			double distance = distances.getDistance(i);
 
@@ -58,9 +64,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 			int spanRows = 4;
 			spanRows += hasAttribute(description, compId) ? 1 : 0;
 			spanRows += hasAttribute(labels, compId) ? 1 : 0;
-
 			flexTable.getFlexCellFormatter().setRowSpan(row, 0, spanRows);
-			flexTable.getRowFormatter().addStyleName(row, "start");
 
 			flexTable.setText(row, 1, "Id:");
 			flexTable.setText(row, 2, compId);
@@ -103,10 +107,6 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 				flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 1, 3);
 				spanRows++;
 			}
-
-			flexTable.getRowFormatter().addStyleName(row+5, "end");
-			flexTable.setHTML(row+spanRows, 0, "<hr>");
-			flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 0, 5);
 		}
 
 		panel.add(flexTable);
