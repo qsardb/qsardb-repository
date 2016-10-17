@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -34,17 +33,14 @@ import org.dspace.content.citation.ReferenceFormatter;
 import org.jbibtex.BibTeXDatabase;
 import org.jbibtex.BibTeXEntry;
 import org.jbibtex.Key;
-import org.jbibtex.Value;
 import org.qsardb.cargo.bibtex.BibTeXCargo;
 import org.qsardb.cargo.map.ReferencesCargo;
-import org.qsardb.cargo.map.ValuesCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
 import org.qsardb.model.Compound;
 import org.qsardb.model.Model;
 import org.qsardb.model.Parameter;
 import org.qsardb.model.Prediction;
 import org.qsardb.model.Property;
-import org.qsardb.model.PropertyRegistry;
 import org.qsardb.model.Qdb;
 
 public class QdbCompounds extends ApplicationTransformer implements CacheableProcessingComponent {
@@ -253,39 +249,45 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 
 	private void generatePropertyInfo(Qdb qdb, Compound c, Division div) throws Exception {
 		div.setHead("Properties");
-		PropertyRegistry properties = qdb.getPropertyRegistry();
 
-		if (properties.size() == 0) {
-			div.addPara("This archive contains no properties");
-		} else {
-			for(Property property: properties){
-				String pval = loadValue(property, c.getId());
-				if (pval == null) {
-					continue;
+		boolean havePropertyData = false;
+
+		for(Property property: qdb.getPropertyRegistry()) {
+			LinkedHashMap<String, String> rowValues = new LinkedHashMap<>();
+
+			String pval = loadValue(property, c.getId());
+			if (pval != null) {
+				rowValues.put(pval, loadPropertyReference(property, c.getId()));
+			}
+
+			for (Model m: qdb.getModelRegistry().getByProperty(property)) {
+				for (Prediction p: qdb.getPredictionRegistry().getByModel(m)) {
+					pval = loadValue(p, c.getId());
+					if (pval != null) {
+						rowValues.put(pval, m.getId()+": "+m.getName()+" ("+p.getName()+")");
+					}
 				}
+			}
+
+			if (!rowValues.isEmpty()) {
+				havePropertyData = true;
 
 				Para para = div.addPara("property-line", null);
 				para.addContent(property.getId()+": "+property.getName());
 				QdbFormat.unit(property, para);
 				QdbFormat.descriptionAttribute(property, para);
 
-				Table table = div.addTable("property-table", 1, 2);
-
-				Row row = table.addRow();
-				row.addCellContent(pval);
-				row.addCell().addHtmlContent(loadPropertyReference(property, c.getId()));
-
-				for (Model m: qdb.getModelRegistry().getByProperty(property)) {
-					for (Prediction p: qdb.getPredictionRegistry().getByModel(m)) {
-						pval = loadValue(p, c.getId());
-						if (pval != null) {
-							row = table.addRow();
-							row.addCellContent(pval);
-							row.addCell().addHtmlContent(m.getId()+": "+m.getName()+" ("+p.getName()+")");
-						}
-					}
+				Table table = div.addTable("property-table", rowValues.size(), 2);
+				for (Map.Entry<String, String> e: rowValues.entrySet()) {
+					Row row = table.addRow();
+					row.addCellContent(e.getKey());
+					row.addCell().addHtmlContent(e.getValue());
 				}
 			}
+		}
+
+		if (!havePropertyData) {
+			div.addPara("N/A");
 		}
 	}
 
