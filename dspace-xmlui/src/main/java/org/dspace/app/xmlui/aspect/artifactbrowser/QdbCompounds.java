@@ -277,7 +277,11 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				QdbFormat.unit(property, para);
 				QdbFormat.descriptionAttribute(property, para);
 
-				Table table = div.addTable("property-table", rowValues.size(), 2);
+				Table table = div.addTable("property-table", rowValues.size()+1, 2);
+				Row header = table.addRow(Row.ROLE_HEADER);
+				header.addCellContent("Value");
+				header.addCellContent("Source or prediction");
+
 				for (Map.Entry<String, String> e: rowValues.entrySet()) {
 					Row row = table.addRow();
 					row.addCellContent(e.getKey());
