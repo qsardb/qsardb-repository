@@ -2,7 +2,9 @@
 
 package org.dspace.app.xmlui.aspect.artifactbrowser;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -161,8 +163,12 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					int n = 1;
 					for (String k: referenceNumbers.keySet()) {
 						BibTeXEntry e = entries.remove(new Key(k));
-						String reference = formatter.format(e, true, true);
-						bibList.addItem().addHtmlContent(reference);
+						if (e != null) {
+							String reference = formatter.format(e, true, true);
+							bibList.addItem().addHtmlContent(reference);
+						} else {
+							bibList.addItem().addHtmlContent("N/A");
+						}
 					}
 
 					for (Map.Entry<Key, BibTeXEntry> e: entries.entrySet()) {
@@ -181,16 +187,25 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		}
 	}
 
-	private String fmtReference(String ref, Map<String, String> refs) {
-		if (ref != null) {
-			if (refs.containsKey(ref)) {
-				return refs.get(ref);
-			} else {
-				refs.put(ref, "[" + (refs.size()+1) + "]");
-				return refs.get(ref);
-			}
+	private static String fmtReference(String ref, Map<String, String> refs) {
+		if (ref == null) {
+			return "";
 		}
-		return "";
+
+		Splitter splitter = Splitter.on(CharMatcher.anyOf(",;\t "));
+		ArrayList<String> result = new ArrayList<>();
+		for (String i: splitter.trimResults().omitEmptyStrings().split(ref)) {
+			if (!refs.containsKey(i)) {
+				refs.put(i, String.valueOf(refs.size()+1));
+			}
+			result.add(refs.get(i));
+		}
+
+		if (result.isEmpty()) {
+			return "";
+		} else {
+			return "[" + Joiner.on(",").join(result) + "]";
+		}
 	}
 
 	public String process(Item item, final String compoundId, final Division div) throws WingException, ProcessingException {
