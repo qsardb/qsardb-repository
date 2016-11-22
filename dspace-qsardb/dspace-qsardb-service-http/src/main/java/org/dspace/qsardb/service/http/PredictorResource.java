@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2014 University of Tartu
+ *  Copyright (c) 2014-2016 University of Tartu
  */
 package org.dspace.qsardb.service.http;
 
@@ -74,8 +74,34 @@ public class PredictorResource {
 		}
 	}
 
-	protected Map<Descriptor, String> calculateDescriptors(String handle, Model model, String structure) throws Exception {
-		return PredictorUtil.calculateDescriptors(model, structure);
+	protected PredictorResponse calculateDescriptors(String handle, Model model, String structure) throws Exception {
+		Map<Descriptor, String> result = PredictorUtil.calculateDescriptors(model, structure);
+
+		LinkedHashMap<String, String> params = new LinkedHashMap<>();
+
+		PredictorResponse r = new PredictorResponse();
+		for(Descriptor descriptor : result.keySet()) {
+			params.put(descriptor.getId(), result.get(descriptor));
+
+			if(!descriptor.hasCargo(BODOCargo.class)){
+				continue;
+			}
+
+			BODODescriptor bodoDescriptor = descriptor.getCargo(BODOCargo.class).loadBodoDescriptor();
+
+			if (bodoDescriptor.getImplementations().size() > 0) {
+				String app = bodoDescriptor.getImplementations().get(0).getTitle();
+				if (app.contains("org.openscience.cdk")) {
+					app = "CDK, version " + org.openscience.cdk.CDK.getVersion();
+				}
+
+				r.getImplementations().put(descriptor.getId(), app);
+			}
+		}
+
+		r.setParameters(params);
+
+		return r;
 	}
 
 	private PredictorResponse evaluate(final String handle, final String modelId, final PredictorRequest req) throws Exception {
@@ -86,35 +112,18 @@ public class PredictorResource {
 				if (model == null) {
 					throw new NotFoundException("Model not found");
 				}
-				PredictorResponse r = new PredictorResponse();
+
 				Map<String, String> params = getDescriptors(req, qdb);
 
 				String structure = getStructure(req, params);
-
 				logg.debug("structure: " + structure);
+
+				PredictorResponse r;
 				if (structure != null) {
-					Map<Descriptor, String> result = calculateDescriptors(handle, model, structure);
-					params = new LinkedHashMap<String, String>();  //to calc descs
-					for(Descriptor descriptor : result.keySet()) {
-
-						if(!descriptor.hasCargo(BODOCargo.class)){
-							continue;
-						}
-
-						BODODescriptor bodoDescriptor = descriptor.getCargo(BODOCargo.class).loadBodoDescriptor();
-
-						params.put(descriptor.getId(), result.get(descriptor));
-
-						if (bodoDescriptor.getImplementations().size() > 0) {
-							String app = bodoDescriptor.getImplementations().get(0).getTitle();
-							if (app.contains("org.openscience.cdk")) {
-								app = "CDK, version " + org.openscience.cdk.CDK.getVersion();
-							}
-
-							r.getImplementations().put(descriptor.getId(), app);
-
-						}
-					}
+					r = calculateDescriptors(handle, model, structure);
+					params = r.getParameters();
+				} else {
+					r = new PredictorResponse();
 					r.setParameters(params);
 				}
 
@@ -168,7 +177,7 @@ public class PredictorResource {
 			return postRequest.getParameters();
 		}
 
-		Map<String, String> descs = new LinkedHashMap<String, String>();
+		Map<String, String> descs = new LinkedHashMap<>();
 		for (String did: uriInfo.getQueryParameters().keySet()) {
 			String dv = uriInfo.getQueryParameters().getFirst(did);
 			if (qdb.getDescriptor(did) == null || dv == null) {
