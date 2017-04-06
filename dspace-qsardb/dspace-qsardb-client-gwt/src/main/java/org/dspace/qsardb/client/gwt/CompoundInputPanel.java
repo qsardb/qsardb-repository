@@ -36,7 +36,7 @@ public class CompoundInputPanel extends Composite {
 		}
 
 		if (!calculable) {
-			textBox.setText("Descriptors in this model require proprietary software and can not be calculated");
+			textBox.setText("Descriptor calculation is not enabled for this model");
 			textBox.getElement().setAttribute("style", "color:gray");
 		}
 		textBox.setEnabled(calculable);

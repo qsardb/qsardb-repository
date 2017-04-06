@@ -9,7 +9,7 @@
     <div>Chemical structure input (InChI or SMILES format):</div>
 
     <div>
-      <g:TextBox ui:field='textBox' visibleLength="60"/>
+      <g:TextBox ui:field='textBox' visibleLength='64'/>
       <g:Button ui:field='drawButton'>Draw</g:Button>
     </div>
 	<div>
