@@ -329,8 +329,7 @@ public class QdbUtil {
 
 	static
 	private void clearBibTeXMetadata(Item item){
-		item.clearMetadata("bibtex", "entry", null, null);
-		item.clearMetadata("bibtex", "entry", Item.ANY, null);
+		item.clearMetadata("bibtex", "entry", Item.ANY, Item.ANY);
 	}
 
 	static
@@ -377,7 +376,7 @@ public class QdbUtil {
 
 	static
 	private void clearQdbMetadata(Item item){
-		item.clearMetadata("qdb", Item.ANY, Item.ANY, null);
+		item.clearMetadata("qdb", Item.ANY, Item.ANY, Item.ANY);
 	}
 
 	static
@@ -458,7 +457,7 @@ public class QdbUtil {
 
 	static
 	private void clearTitle(Item item){
-		item.clearMetadata("dc", "title", null, null);
+		item.clearMetadata("dc", "title", Item.ANY, Item.ANY);
 	}
 
 	static
