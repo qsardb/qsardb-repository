@@ -139,13 +139,42 @@
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.order.desc">descending</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.author.column_heading">Authors Name</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.column_heading">Title</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.subject.column_heading">Subject</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.journal.column_heading">Journals</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_endpoint.column_heading">Endpoints</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.property_species.column_heading">Species</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.descriptor_application.column_heading">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.prediction_application.column_heading">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.model_type.column_heading">Model type</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.title">Browsing {0} by Title {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.title">Browsing {0} by Title</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.author">Browsing {0} by Author {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.author">Browsing {0} by Author</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.subject">Browsing {0} by Subject {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.subject">Browsing {0} by Subject</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.journal">Browsing {0} by Journal {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.journal">Browsing {0} by Journal</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_endpoint">Browsing {0} by Endpoint {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_endpoint">Browsing {0} by Endpoint</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.property_species">Browsing {0} by Species {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.property_species">Browsing {0} by Species</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.descriptor_application">Browsing {0} by Descriptor calculation software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.descriptor_application">Browsing {0} by Descriptor calculation software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.prediction_application">Browsing {0} by Modeling software {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.prediction_application">Browsing {0} by Modeling software</message>
+
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.metadata.model_type">Browsing {0} by Model type {1}</message>
+	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.metadata.model_type">Browsing {0} by Model type</message>
 
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.title.item.title">Browsing {0} by Title {1}</message>
 	<message key="xmlui.ArtifactBrowser.ConfigurableBrowse.trail.item.title">Browsing {0} by Title</message>
@@ -240,6 +269,28 @@
 	<message key="xmlui.ArtifactBrowser.ItemViewer.show_full">Show full item record</message>
 
         <message key="xmlui.ArtifactBrowser.ItemViewer.withdrawn">This item has been withdrawn and is no longer available.</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.metadata_head">Metadata</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.content_head">QsarDB content</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.head_property">{0} - &quot;{1}&quot;</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_summary">Summary</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_values">{0} Compounds</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_models_summary">{0} Model(s) with {1} Prediction(s)</message>
+	<message key="xmlui.ArtifactBrowser.ItemViewer.model_summary">{0} - &quot;{1}&quot;</message>
+
+	<message key="xmlui.ArtifactBrowser.ItemViewer.property_bibliography">Bibliography</message>
+
+	<!-- org.dspace.app.xmlui.artifactbrowser.ApplicationTransformer and its subclasses -->
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.trail">QDB Explorer</message>
+	<message key="xmlui.ArtifactBrowser.QdbExplorer.handle_trail">{0} - QDB Explorer</message>
+
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.trail">QDB Predictor</message>
+	<message key="xmlui.ArtifactBrowser.QdbPredictor.handle_trail">{0} - QDB Predictor</message>
+
+	<message key="xmlui.ArtifactBrowser.QdbCompounds.trail">QDB Compounds</message>
+	<message key="xmlui.ArtifactBrowser.QdbCompounds.handle_trail">{0} - QDB Compounds</message>
 
 	<!-- org.dspace.app.xmlui.artifactbrowser.Navigation.java -->
         <!-- Note: As of DSpace 6.0, org.dspace.app.xmlui.aspect.artifactbrowser.Navigation has been removed. -->
@@ -253,6 +304,12 @@
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_subject">Subjects</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateissued">By Issue Date</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.browse_dateaccessioned">By Submit Date</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_journal">Journals</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_endpoint">Endpoints</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_property_species">Species</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_descriptor_application">Descriptor calculation software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_prediction_application">Modeling software</message>
+	<message key="xmlui.ArtifactBrowser.Navigation.browse_model_type">Model type</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_collection">This Collection</message>
 	<message key="xmlui.ArtifactBrowser.Navigation.head_this_community">This Community</message>
 
@@ -696,6 +753,7 @@
 	<message key="xmlui.Submission.submit.progressbar.describe">Describe</message>
     <message key="xmlui.Submission.submit.progressbar.access">Access</message>
     <message key="xmlui.Submission.submit.progressbar.upload">Upload</message>
+	<message key="xmlui.Submission.submit.progressbar.validate">Validate</message>
 	<message key="xmlui.Submission.submit.progressbar.verify">Review</message>
 	<message key="xmlui.Submission.submit.progressbar.creative-commons">Creative Commons</message>
 	<message key="xmlui.Submission.submit.progressbar.CClicense">CC License</message>
@@ -738,6 +796,7 @@
 
 	<!-- org.dspace.app.xmlui.Submission.submit.DescribeStep -->
 	<message key="xmlui.Submission.submit.DescribeStep.head">Describe Item</message>
+	<message key="xmlui.Submission.submit.DescribeStep.head_title">Describe Item: {0}</message>
 	<message key="xmlui.Submission.submit.DescribeStep.unknown_field">Error: Unknown field type</message>
 	<message key="xmlui.Submission.submit.DescribeStep.required_field">This field is required</message>
 	<message key="xmlui.Submission.submit.DescribeStep.last_name_help">Last name, <i>e.g. Smith</i></message>
@@ -801,6 +860,7 @@
 	<message key="xmlui.Submission.submit.UploadStep.file">File</message>
 	<message key="xmlui.Submission.submit.UploadStep.file_help">Please enter the full path of the file on your computer corresponding to your item. If you click "Browse...", a new window will allow you to select the file from your computer.</message>
 	<message key="xmlui.Submission.submit.UploadStep.file_error">The item must contain at least one file.</message>
+	<message key="xmlui.Submission.submit.UploadStep.multiple_qdb_error">The submitted item can contain only one QDB archive file.</message>
 	<message key="xmlui.Submission.submit.UploadStep.upload_error">There was a problem uploading your file.  Either the filename you entered was incorrect, there was a network problem which prevented the file from reaching us correctly, or you have attempted to upload a file format marked for internal system use only.  Please try again.</message>
 	<message key="xmlui.Submission.submit.UploadStep.virus_error">The file has not been uploaded as it appears to contain a virus. Please contact the system administrator.</message>
     <message key="xmlui.Submission.submit.UploadStep.virus_checker_error">A technical problem was encountered whilst attempting to scan the file for viruses. Please contact the system administrator.</message>
@@ -871,6 +931,20 @@
     <!-- org.dspace.app.xmlui.Submission.submit.EditBitstreamPolicies -->
     <message key="xmlui.Submission.submit.EditBitstreamPolicies.head">Bitstream Access</message>
 
+	<!-- org.dspace.app.xmlui.Submission.submit.QdbValidateStep -->
+	<message key="xmlui.Submission.submit.QdbValidateStep.head">QsarDB validation</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.level">QDB conformance level</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic">Basic (one star)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_basic_help">All Container and Cargo instances are correctly defined. All Container instances are resolveable in local scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate">Intermediate (two stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_intermediate_help">Additionally, all Compound, Property and Descriptor instances are resolveable in global scope.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced">Advanced (three stars)</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.option_advanced_help">Additionally, all Models are evaluateable and all Prediction results (training and external validation) are reproducible.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.validate">Validate</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_init">Not validated</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_success">QDB validation passed</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_qdb_error">QDB validation failed because of a low-level QDB error. The uploaded QDB file is unusable.</message>
+	<message key="xmlui.Submission.submit.QdbValidateStep.status_error">QDB validation failed</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.ReviewStep -->
 	<message key="xmlui.Submission.submit.ReviewStep.head">Review Submission</message>
@@ -891,13 +965,13 @@
 	<!-- org.dspace.app.xmlui.Submission.submit.CCLicenseStep -->
         <message key="xmlui.Submission.submit.CCLicenseStep.ccws_error">An error occurred ... {0}</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.head">License Your Work</message>
-        <message key="xmlui.Submission.submit.CCLicenseStep.info1">If you wish, you may add a <a href="http://creativecommons.org/">Creative Commons</a> License to your item. <strong>Creative Commons licenses govern what people who read your work may then do with it.</strong></message>
+        <message key="xmlui.Submission.submit.CCLicenseStep.info1"><p>If you wish, you may add a <a href="http://creativecommons.org/">Creative Commons</a> license to your item. <strong>Creative Commons licenses govern what people who read your work may then do with it.</strong></p><p>The following licenses are encouraged for making your scientific contribution easly reusable and citable:</p><ul><li>Public domain (<a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0</a>)</li><li>Creative Commons Attribution (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a>)</li><li>Creative Commons Attribution-ShareAlike (<a href="https://creativecommons.org/licenses/by-sa/4.0/">BY-SA</a>)</li></ul><p>All other Creative Commons options are also available, but they expose restrictions that make your data unfit to <a href="http://opendefinition.org/">Open Data</a> concept.</p></message>
         <message key="xmlui.Submission.submit.CCLicenseStep.submit_choose_creative_commons">Choose a license</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.submit_to_creative_commons">Proceed to Creative Commons website to select a license</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.license">License Type</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.select_change">Select or modify your license ...</message>
         <message key="xmlui.Submission.submit.CCLicenseStep.no_license">No Creative Commons License</message>
-        <message key="xmlui.Submission.submit.CCLicenseStep.save_changes">You must click Next to save your changes.</message>
+        <message key="xmlui.Submission.submit.CCLicenseStep.save_changes">You must click "Complete submission" to finish your submission.</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.LicenseStep -->
 	<message key="xmlui.Submission.submit.LicenseStep.head">Distribution License</message>
@@ -2192,6 +2266,7 @@
 	<message key="xmlui.dri2xhtml.METS-1.0.no-preview">No preview available</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-title">Untitled</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.no-author">Unknown author</message>
+	<message key="xmlui.dri2xhtml.METS-1.0.no-publisher">Unknown publisher</message>
 	<message key="xmlui.dri2xhtml.METS-1.0.non-conformant">
 		This is not a DSpace object conformant to the METS 1.0 profile and as such cannot be
         rendered effectively. You can override either the template that handles the general

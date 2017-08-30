@@ -92,6 +92,9 @@ public class UploadStep extends AbstractProcessingStep
     // return from editing file information
     public static final int STATUS_EDIT_COMPLETE = 25;
 
+    // error - don't accept multiple QDB files per item
+    public static final int STATUS_MULTIPLE_QDB_FILES = 102;
+
     /** log4j logger */
     private static final Logger log = Logger.getLogger(UploadStep.class);
 
@@ -583,6 +586,11 @@ public class UploadStep extends AbstractProcessingStep
                     return STATUS_UPLOAD_ERROR;
                 }
 
+                if (tooManyQdbBitstreams(context, item)) {
+                    backoutBitstream(context, subInfo, b, item);
+                    return STATUS_MULTIPLE_QDB_FILES;
+                }
+
                 // Check for virus
                 if (configurationService.getBooleanProperty("submission-curation.virus-scan"))
                 {
@@ -738,6 +746,18 @@ public class UploadStep extends AbstractProcessingStep
         }
 
         return STATUS_COMPLETE;
+    }
+
+	private boolean tooManyQdbBitstreams(Context context, Item item) throws SQLException {
+        int bitstreamCount = 0;
+        for (Bundle bundle: itemService.getBundles(item, "ORIGINAL")) {
+            for (Bitstream bitstream: bundle.getBitstreams()) {
+                if ("QsarDB".equals(bitstreamService.getFormat(context, bitstream).getShortDescription())) {
+                    ++bitstreamCount;
+                }
+            }
+        }
+        return bitstreamCount > 1;
     }
 
 }

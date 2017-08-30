@@ -277,7 +277,7 @@ public class DSBitStoreService implements BitStoreService
      * @exception IOException
      *                If a problem occurs while determining the file
      */
-    protected File getFile(Bitstream bitstream) throws IOException
+    public File getFile(Bitstream bitstream) throws IOException
     {
         // Check that bitstream is not null
         if (bitstream == null)

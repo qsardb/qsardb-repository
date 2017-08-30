@@ -118,6 +118,11 @@
               </xsl:when>
               <xsl:otherwise>
             <body>
+                <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='gwt'][@qualifier='historyFrame']">
+                  <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex="-1" style="position:absolute;width:0;height:0;border:0">
+                    <xsl:comment>GWT history</xsl:comment>
+                  </iframe>
+                </xsl:if>
                 
                 <div id="ds-main">
                     <!--
@@ -796,11 +801,6 @@
                 <xsl:variable name="xrefTarget">
                         <xsl:value-of select="./dri:p/dri:xref/@target"/>
                 </xsl:variable>
-                <xsl:if test="$itemDivision='item-view'">
-                    <xsl:call-template name="cc-license">
-                        <xsl:with-param name="metadataURL" select="./dri:referenceSet/dri:reference/@url"/>
-                    </xsl:call-template>
-                </xsl:if>
         <xsl:apply-templates select="@pagination">
             <xsl:with-param name="position">bottom</xsl:with-param>
         </xsl:apply-templates>
@@ -1709,7 +1709,15 @@
         </h3>
     </xsl:template>
     
-    
+	<!-- QsarDB: information labels with tooltips -->
+    <xsl:template match="dri:info">
+		<xsl:text> </xsl:text>
+		<span>
+			<xsl:attribute name="class">info-label</xsl:attribute>
+			<xsl:attribute name="title"><xsl:value-of select="text()"/></xsl:attribute>
+			<xsl:value-of select="@label"/>
+		</span>
+    </xsl:template>
     
     
     <!-- Next come the components of rich text containers, namely: hi, xref, figure and, in case of interactive
@@ -1753,13 +1761,13 @@
         <xsl:if test="@target">
             <a>
                 <xsl:attribute name="href"><xsl:value-of select="@target"/></xsl:attribute>
-                <xsl:if test="@title">
-                	<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
-                </xsl:if>
-                <xsl:if test="@rend">
-                	<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
-                </xsl:if>
                 <img>
+                    <xsl:if test="@title">
+                    	<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="@rend">
+                    	<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
+                    </xsl:if>
                     <xsl:attribute name="src"><xsl:value-of select="@source"/></xsl:attribute>
                     <xsl:attribute name="alt"><xsl:apply-templates /></xsl:attribute>
                 <xsl:attribute name="border"><xsl:text>none</xsl:text></xsl:attribute>
@@ -1768,6 +1776,12 @@
         </xsl:if>
         <xsl:if test="not(@target)">
             <img>
+				<xsl:if test="@title">
+					<xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@rend">
+					<xsl:attribute name="class"><xsl:value-of select="@rend"/></xsl:attribute>
+				</xsl:if>
                 <xsl:attribute name="src"><xsl:value-of select="@source"/></xsl:attribute>
                 <xsl:attribute name="alt"><xsl:apply-templates /></xsl:attribute>
             </img>
@@ -3736,59 +3750,15 @@
                 </span>
             </div>
             <div class="artifact-info">
-                <span class="author">
-                    <xsl:choose>
-                        <xsl:when test="dri:list[@n=(concat($handle, ':dc.contributor.author'))]">
-                            <xsl:for-each select="dri:list[@n=(concat($handle, ':dc.contributor.author'))]/dri:item">
-                                <xsl:variable name="author">
-                                    <xsl:value-of select="."/>
-                                </xsl:variable>
-                                <span>
-                                    <!--Check authority in the mets document-->
-                                    <xsl:if test="$metsDoc/mets:METS/mets:dmdSec/mets:mdWrap/mets:xmlData/dim:dim/dim:field[@element='contributor' and @qualifier='author' and . = $author]/@authority">
-                                        <xsl:attribute name="class">
-                                            <xsl:text>ds-dc_contributor_author-authority</xsl:text>
-                                        </xsl:attribute>
-                                    </xsl:if>
-                                    <xsl:apply-templates select="."/>
-                                </span>
-
-                                <xsl:if test="count(following-sibling::dri:item) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:when test="dri:list[@n=(concat($handle, ':dc.creator'))]">
-                            <xsl:for-each select="dri:list[@n=(concat($handle, ':dc.creator'))]/dri:item">
-                                <xsl:apply-templates select="."/>
-                                <xsl:if test="count(following-sibling::dri:item) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:when test="dri:list[@n=(concat($handle, ':dc.contributor'))]">
-                            <xsl:for-each select="dri:list[@n=(concat($handle, ':dc.contributor'))]/dri:item">
-                                <xsl:apply-templates select="."/>
-                                <xsl:if test="count(following-sibling::dri:item) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-author</i18n:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </span>
-                <xsl:text> </xsl:text>
                 <xsl:if test="dri:list[@n=(concat($handle, ':dc.date.issued'))] or dri:list[@n=(concat($handle, ':dc.publisher'))]">
                     <span class="publisher-date">
-                        <xsl:text>(</xsl:text>
                         <xsl:if test="dri:list[@n=(concat($handle, ':dc.publisher'))]">
                             <span class="publisher">
                                 <xsl:apply-templates select="dri:list[@n=(concat($handle, ':dc.publisher'))]/dri:item"/>
                             </span>
-                            <xsl:text>, </xsl:text>
+                            <xsl:text> </xsl:text>
                         </xsl:if>
+                        <xsl:text>(</xsl:text>
                         <span class="date">
                             <xsl:value-of
                                     select="substring(dri:list[@n=(concat($handle, ':dc.date.issued'))]/dri:item,1,10)"/>

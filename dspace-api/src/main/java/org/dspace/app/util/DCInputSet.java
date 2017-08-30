@@ -24,16 +24,20 @@ public class DCInputSet
 	private String formName = null; 
 	/** the inputs ordered by page and row position */
 	private DCInput[][] inputPages = null;
+
+	/** page titles in the form */
+	private final List<String> titles;
 	
         /** constructor
          * @param formName form name
          * @param pages pages
          * @param listMap map
          */
-	public DCInputSet(String formName, List<List<Map<String, String>>> pages, Map<String, List<String>> listMap)
+	public DCInputSet(String formName, List<List<Map<String, String>>> pages, List<String> pageTitles, Map<String, List<String>> listMap)
 	{
 		this.formName = formName;
 		inputPages = new DCInput[pages.size()][];
+		titles = pageTitles;
 		for ( int i = 0; i < inputPages.length; i++ )
 		{
 			List<Map<String, String>> page = pages.get(i);
@@ -44,7 +48,7 @@ public class DCInputSet
 			}
 		}
 	}
-	
+
 	/**
 	 * Return the name of the form that defines this input set
 	 * @return formName 	the name of the form
@@ -94,6 +98,21 @@ public class DCInputSet
 		return filteredInputs.toArray(inputArray);
 	}
 	
+    /**
+	 * Gets the title for a page in the form definition
+	 *
+	 * @param  pageNum desired page within set
+	 *
+	 * @return The title or <code>null</code> if not set
+	 */
+	public String getPageTitle(int pageNum){
+		if (pageNum < titles.size())
+		{
+			return titles.get(pageNum);
+		}
+		return null;
+	}
+
     /**
      * Does this set of inputs include an alternate title field?
      *

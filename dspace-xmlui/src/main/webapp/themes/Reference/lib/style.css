@@ -403,6 +403,14 @@ p.copyright-text {
         text-align: center;
 }
 
+p.side-left {
+	float: left;
+}
+
+p.side-right {
+	float: right;
+}
+
 div.primary {
         overflow: auto;
         margin-bottom: 20px;
@@ -485,7 +493,21 @@ th.doubleIndent {
     padding-right: 0;
 }
 
+th.icon {
+	width: 22px;
+}
 
+th.short {
+	width: 50px;
+}
+
+th.medium {
+	width: 100px;
+}
+
+th.long {
+	width: 200px;
+}
 
 /* highlight a single row */
 tr.ds-table-row.highlight {
@@ -542,6 +564,18 @@ table.ds-gloss-list td ul {
         margin: 0px;
 }
 
+/* QsarDB: information labels with tooltips */
+.info-label {
+	padding: 1px 6px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: normal;
+	font-family: monospace;
+	background: #c7e8de;
+}
+
+
 /* Formatting associated with the "Files in this item" table in the item view */
 *.file-list td {
         text-align: center;
@@ -549,6 +583,14 @@ table.ds-gloss-list td ul {
 
 a.image-link img {
         border: none;
+}
+
+a.application-link {
+	margin-left: 5px;
+}
+
+img.icon {
+	border: 0px;
 }
 
 span.bold {
@@ -561,6 +603,20 @@ span.italics,span.italic {
 
 span.underline {
         text-decoration: underline;
+}
+
+span.superscript {
+	font-size: .83em;
+	vertical-align: super;
+}
+
+span.subscript {
+	font-size: .83em;
+	vertical-align: sub;
+}
+
+td div {
+	white-space: nowrap;
 }
 
 span.floatleft {
@@ -644,6 +700,9 @@ ul.ds-artifact-list li div.artifact-preview {
 }
 
 
+div.license-info {
+	margin: 0.6em 0;
+}
 
 /* The composite field voodoo */
 span.ds-composite-field {
@@ -1521,4 +1580,13 @@ div.vocabulary-container li.error{
     float:left;
     border: 1px solid #cccccc;
     margin-right: 3px;
+}
+
+#aspect_discovery_recentSubmissions_RecentSubmissionTransformer_div_recent-submissions {
+	overflow: auto;
+	margin-bottom: 6px;
+}
+
+#aspect_artifactbrowser_QdbCompounds_table_property-table td.ds-table-cell.odd {
+	width: 4em;
 }

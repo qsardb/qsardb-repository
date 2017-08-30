@@ -19,6 +19,7 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.embargo.service.EmbargoService;
+import org.dspace.eperson.EPerson;
 import org.dspace.event.Event;
 import org.dspace.identifier.IdentifierException;
 import org.dspace.identifier.service.IdentifierService;
@@ -196,6 +197,9 @@ public class InstallItemServiceImpl implements InstallItemService
 
         // Add provenance description
         itemService.addMetadata(c, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", provDescription);
+
+        EPerson submitter = item.getSubmitter();
+        itemService.addMetadata(c, item, MetadataSchema.DC_SCHEMA, "publisher", null, null, submitter.getFullName());
     }
 
     /**

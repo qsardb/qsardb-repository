@@ -418,6 +418,18 @@ public class SimpleHTMLFragment extends AbstractWingElement {
 					element.setAttribute("rend", "underline");
 
 					translate(element);
+				} else if ("sup".equals(name)) {
+					limitAttributes(element);
+					element.setName("hi");
+					element.setAttribute("rend", "superscript");
+
+					translate(element);
+				} else if ("sub".equals(name)) {
+					limitAttributes(element);
+					element.setName("hi");
+					element.setAttribute("rend", "subscript");
+
+					translate(element);
 				} else if ("img".equals(name)) {
 					// The HTML <img> element is translated into a DRI figure
 					moveAttribute(element, "src", "source");

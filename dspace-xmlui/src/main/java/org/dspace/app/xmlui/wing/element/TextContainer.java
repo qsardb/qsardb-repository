@@ -7,9 +7,15 @@
  */
 package org.dspace.app.xmlui.wing.element;
 
+
+import org.dspace.app.xmlui.wing.AttributeMap;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingContext;
 import org.dspace.app.xmlui.wing.WingException;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.NamespaceSupport;
 
 /**
  * A class representing all the containers that contain unformatted text, such
@@ -82,4 +88,43 @@ public abstract class TextContainer extends Container
         Data data = new Data(context, message);
         contents.add(data);
     }
+
+    public void addContent(Message message, final boolean para) throws WingException {
+        Data data = new Data(context, message){
+
+            @Override
+            public void toSAX(ContentHandler contentHandler, LexicalHandler lexicalHandler, NamespaceSupport namespaces) throws SAXException {
+
+                if(para){
+                    startElement(contentHandler, namespaces, Para.E_PARA, null);
+                }
+
+                super.toSAX(contentHandler, lexicalHandler, namespaces);
+
+                if(para){
+                    endElement(contentHandler, namespaces, Para.E_PARA);
+                }
+            }
+        };
+        contents.add(data);
+    }
+
+    public void addHtmlContent(String characters) throws WingException {
+        SimpleHTMLFragment data = new SimpleHTMLFragment(context, false, characters);
+
+        contents.add(data);
+    }
+
+	public void addInfo(final String label, String characters) throws WingException {
+		contents.add(new Data(context, characters){
+			@Override
+			public void toSAX(ContentHandler contentHandler, LexicalHandler lexicalHandler, NamespaceSupport namespaces) throws SAXException {
+				AttributeMap attributes = new AttributeMap();
+				attributes.put("label", label);
+				startElement(contentHandler, namespaces, "info", attributes);
+				super.toSAX(contentHandler, lexicalHandler, namespaces);
+				endElement(contentHandler, namespaces, "info");
+			}
+		});
+	}
 }

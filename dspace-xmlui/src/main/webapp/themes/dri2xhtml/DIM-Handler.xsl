@@ -126,52 +126,20 @@
                </span>
            </div>
             <div class="artifact-info">
-                <span class="author">
+                <span class="publisher">
                     <xsl:choose>
-                        <xsl:when test="dim:field[@element='contributor'][@qualifier='author']">
-                            <xsl:for-each select="dim:field[@element='contributor'][@qualifier='author']">
-                                <span>
-                                  <xsl:if test="@authority">
-                                    <xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
-                                  </xsl:if>
-                                  <xsl:copy-of select="node()"/>
-                                </span>
-                                <xsl:if test="count(following-sibling::dim:field[@element='contributor'][@qualifier='author']) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:when test="dim:field[@element='creator']">
-                            <xsl:for-each select="dim:field[@element='creator']">
-                                <xsl:copy-of select="node()"/>
-                                <xsl:if test="count(following-sibling::dim:field[@element='creator']) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:when test="dim:field[@element='contributor']">
-                            <xsl:for-each select="dim:field[@element='contributor']">
-                                <xsl:copy-of select="node()"/>
-                                <xsl:if test="count(following-sibling::dim:field[@element='contributor']) != 0">
-                                    <xsl:text>; </xsl:text>
-                                </xsl:if>
-                            </xsl:for-each>
+                        <xsl:when test="dim:field[@element='publisher']">
+                            <xsl:copy-of select="dim:field[@element='publisher']/node()"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-author</i18n:text>
+                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-publisher</i18n:text>
                         </xsl:otherwise>
                     </xsl:choose>
                 </span>
                 <xsl:text> </xsl:text>
-                <xsl:if test="dim:field[@element='date' and @qualifier='issued'] or dim:field[@element='publisher']">
+                <xsl:if test="dim:field[@element='date' and @qualifier='issued']">
 	                <span class="publisher-date">
 	                    <xsl:text>(</xsl:text>
-	                    <xsl:if test="dim:field[@element='publisher']">
-	                        <span class="publisher">
-	                            <xsl:copy-of select="dim:field[@element='publisher']/node()"/>
-	                        </span>
-	                        <xsl:text>, </xsl:text>
-	                    </xsl:if>
 	                    <span class="date">
 	                        <xsl:value-of select="substring(dim:field[@element='date' and @qualifier='issued']/node(),1,10)"/>
 	                    </span>

@@ -331,6 +331,34 @@
             <artifactId>dspace-tm-extractors</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>evaluation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb</groupId>
+            <artifactId>validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.cargo</groupId>
+            <artifactId>map</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.cargo</groupId>
+            <artifactId>matrix</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.storage</groupId>
+            <artifactId>directory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.qsardb.storage</groupId>
+            <artifactId>zipfile</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena-libs</artifactId>
             <type>pom</type>
@@ -545,6 +573,11 @@
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-core</artifactId>
                 </exclusion>
+                <!-- A more recent version is retrieved from org.qsardb:validation -->
+                <exclusion>
+                    <groupId>org.jbibtex</groupId>
+                    <artifactId>jbibtex</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -726,17 +759,23 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.7.0</version>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.0</version>
+            <version>2.5.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.7.0</version>
+            <version>2.5.4</version>
         </dependency>
     </dependencies>
 

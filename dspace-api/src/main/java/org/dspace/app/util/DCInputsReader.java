@@ -66,6 +66,11 @@ public class DCInputsReader
     private Map<String, List<List<Map<String, String>>>> formDefns  = null;
 
     /**
+     Reference to the page names defined in the forms.
+     */
+    private Map<String, List<String>> formPageTitles  = null;
+
+    /**
      * Reference to the value-pairs map, computed from the forms definition file
      */
     private Map<String, List<String>> valuePairs = null;    // Holds display/storage pairs
@@ -108,6 +113,7 @@ public class DCInputsReader
     {
         whichForms = new HashMap<String, String>();
         formDefns  = new HashMap<String, List<List<Map<String, String>>>>();
+        formPageTitles  = new HashMap<String, List<String>>();
         valuePairs = new HashMap<String, List<String>>();
 
         String uri = "file:" + new File(fileName).getAbsolutePath();
@@ -177,7 +183,8 @@ public class DCInputsReader
         {
                 throw new DCInputsReaderException("Missing the " + formName  + " form");
         }
-        lastInputSet = new DCInputSet(formName, pages, valuePairs);
+        List<String> pageTitles = formPageTitles.get(formName);
+        lastInputSet = new DCInputSet(formName, pages, pageTitles, valuePairs);
         return lastInputSet;
     }
     
@@ -308,6 +315,8 @@ public class DCInputsReader
                         }
                         List<List<Map<String, String>>> pages = new ArrayList<List<Map<String, String>>>(); // the form contains pages
                         formDefns.put(formName, pages);
+                        List<String> titles = new ArrayList<String>();
+                        formPageTitles.put(formName, titles);
                         NodeList pl = nd.getChildNodes();
                         int lenpg = pl.getLength();
                         for (int j = 0; j < lenpg; j++)
@@ -323,6 +332,8 @@ public class DCInputsReader
                                         }
                                         List<Map<String, String>> page = new ArrayList<Map<String, String>>();
                                         pages.add(page);
+                                        String pgTitle = getAttribute(npg, "title");
+                                        titles.add(pgTitle);
                                         NodeList flds = npg.getChildNodes();
                                         int lenflds = flds.getLength();
                                         for (int k = 0; k < lenflds; k++)

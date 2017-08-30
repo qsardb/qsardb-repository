@@ -7,6 +7,7 @@
  */
 package org.dspace.content.service;
 
+import java.io.File;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
 import org.dspace.core.Context;
@@ -200,4 +201,6 @@ public interface BitstreamService extends DSpaceObjectService<Bitstream>, DSpace
     int countBitstreamsWithoutPolicy(Context context) throws SQLException;
 
     List<Bitstream> getNotReferencedBitstreams(Context context) throws SQLException;
+
+	public File getFile(Context context, Bitstream bitstream) throws IOException, SQLException, AuthorizeException;
 }

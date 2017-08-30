@@ -22,6 +22,52 @@
 
     <build>
         <plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<target>
+						<copy
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Explorer"
+						>
+							<fileset
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Explorer"
+							/>
+						</copy>
+						<copy
+							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Predictor"
+						>
+							<fileset
+								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Predictor"
+							/>
+						</copy>
+
+						<get
+							src="http://peter-ertl.com/jsme/download/JSME_2016-07-31.zip"
+							dest="${basedir}/target/JSME.zip"
+							skipexisting="true"
+							/>
+						<unzip
+							src="${basedir}/target/JSME.zip"
+							dest="${basedir}/target/${pom.artifactId}-${pom.version}/static"
+							>
+							<patternset>
+								<include name="*/jsme/"/>
+							</patternset>
+							<mapper>
+								<cutdirsmapper dirs="1" />
+							</mapper>
+						</unzip>
+					</target>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -98,6 +144,49 @@
             <groupId>org.dspace</groupId>
             <artifactId>dspace-services</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-client-gwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-gwt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dspace</groupId>
+			<artifactId>dspace-qsardb-service-http</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>2.22.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.22.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.1.3.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.logging</groupId>
+					<artifactId>jboss-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.qsardb</groupId>
+			<artifactId>statistics</artifactId>
+		</dependency>
 
         <!-- Custom build DSpace cocoon -->
         <dependency>
@@ -232,7 +321,7 @@
         <dependency>
         	<groupId>com.fasterxml.jackson.core</groupId>
         	<artifactId>jackson-core</artifactId>
-        	<version>2.7.0</version>
+        	<version>2.5.4</version>
         </dependency>
 
         <!-- Needed for Form Validation -->

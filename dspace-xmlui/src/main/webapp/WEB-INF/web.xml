@@ -103,6 +103,11 @@
     </init-param>
   </filter>
 
+  <filter>
+    <filter-name>QdbContextFilter</filter-name>
+    <filter-class>org.dspace.app.xmlui.utils.QdbContextFilter</filter-class>
+  </filter>
+  
   <!--
        Declare a filter to do content negotiation in combination for our
        Linked Data support.
@@ -143,6 +148,11 @@
       <filter-name>rdf-content-negotiation</filter-name>
       <url-pattern>/handle/*</url-pattern>
   </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>QdbContextFilter</filter-name>
+	<url-pattern>/service/*</url-pattern>
+  </filter-mapping>
   
   <!--
     - Use the Cocoon debug filter together with the Cocoon demo webapp
@@ -173,6 +183,10 @@
       <listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>org.dspace.app.util.RDSContextListener</listener-class>
+    </listener>
+
     <!--
         - Declare Spring context listener which sets up the Spring
         Application Context - containing all Cocoon components (and user
@@ -196,6 +210,18 @@
     <!--
         Servlet Configuration ==========================================
     -->
+    <servlet>
+        <servlet-name>QdbServiceServlet</servlet-name>
+        <servlet-class>org.dspace.qsardb.service.gwt.QdbServiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.dspace.qsardb.service.http.QdbResourceConfig</param-value>
+        </init-param>
+    </servlet>
 
     <!--servlet>
         <description>Cocoon</description>
@@ -218,6 +244,16 @@
     </servlet>
 
     <!-- URL space mappings ============================================= -->
+
+	<servlet-mapping>
+		<servlet-name>QdbServiceServlet</servlet-name>
+		<url-pattern>/service/gwt</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>JerseyServlet</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
 
     <!--
         Cocoon handles all the URL space assigned to the webapp using its sitemap.

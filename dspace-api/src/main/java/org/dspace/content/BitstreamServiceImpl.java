@@ -7,6 +7,7 @@
  */
 package org.dspace.content;
 
+import java.io.File;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,6 +31,9 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import org.dspace.storage.bitstore.BitStoreService;
+import org.dspace.storage.bitstore.BitstreamStorageServiceImpl;
+import org.dspace.storage.bitstore.DSBitStoreService;
 
 /**
  * Service implementation for the Bitstream object.
@@ -447,4 +451,16 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
     public List<Bitstream> getNotReferencedBitstreams(Context context) throws SQLException {
         return bitstreamDAO.getNotReferencedBitstreams(context);
     }
+
+	@Override
+	public File getFile(Context context, Bitstream bitstream) throws IOException, SQLException, AuthorizeException {
+        authorizeService.authorizeAction(context, bitstream, Constants.READ);
+
+		int store = bitstream.getStoreNumber();
+		BitStoreService bss = ((BitstreamStorageServiceImpl)bitstreamStorageService).getStores().get(store);
+		if (bss instanceof DSBitStoreService) {
+			return ((DSBitStoreService)bss).getFile(bitstream);
+		}
+		throw new UnsupportedOperationException();
+	}
 }
