@@ -1,25 +1,32 @@
 package org.dspace.ctask.general;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import org.dmg.pmml.DataField;
+import org.dmg.pmml.FieldName;
+import org.dmg.pmml.OpType;
 import org.dspace.content.QdbModelUtil;
-
-import org.qsardb.cargo.matrix.*;
-import org.qsardb.cargo.pmml.*;
-import org.qsardb.evaluation.*;
-import org.qsardb.model.*;
-
-import org.jpmml.manager.*;
-
-import org.dspace.curate.*;
+import org.dspace.curate.Distributive;
 import org.jpmml.evaluator.RegressionModelEvaluator;
+import org.qsardb.cargo.matrix.LeverageCargo;
+import org.qsardb.cargo.matrix.LeverageValuesCargo;
+import org.qsardb.cargo.pmml.FieldNameUtil;
+import org.qsardb.cargo.pmml.PMMLCargo;
+import org.qsardb.evaluation.Evaluator;
+import org.qsardb.evaluation.PMMLEvaluator;
+import org.qsardb.model.Compound;
+import org.qsardb.model.Descriptor;
+import org.qsardb.model.Model;
+import org.qsardb.model.Prediction;
+import org.qsardb.model.Property;
 
 @Distributive
 public class QdbLeverageCalculator extends QdbModelTask {
 
 	@Override
-	public boolean accept(Model model){
-
-		if(model.hasCargo(PMMLCargo.class)){
+	public boolean accept(Model model) {
+		if(model.hasCargo(PMMLCargo.class)) {
 			return !hasDistance(model, LeverageCargo.class);
 		}
 
@@ -30,12 +37,11 @@ public class QdbLeverageCalculator extends QdbModelTask {
 	public boolean curate(Model model, Prediction training, Collection<Prediction> validations) throws Exception {
 		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
 
-		if(evaluator != null){
+		if(evaluator != null) {
 			evaluator.init();
 
 			try {
-
-				if(!checkEvaluator(evaluator)){
+				if(!requiresLeverages(evaluator, model.getProperty())) {
 					return false;
 				}
 
@@ -50,7 +56,7 @@ public class QdbLeverageCalculator extends QdbModelTask {
 					leverageValuesCargo.storeDoubleMap(convertMap(leverages), QdbModelTask.format);
 				}
 
-				for(Prediction validation : validations){
+				for(Prediction validation : validations) {
 					Map<Compound, Double> leverages = leverageCargo.predict(getCompounds(validation));
 
 					LeverageValuesCargo leverageValuesCargo = validation.getOrAddCargo(LeverageValuesCargo.class);
@@ -68,23 +74,18 @@ public class QdbLeverageCalculator extends QdbModelTask {
 		return false;
 	}
 
-	static
-	private boolean checkEvaluator(Evaluator evaluator){
-
-		if(evaluator instanceof PMMLEvaluator){
+	static private boolean requiresLeverages(Evaluator evaluator, Property property) {
+		if(evaluator instanceof PMMLEvaluator) {
 			PMMLEvaluator pmmlEvaluator = (PMMLEvaluator)evaluator;
 
-			return checkModelManager(pmmlEvaluator.getModelManager());
-		}
+			FieldName propField = FieldNameUtil.encodeProperty(property);
+			for (DataField df : pmmlEvaluator.getModelManager().getDataDictionary().getDataFields()) {
+				if (propField.equals(df.getName()) && df.getOptype() == OpType.CATEGORICAL) {
+					return false;
+				}
+			}
 
-		return false;
-	}
-
-	static
-	private boolean checkModelManager(ModelManager<?> modelManager){
-
-		if(modelManager instanceof RegressionModelEvaluator){
-			return true;
+			return pmmlEvaluator.getModelManager() instanceof RegressionModelEvaluator;
 		}
 
 		return false;
