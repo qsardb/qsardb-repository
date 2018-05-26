@@ -18,7 +18,7 @@ fieldset {
 div#ds-main {
         position: relative;
         margin-top: 5px;
-        width: 750px;
+        width: 850px;
         color: inherit;
         background-color: white;
         margin-left: auto;
@@ -116,12 +116,12 @@ div#ds-user-box a:hover {
 div#ds-body {
         position: relative;
         float: left;
-        width: 592px;
+        width: 690px;
         clear: left;
         color: inherit;
         background-color: rgb(255, 255, 253);
         border: 2px solid rgb(240, 240, 210);
-        margin: 15px 0px 0px 0px;
+        margin: 13px 0px 0px 0px;
         padding-bottom: 30px;
         padding-left: 5px;
         padding-right: 5px;
@@ -635,8 +635,6 @@ ul.ds-artifact-list {
         padding: 0px;
         list-style-type: none;
         margin: 0px;
-        float: left;
-        width: 584px;
 }
 
 ul.ds-artifact-list li.odd {
@@ -668,7 +666,6 @@ ul.ds-artifact-list li  div {
 ul.ds-artifact-list li div.artifact-description {
         float: left;
         margin-top: 0px;
-        width: 83%;
         padding: 0 5px;
 }
 
@@ -833,7 +830,6 @@ form.ds-interactive-div li.ds-form-item.last {
 }
 
 form.ds-interactive-div.primary {
-        float: left;
         clear: both;
         padding: 0px;
         margin-bottom: 10px;
