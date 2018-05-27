@@ -1,13 +1,18 @@
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.user.client.ui.*;
+import org.dspace.qsardb.rpc.gwt.ModelTable;
+import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 
 public class DataOutputPanel extends Composite implements EvaluationEventHandler {
 
-	private FlexTable table = null;
+	private final ModelTable modelTable;
+	private FlexTable table;
 
 
-	public DataOutputPanel(){
+	public DataOutputPanel(ModelTable modelTable){
+		this.modelTable = modelTable;
+
 		Panel panel = new FlowPanel();
 
 		this.table = new FlexTable();
@@ -30,12 +35,21 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 
 		String[] parts = result.split("=");
 
-		String descriptorUnits = event.getResponse().getResultUnits();
-		if (descriptorUnits != null && !descriptorUnits.trim().equals("")) {
-			this.table.setHTML(0, 0, parts[0] + " [" + descriptorUnits + "]");
+		PropertyColumn property = modelTable.getColumn(PropertyColumn.class);
+		FlowPanel propertyPanel = new FlowPanel();
+
+		String propertyUnits = event.getResponse().getResultUnits();
+		if (propertyUnits != null && !propertyUnits.trim().equals("")) {
+			propertyPanel.add(new InlineLabel(parts[0] + " [" + propertyUnits + "]"));
 		} else {
-			this.table.setHTML(0, 0, parts[0]);
+			propertyPanel.add(new InlineLabel(parts[0]));
 		}
+
+		if (property.getDescription() != null){
+			propertyPanel.add(new DescriptionLabel(property));
+		}
+
+		this.table.setWidget(0, 0, propertyPanel);
 
 		FlexTable.RowFormatter formatter = this.table.getRowFormatter();
 

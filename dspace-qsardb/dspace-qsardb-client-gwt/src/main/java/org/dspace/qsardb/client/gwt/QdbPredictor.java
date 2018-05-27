@@ -30,7 +30,7 @@ public class QdbPredictor extends QdbApplication {
 
 		panel.add(new Heading("Model output", 3));
 
-		DataOutputPanel outputPanel = new DataOutputPanel();
+		DataOutputPanel outputPanel = new DataOutputPanel(table);
 		panel.add(outputPanel);
 
 		inputPanel.addEvaluationEventHandler(outputPanel);
