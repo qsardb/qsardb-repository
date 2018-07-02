@@ -1586,3 +1586,8 @@ div.vocabulary-container li.error{
 #aspect_artifactbrowser_QdbCompounds_table_property-table td.ds-table-cell.odd {
 	width: 4em;
 }
+
+/* DS-3705 fix bottom pagination covering the whole list in /recent-submissions?themepath=Reference/ */
+.pagination.bottom {
+    display: flow-root;
+}
