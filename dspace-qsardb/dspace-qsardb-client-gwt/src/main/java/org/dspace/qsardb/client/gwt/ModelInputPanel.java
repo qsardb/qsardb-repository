@@ -27,7 +27,6 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		PredictionColumn training = trainings.get(0);
 
 		DescriptorValueChangeEventHandler changeHandler = new DescriptorValueChangeEventHandler(){
-
 			@Override
 			public void onDescriptorValueChanged(DescriptorValueChangeEvent event){
 				fireInputChangeEvent();
@@ -38,14 +37,13 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
-                    DescriptorInputComponent descriptorInput = new DescriptorInputComponent(property, descriptor, training);
-		    descriptorInputList.add(descriptorInput);
-                    descriptorInput.addDescriptorValueChangeEventHandler(changeHandler);
-                    panel.add(descriptorInput);
+			DescriptorInputComponent descriptorInput = new DescriptorInputComponent(property, descriptor, training);
+			descriptorInputList.add(descriptorInput);
+			descriptorInput.addDescriptorValueChangeEventHandler(changeHandler);
+			panel.add(descriptorInput);
 		}
 
 		Timer timer = new Timer(){
-
 			@Override
 			public void run(){
 				fireInputChangeEvent();
@@ -79,7 +77,6 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		}
 
 		if (event.getSource().getClass() == CompoundInputPanel.class) {
-
 			final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
 			predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
 
@@ -91,7 +88,6 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor().getApplication()));
 			}
 		}
-
 	}
 
 	private String getLabelText(DescriptorColumn d, PredictorResponse response) {
@@ -99,7 +95,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		String application = response.getImplementations().get(d.getId());
 		if (application == null || application.trim().equals("")) {
 			result = "Prediction value calculated with <N/A>";
-		} else  {
+		} else {
 			result = "Current prediction is made with value calculated with " + application;
 		}
 		return result;
@@ -109,14 +105,13 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		String result;
 		if (application == null || application.trim().equals("")) {
 			result = "Prediction value calculated with <N/A>";
-		} else  {
+		} else {
 			result = "Current prediction is made with value calculated with " + application;
 		}
 		return result;
 	}
 
 	public Map<String, String> getDescriptorValues(){
-
 		Map<String, String> values = new LinkedHashMap<String, String>();
 
 		List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
@@ -128,8 +123,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 	}
 
 	public void setDescriptorValues(Map<String, String> values){
-                
-                List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
+		List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
 		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
 			String value = values.get(descriptorInput.getId());
 
@@ -137,7 +131,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 				descriptorInput.setValue(value);
 			}
 		}
-                
+
 	}
 
 	private List<DescriptorInputComponent> getDescriptorInputPanels(){
