@@ -17,8 +17,13 @@
       margin-left: 0px;
       margin-right: auto;
       cursor: pointer;
+      float: left;
       }
       
+      .collapsible-panel {
+      clear: both;
+      }
+
       .label {
       outline: none;
       border: none;
@@ -32,17 +37,12 @@
   </ui:style>
 
   <g:HTMLPanel styleName='{style.panel}'>
+      <g:FlowPanel ui:field='inputPanel'>
+          <g:ToggleButton styleName='{style.toggle-button}' ui:field='collapseButton'></g:ToggleButton>
+          <q:DescriptorValueTextbox ui:field='descriptorValue'></q:DescriptorValueTextbox>
+      </g:FlowPanel>
 
-      <g:HorizontalPanel styleName='{style.panel}'>
-          <g:cell horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE">
-              <g:ToggleButton styleName='{style.toggle-button}' ui:field='collapseButton'></g:ToggleButton>
-          </g:cell>
-          <g:cell horizontalAlignment="ALIGN_RIGHT" verticalAlignment="ALIGN_MIDDLE">
-              <q:DescriptorValueTextbox ui:field='descriptorValue'></q:DescriptorValueTextbox>
-          </g:cell>
-    </g:HorizontalPanel>
-
-    <g:FlowPanel ui:field='collapsiblePanel'>
+      <g:FlowPanel styleName='{style.collapsible-panel}' ui:field='collapsiblePanel'>
         <g:Label ui:field='modelSoftLabel' styleName='{style.label}'></g:Label>
         <g:Label ui:field='predictionSoftLabel' styleName='{style.label}'></g:Label>
     </g:FlowPanel>

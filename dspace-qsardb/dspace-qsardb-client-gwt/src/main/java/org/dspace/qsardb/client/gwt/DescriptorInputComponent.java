@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -34,6 +35,7 @@ import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 
 public class DescriptorInputComponent extends Composite {
 
+	@UiField FlowPanel inputPanel;
 	@UiField(provided = true) DescriptorValueTextbox descriptorValue;
 	@UiField(provided = true) ToggleButton collapseButton;
 	@UiField(provided = true) FlowPanel collapsiblePanel;
@@ -86,13 +88,12 @@ public class DescriptorInputComponent extends Composite {
 			descriptorUnits = "";
 		}
 
-		Label expandLabel = new Label(descriptor.getId() + ": " + descriptor.getName() + descriptorUnits);
-		Label collapseLabel = new Label(descriptor.getId() + ": " + descriptor.getName() + descriptorUnits);
+		String labelText = descriptor.getId() + ": " + descriptor.getName() + descriptorUnits;
+		InlineLabel expandLabel = new InlineLabel(labelText);
+		InlineLabel collapseLabel = new InlineLabel(labelText);
 
 		expandFace.add(expandLabel);
 		collapseFace.add(collapseLabel);
-		expandFace.setCellWidth(expandLabel, "100%");
-		collapseFace.setCellWidth(collapseLabel, "100%");
 
 		expandLabel.getElement().setAttribute("style", "white-space: normal;");
 		collapseLabel.getElement().setAttribute("style", "white-space: normal;");
@@ -130,6 +131,12 @@ public class DescriptorInputComponent extends Composite {
 		collapsiblePanel = new FlowPanel();
 		initWidget(binder.createAndBindUi(this));
 		collapsiblePanel.setVisible(false);
+
+		if (descriptor.getDescription() != null) {
+			DescriptionLabel descLabel = new DescriptionLabel(descriptor);
+			descLabel.getElement().getStyle().setProperty("float", "left");
+			inputPanel.insert(descLabel, 1);
+		}
 	}
 
 	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler) {
