@@ -10,8 +10,8 @@ provides extra functionality for exploring and visualisation of QSAR/QSPR models
 and related data directly in the web browser.
 
 Description:
-- QSAR DataBank repository: open and linked qualitative and quantitative structure–activity relationship models,
-  Ruusmann, V.; Sild, S.; Maran, U., J. Cheminf. 2014, 6:25, 
+- QSAR DataBank repository: open and linked qualitative and quantitative structure–activity
+  relationship models, Ruusmann, V.; Sild, S.; Maran, U., J. Cheminf. 2015, 7:32, 
   http://dx.doi.org/10.1186/s13321-015-0082-6
 
 For more information contact: qsardb@chem.ut.ee
