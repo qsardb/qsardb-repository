@@ -98,4 +98,46 @@ public class BibTeXUtil {
 
 		return null;
 	}
+
+	static public BibTeXEntry toQsarDBEntry(Item item){
+		Key key = new Key(item.getHandle());
+		BibTeXEntry entry = new BibTeXEntry(TYPE_MISC, key);
+
+		KeyMap<Value> keyMap = new KeyMap<Value>();
+
+		StringBuilder sb = new StringBuilder();
+		for (MetadataValue field: itemService.getMetadata(item, MetadataSchema.DC_SCHEMA, "publisher", Item.ANY, Item.ANY)){
+			sb.append(" and ").append(field.getValue());
+		}
+		String authors = sb.substring(5);
+		keyMap.put(KEY_AUTHOR, new StringValue(authors, StringValue.Style.BRACED));
+
+		String handle = item.getHandle();
+		String title = "QDB archive #" + handle.substring(handle.indexOf("/") + 1);
+		keyMap.put(KEY_TITLE, new StringValue(title, StringValue.Style.BRACED));
+
+		String howpublished = "QsarDB repository";
+		keyMap.put(KEY_HOWPUBLISHED, new StringValue(howpublished, StringValue.Style.BRACED));
+
+		for (MetadataValue field: itemService.getMetadata(item, MetadataSchema.DC_SCHEMA, "date", "issued", Item.ANY)){
+			String year = field.getValue().split("-")[0];
+			keyMap.put(KEY_YEAR, new StringValue(year, StringValue.Style.BRACED));
+			break;
+		}
+
+		for (MetadataValue field: itemService.getMetadata(item, MetadataSchema.DC_SCHEMA, "identifier", "uri", Item.ANY)){
+			String uri = field.getValue();
+			keyMap.put(KEY_URL, new StringValue(uri, StringValue.Style.BRACED));
+			if (uri.contains("doi.org")) {
+				keyMap.remove(KEY_URL);
+				String doi = uri.replace("http://dx.doi.org/", "");
+				keyMap.put(KEY_DOI, new StringValue(doi, StringValue.Style.BRACED));
+				break;
+			}
+		}
+
+		entry.addAllFields(keyMap);
+
+		return entry;
+	}
 }

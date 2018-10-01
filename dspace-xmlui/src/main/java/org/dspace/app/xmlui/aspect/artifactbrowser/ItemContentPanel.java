@@ -80,23 +80,13 @@ class ItemContentPanel {
 		QdbFormat.unit(property, propertyHead);
 		QdbFormat.descriptionAttribute(property, propertyHead);
 
-		Map<String, BibTeXEntry> bibliography = new LinkedHashMap<String, BibTeXEntry>();
-
-		bibliography.putAll(loadBibliography(property));
-
 		java.util.Collection<Model> propertyModels = models.getByProperty(property);
 		java.util.Collection<Prediction> propertyPredictions = new LinkedHashSet<Prediction>();
 
 		for(Model propertyModel : propertyModels){
-			bibliography.putAll(loadBibliography(propertyModel));
-
 			java.util.Collection<Prediction> modelPredictions = predictions.getByModel(propertyModel);
 
 			propertyPredictions.addAll(modelPredictions);
-		}
-
-		for(Prediction propertyPrediction : propertyPredictions){
-			bibliography.putAll(loadBibliography(propertyPrediction));
 		}
 
 		if(true){
@@ -114,24 +104,6 @@ class ItemContentPanel {
 
 			for(Model propertyModel : propertyModels){
 				generateModelDivision(viewer, item, propertyModel, propertyModelsDivision);
-			}
-		} // End if
-
-		if(bibliography.size() > 0){
-			Division biblioDivision = propertyDivision.addDivision("property-bibliography-" + property.getId(), "secondary");
-			biblioDivision.setHead(T_property_bibliography);
-			List bibliographyList = biblioDivision.addList("property-bibliography-" + property.getId(), null);
-
-			ArrayList<String> keys = new ArrayList<String>(bibliography.keySet());
-			Collections.sort(keys);
-
-			ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
-
-			for(String key : keys){
-				BibTeXEntry entry = bibliography.get(key);
-
-				Item referencePara = bibliographyList.addItem();
-				referencePara.addHtmlContent(formatter.format(entry, true));
 			}
 		}
 	}
@@ -204,42 +176,6 @@ class ItemContentPanel {
 				predictionRow.addCellContent(formatStats(stats.stdev()));
 			}
 		}
-	}
-
-	static
-	private Map<String, BibTeXEntry> loadBibliography(Container<?, ?> container){
-
-		if(container.hasCargo(BibTeXCargo.class)){
-			BibTeXCargo bibtexCargo = container.getCargo(BibTeXCargo.class);
-
-			try {
-				BibTeXDatabase database = bibtexCargo.loadBibTeX();
-				Map<String, BibTeXEntry> m = new LinkedHashMap<String, BibTeXEntry>();
-
-				for (BibTeXEntry e: database.getEntries().values()) {
-					m.put(createSortableEntryKey(e), e);
-				}
-				return m;
-			} catch(Exception e){
-				// Ignored
-			}
-		}
-
-		return Collections.<String, BibTeXEntry>emptyMap();
-	}
-
-	private static String createSortableEntryKey (BibTeXEntry e) {
-		String year = getKey(e, BibTeXEntry.KEY_YEAR, "0000");
-		String author = getKey(e, BibTeXEntry.KEY_AUTHOR, "unknown").split(",")[0];
-		String pages = getKey(e, BibTeXEntry.KEY_PAGES, "");
-		String doi = getKey(e, BibTeXEntry.KEY_DOI, "");
-
-		return year + author + pages + doi;
-	}
-
-	private static String getKey(BibTeXEntry entry, Key key, String missing) {
-		org.jbibtex.Value value = entry.getField(key);
-		return value != null ? value.toUserString() : missing;
 	}
 
 	static

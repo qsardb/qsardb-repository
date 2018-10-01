@@ -149,12 +149,9 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		public String format(Value value, boolean latex, boolean html){
 			String string = super.format(value, latex, html);
 
+			string = "http://dx.doi.org/" + string;
 			if(html){
-				string = ("DOI: <a href=\"http://dx.doi.org/" + string + "\">" + string + "</a>");
-			} else
-
-			{
-				string = ("DOI: " + string);
+				string = ("<a href=\"" + string + "\">" + string + "</a>");
 			}
 
 			return string;
