@@ -375,7 +375,7 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
         contentPanel.setHead(T_item_content_head);
         ItemContentPanel.generate(this, item, contentPanel);
 
-        generateCitingDivision(this, item, division);
+        generateCitingDivision(item, division);
 
         Division metadataPanel = division.addDivision("item-metadata", "primary");
         metadataPanel.setHead(T_item_metadata_head);
@@ -388,22 +388,26 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
     	super.recycle();
     }
 
-    private static void generateCitingDivision(ItemViewer viewer, Item item, Division division) throws WingException {
+    private static void generateCitingDivision(Item item, Division division) throws WingException {
         Division div = division.addDivision("item-citing", "primary");
         div.setHead("Citing");
-        div.addPara("When citing this QDB archive, please also include the original article:");
+
+        Para para = div.addPara();
+        para.addContent("When using this QDB archive, please cite (");
+        para.addXref("http://qsardb.org/qdb/_info/citing", "see details");
+        para.addContent(") it together with the original article:");
 
         org.dspace.app.xmlui.wing.element.List list = div.addList("biblio");
 
         ReferenceFormatter fmt = new ReferenceFormatter(new ACSReferenceStyle());
 
+        BibTeXEntry qsardbEntry = BibTeXUtil.toQsarDBEntry(item);
+        list.addItem().addHtmlContent(fmt.format(qsardbEntry, false, true));
+
         BibTeXEntry entry = BibTeXUtil.toEntry(item);
-        if (entry != null){
+        if (entry != null) {
             String reference = fmt.format(entry, false, true);
             list.addItem().addHtmlContent(reference);
         }
-
-        BibTeXEntry qsardbEntry = BibTeXUtil.toQsarDBEntry(item);
-        list.addItem().addHtmlContent(fmt.format(qsardbEntry, false, true));
     }
 }
