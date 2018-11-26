@@ -268,18 +268,18 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 		boolean havePropertyData = false;
 
 		for(Property property: qdb.getPropertyRegistry()) {
-			LinkedHashMap<String, String> rowValues = new LinkedHashMap<>();
+			ArrayList<String[]> rowValues = new ArrayList<>();
 
 			String pval = loadValue(property, c.getId());
 			if (pval != null) {
-				rowValues.put(pval, loadPropertyReference(property, c.getId()));
+				rowValues.add(new String[]{pval, loadPropertyReference(property, c.getId())});
 			}
 
 			for (Model m: qdb.getModelRegistry().getByProperty(property)) {
 				for (Prediction p: qdb.getPredictionRegistry().getByModel(m)) {
 					pval = loadValue(p, c.getId());
 					if (pval != null) {
-						rowValues.put(pval, m.getId()+": "+m.getName()+" ("+p.getName()+")");
+						rowValues.add(new String[]{pval, m.getId()+": "+m.getName()+" ("+p.getName()+")"});
 					}
 				}
 			}
@@ -297,10 +297,10 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 				header.addCellContent("Value");
 				header.addCellContent("Source or prediction");
 
-				for (Map.Entry<String, String> e: rowValues.entrySet()) {
+				for (String[] rv: rowValues) {
 					Row row = table.addRow();
-					row.addCellContent(e.getKey());
-					row.addCell().addHtmlContent(e.getValue());
+					row.addCellContent(rv[0]);
+					row.addCell().addHtmlContent(rv[1]);
 				}
 			}
 		}
