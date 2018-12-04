@@ -30,8 +30,8 @@ class PropertyClassesPanel extends FlowPanel implements SeriesDisplayEventHandle
 	public PropertyClassesPanel(QdbTable table) {
 		property = table.getColumn(PropertyColumn.class);
 
-		classes = new ArrayList<String>();
-		for (Object c: new HashSet<Object>(property.getValues().values())) {
+		classes = new ArrayList<>();
+		for (Object c: new HashSet<>(property.getValues().values())) {
 			classes.add(c.toString());
 		}
 	}
@@ -86,6 +86,10 @@ class PropertyClassesPanel extends FlowPanel implements SeriesDisplayEventHandle
 		clear();
 
 		for (PredictionColumn predCol: event.getValues(Boolean.TRUE)) {
+			if (predCol.getType().equals(PredictionColumn.Type.TESTING)) {
+				continue;
+			}
+
 			makeConfusionMatrix(predCol);
 
 			add(new HTML(predCol.getId() + ": "+predCol.getName()));
