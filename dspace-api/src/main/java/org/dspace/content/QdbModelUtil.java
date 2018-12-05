@@ -17,6 +17,8 @@ import org.dmg.pmml.MiningField;
 import org.dmg.pmml.MiningModel;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMML;
+import org.dmg.pmml.RegressionModel;
+import org.dmg.pmml.RegressionNormalizationMethodType;
 import org.dmg.pmml.Segment;
 import org.dmg.pmml.Segmentation;
 import org.dmg.pmml.TreeModel;
@@ -136,6 +138,13 @@ public class QdbModelUtil {
 			}
 			
 			return "Clustering model";
+		}
+
+		if (pmmlModel instanceof RegressionModel) {
+			RegressionModel model = (RegressionModel) pmmlModel;
+			if (model.getNormalizationMethod() == RegressionNormalizationMethodType.LOGIT) {
+				return "Logistic regression";
+			}
 		}
 		
 		String name = pmmlModel.getClass().getSimpleName();
