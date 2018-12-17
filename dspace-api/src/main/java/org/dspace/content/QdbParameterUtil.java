@@ -15,7 +15,7 @@ public class QdbParameterUtil {
 	public static String loadUnits(Parameter parameter) {
 		if (parameter.hasCargo(UCUMCargo.class)) {
 			try {
-				return parameter.getCargo(UCUMCargo.class).loadString();
+				return parameter.getCargo(UCUMCargo.class).loadString().trim();
 			} catch (IOException ignore) {
 			}
 		}
