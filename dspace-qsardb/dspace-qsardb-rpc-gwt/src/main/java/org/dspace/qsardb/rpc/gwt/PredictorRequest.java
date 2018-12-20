@@ -10,13 +10,13 @@ public class PredictorRequest {
 
 	private String structure;
 
-	private Map<String, String> parameters;
+	private Map<String, String> descriptorValues;
 
 	public PredictorRequest() {
 	}
 	
 	public PredictorRequest(Map<String, String> parameters) {
-		this.parameters = parameters;
+		this.descriptorValues = parameters;
 	}
 
 	public PredictorRequest(String structure) {
@@ -31,19 +31,19 @@ public class PredictorRequest {
 		this.structure = structure;
 	}
 
-	public Map<String, String> getParameters() {
-		if (parameters == null) {
-			parameters = new LinkedHashMap<String, String>();
+	public Map<String, String> getDescriptorValues() {
+		if (descriptorValues == null) {
+			descriptorValues = new LinkedHashMap<>();
 		}
-		return parameters;
+		return descriptorValues;
 	}
 	
-	public void setParameters(Map<String, String> params) {
-		parameters = params;
+	public void setDescriptorValues(Map<String, String> params) {
+		descriptorValues = params;
 	}
 
 	@Override
 	public String toString() {
-		return "PredictorRequest:"+structure+":"+parameters;
+		return "PredictorRequest:"+structure+":"+descriptorValues;
 	}
 }

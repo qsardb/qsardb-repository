@@ -176,7 +176,7 @@ public class PredictorResource {
 
 	private Map<String, String> getDescriptors(PredictorRequest postRequest, Qdb qdb){
 		if (postRequest != null) {
-			return postRequest.getParameters();
+			return postRequest.getDescriptorValues();
 		}
 
 		Map<String, String> descs = new LinkedHashMap<>();
