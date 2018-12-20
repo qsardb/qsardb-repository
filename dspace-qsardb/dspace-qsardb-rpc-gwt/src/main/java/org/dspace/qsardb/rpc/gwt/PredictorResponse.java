@@ -14,7 +14,7 @@ public class PredictorResponse {
 	//units for predicted value
 	private String resultUnits;
 
-	private Map<String, String> parameters;
+	private Map<String, String> descriptorValues;
 
 	private Map<String, String> implementations;
 
@@ -34,15 +34,15 @@ public class PredictorResponse {
 		this.resultUnits = resultUnits;
 	}
 
-	public Map<String, String> getParameters() {
-		if (parameters == null) {
-			parameters = new LinkedHashMap<String, String>();
+	public Map<String, String> getDescriptorValues() {
+		if (descriptorValues == null) {
+			descriptorValues = new LinkedHashMap<String, String>();
 		}
-		return parameters;
+		return descriptorValues;
 	}
 
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
+	public void setDescriptorValues(Map<String, String> parameters) {
+		this.descriptorValues = parameters;
 	}
 
 	public Map<String, String> getImplementations() {
@@ -61,10 +61,10 @@ public class PredictorResponse {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\nResponse -- contains:\n");
 
-		if (parameters != null) {
-			sb.append("Values: ").append(parameters.keySet().size()).append("\n");
-			for(String key : parameters.keySet()) {
-				sb.append(key).append(" : ").append(parameters.get(key)).append("\n");
+		if (descriptorValues != null) {
+			sb.append("Values: ").append(descriptorValues.keySet().size()).append("\n");
+			for(String key : descriptorValues.keySet()) {
+				sb.append(key).append(" : ").append(descriptorValues.get(key)).append("\n");
 			}
 			sb.append("\n");
 		}

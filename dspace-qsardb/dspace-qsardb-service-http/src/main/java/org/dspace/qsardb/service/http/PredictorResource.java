@@ -101,7 +101,7 @@ public class PredictorResource {
 			}
 		}
 
-		r.setParameters(params);
+		r.setDescriptorValues(params);
 
 		return r;
 	}
@@ -123,10 +123,10 @@ public class PredictorResource {
 				PredictorResponse r;
 				if (structure != null) {
 					r = calculateDescriptors(handle, model, structure);
-					params = r.getParameters();
+					params = r.getDescriptorValues();
 				} else {
 					r = new PredictorResponse();
-					r.setParameters(params);
+					r.setDescriptorValues(params);
 				}
 
 				String units = "";

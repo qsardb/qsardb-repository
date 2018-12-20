@@ -17,7 +17,7 @@ public class InputChangeEvent extends GwtEvent<InputChangeEventHandler> {
 
 	public InputChangeEvent(PredictorResponse response){
 		this.response = response;
-		setValues(response.getParameters());
+		setValues(response.getDescriptorValues());
 	}
 
 	@Override
