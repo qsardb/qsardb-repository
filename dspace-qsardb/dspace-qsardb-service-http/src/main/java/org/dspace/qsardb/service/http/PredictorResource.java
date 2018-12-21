@@ -123,10 +123,15 @@ public class PredictorResource {
 					r.setDescriptorValues(params);
 				}
 
+				String propertyId = model.getProperty().getId();
+
 				String units = QdbParameterUtil.loadUnits(model.getProperty());
 				r.setResultUnits(units);
 
-				r.setResult(PredictorUtil.evaluate(model, params));  
+				PredictorUtil.Result result = PredictorUtil.evaluate(model, params);
+				r.setResult(result.getEquation());
+				r.getPredictionValues().put(propertyId, result.getValue());
+
 				return r;
 			}
 		};

@@ -11,6 +11,8 @@ public class PredictorResponse {
 	//predicted value
 	private String result;
 
+	private Map<String, String> predictionValues;
+
 	//units for predicted value
 	private String resultUnits;
 
@@ -24,6 +26,17 @@ public class PredictorResponse {
 
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	public Map<String, String> getPredictionValues() {
+		if (predictionValues == null) {
+			this.predictionValues = new LinkedHashMap<>();
+		}
+		return predictionValues;
+	}
+
+	public void setPredictionValues(Map<String, String> predictionValues) {
+		this.predictionValues = predictionValues;
 	}
 
 	public String getResultUnits() {

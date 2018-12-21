@@ -19,6 +19,19 @@ import org.openscience.cdk.smiles.*;
 
 public class PredictorUtil {
 
+	public static class Result {
+		private String value;
+		private String equation;
+
+		public String getValue() {
+			return value;
+		}
+
+		public String getEquation() {
+			return equation;
+		}
+	}
+
 	private PredictorUtil(){
 	}
 
@@ -39,7 +52,7 @@ public class PredictorUtil {
 
 	static
 	synchronized
-	public String evaluate(Model model, Map<String, String> parameters) throws Exception {
+	public Result evaluate(Model model, Map<String, String> parameters) throws Exception {
 		Evaluator evaluator = prepareEvaluator(model);
 
 		evaluator.init();
@@ -80,10 +93,23 @@ public class PredictorUtil {
 	}
 
 	static
-	private String evaluate(Evaluator evaluator, Map<String, String> parameters) throws Exception {
+	private Result evaluate(Evaluator evaluator, Map<String, String> parameters) throws Exception {
 		List<Descriptor> descriptors = evaluator.getDescriptors();
+		Map<Descriptor, String> descriptorValues = mapValues(descriptors, parameters);
 
-		return (String)evaluator.evaluateAndFormat(mapValues(descriptors, parameters), null);
+		Result r = new Result();
+		r.equation = (String)evaluator.evaluateAndFormat(descriptorValues, null);
+
+		Object result = evaluator.evaluate(descriptorValues).getValue();
+		if (result instanceof Map) {
+			Map map = (Map)result;
+			if (map.size() == 1) {
+				result = map.values().iterator().next();
+			}
+		}
+
+		r.value = String.valueOf(result);
+		return r;
 	}
 
 	static
