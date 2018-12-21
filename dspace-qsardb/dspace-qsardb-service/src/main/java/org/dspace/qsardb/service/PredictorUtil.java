@@ -1,21 +1,26 @@
 package org.dspace.qsardb.service;
 
-import java.util.*;
-
-import org.qsardb.cargo.bodo.*;
-import org.qsardb.evaluation.*;
-import org.qsardb.model.*;
-
-import net.sf.blueobelisk.*;
-import net.sf.jniinchi.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import net.sf.blueobelisk.BODODescriptor;
+import net.sf.jniinchi.INCHI_RET;
 import org.dspace.content.QdbModelUtil;
-
-import org.openscience.cdk.*;
-import org.openscience.cdk.exception.*;
-import org.openscience.cdk.inchi.*;
-import org.openscience.cdk.interfaces.*;
-import org.openscience.cdk.qsar.*;
-import org.openscience.cdk.smiles.*;
+import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.exception.InvalidSmilesException;
+import org.openscience.cdk.inchi.InChIGeneratorFactory;
+import org.openscience.cdk.inchi.InChIToStructure;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.qsar.BODOUtil;
+import org.openscience.cdk.qsar.DescriptorUtil;
+import org.openscience.cdk.qsar.DescriptorValueCache;
+import org.openscience.cdk.qsar.IMolecularDescriptor;
+import org.openscience.cdk.smiles.SmilesParser;
+import org.qsardb.cargo.bodo.BODOCargo;
+import org.qsardb.evaluation.Evaluator;
+import org.qsardb.model.Descriptor;
+import org.qsardb.model.Model;
 
 public class PredictorUtil {
 
@@ -32,12 +37,10 @@ public class PredictorUtil {
 		}
 	}
 
-	private PredictorUtil(){
+	private PredictorUtil() {
 	}
 
-	static
-	synchronized
-	public Map<Descriptor, String> calculateDescriptors(Model model, String structure) throws Exception {
+	public static synchronized Map<Descriptor, String> calculateDescriptors(Model model, String structure) throws Exception {
 		IAtomContainer molecule = prepareMolecule(structure);
 
 		Evaluator evaluator = prepareEvaluator(model);
@@ -64,9 +67,8 @@ public class PredictorUtil {
 		}
 	}
 
-	static
-	private Map<Descriptor, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
-		Map<Descriptor, String> result = new LinkedHashMap<Descriptor, String>();
+	private static Map<Descriptor, String> calculateDescriptors(Evaluator evaluator, IAtomContainer molecule) throws Exception {
+		Map<Descriptor, String> result = new LinkedHashMap<>();
 
 		DescriptorValueCache cache = new DescriptorValueCache();
 
@@ -112,8 +114,7 @@ public class PredictorUtil {
 		return r;
 	}
 
-	static
-	public IAtomContainer prepareMolecule(String string) throws CDKException {
+	public static IAtomContainer prepareMolecule(String string) throws CDKException {
 		IAtomContainer molecule = parseMolecule(string);
 
 		molecule = DescriptorUtil.prepareMolecule(molecule);
@@ -121,8 +122,7 @@ public class PredictorUtil {
 		return molecule;
 	}
 
-	static
-	private Evaluator prepareEvaluator(Model model) throws Exception {
+	private static Evaluator prepareEvaluator(Model model) throws Exception {
 		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
 
 		if(evaluator == null){
@@ -132,8 +132,7 @@ public class PredictorUtil {
 		return evaluator;
 	}
 
-	static
-	private IAtomContainer parseMolecule(String string) throws CDKException {
+	private static IAtomContainer parseMolecule(String string) throws CDKException {
 
 		if(string.startsWith("InChI=")){
 			return parseInChIMolecule(string);
@@ -142,8 +141,7 @@ public class PredictorUtil {
 		return parseSmilesMolecule(string);
 	}
 
-	static
-	private IAtomContainer parseInChIMolecule(String string) throws CDKException {
+	private static IAtomContainer parseInChIMolecule(String string) throws CDKException {
 		InChIGeneratorFactory factory = InChIGeneratorFactory.getInstance();
 
 		InChIToStructure converter = factory.getInChIToStructure(string, DefaultChemObjectBuilder.getInstance());
@@ -166,9 +164,8 @@ public class PredictorUtil {
 		return parser.parseSmiles(string);
 	}
 
-	static
-	private <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){
-		Map<Descriptor, V> values = new LinkedHashMap<Descriptor, V>();
+	private static <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){
+		Map<Descriptor, V> values = new LinkedHashMap<>();
 
 		for(Descriptor descriptor : descriptors){
 			values.put(descriptor, parameters.get(descriptor.getId()));
