@@ -19,9 +19,9 @@ public class QdbFormat {
 	}
 
 	public static void unit(Parameter parameter, TextContainer target) throws WingException {
-		String unit = QdbParameterUtil.loadUnits(parameter);
-		if (unit != null) {
-			target.addContent(" ["+unit+"]");
+		String units = QdbParameterUtil.loadUnits(parameter);
+		if (!units.isEmpty()) {
+			target.addContent(" ["+units+"]");
 		}
 	}
 

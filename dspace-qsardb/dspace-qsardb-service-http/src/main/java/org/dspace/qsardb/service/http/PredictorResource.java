@@ -3,7 +3,6 @@
  */
 package org.dspace.qsardb.service.http;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 import net.sf.blueobelisk.BODODescriptor;
 import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
+import org.dspace.content.QdbParameterUtil;
 import org.dspace.content.QdbUtil;
 import org.dspace.qsardb.rpc.gwt.PredictorRequest;
 import org.dspace.qsardb.rpc.gwt.PredictorResponse;
@@ -28,12 +28,9 @@ import org.dspace.qsardb.service.ItemUtil;
 import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
 import org.qsardb.cargo.bodo.BODOCargo;
-import org.qsardb.cargo.ucum.UCUMCargo;
 import org.qsardb.model.Descriptor;
 import org.qsardb.model.Model;
 import org.qsardb.model.Qdb;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Path("/predictor")
 public class PredictorResource {
@@ -43,8 +40,6 @@ public class PredictorResource {
 
 	@Context
 	UriInfo uriInfo;
-
-	private static final Logger logg = LoggerFactory.getLogger(PredictorResource.class);
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -118,7 +113,6 @@ public class PredictorResource {
 				Map<String, String> params = getDescriptors(req, qdb);
 
 				String structure = getStructure(req, params);
-				logg.debug("structure: " + structure);
 
 				PredictorResponse r;
 				if (structure != null) {
@@ -129,17 +123,9 @@ public class PredictorResource {
 					r.setDescriptorValues(params);
 				}
 
-				String units = "";
-				boolean hasUnits = model.getProperty().hasCargo(UCUMCargo.class);
-				if (hasUnits) {
-					try {
-						units = model.getProperty().getCargo(UCUMCargo.class).loadString();
-					} catch (IOException ex) {
-						logg.debug("units, " + ex.getMessage());
-					}
-				}
-
+				String units = QdbParameterUtil.loadUnits(model.getProperty());
 				r.setResultUnits(units);
+
 				r.setResult(PredictorUtil.evaluate(model, params));  
 				return r;
 			}

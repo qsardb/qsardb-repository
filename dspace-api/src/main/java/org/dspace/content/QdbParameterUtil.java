@@ -13,13 +13,13 @@ import org.qsardb.model.Parameter;
 public class QdbParameterUtil {
 
 	public static String loadUnits(Parameter parameter) {
-		if (parameter.hasCargo(UCUMCargo.class)) {
+		if (parameter != null && parameter.hasCargo(UCUMCargo.class)) {
 			try {
 				return parameter.getCargo(UCUMCargo.class).loadString().trim();
 			} catch (IOException ignore) {
 			}
 		}
-		return null;
+		return "";
 	}
 
 	public static Map<String, String> loadStringValues(Parameter<?, ?> parameter) {
