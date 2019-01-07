@@ -3,7 +3,9 @@
  */
 package org.dspace.qsardb.rpc.gwt;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PredictorResponse {
@@ -19,6 +21,8 @@ public class PredictorResponse {
 	private Map<String, String> descriptorValues;
 
 	private Map<String, String> implementations;
+
+	private List<Analogue> analogues;
 
 	public String getResult() {
 		return result;
@@ -69,26 +73,25 @@ public class PredictorResponse {
 		this.implementations = implementations;
 	}
 
+	public List<Analogue> getAnalogues() {
+		if (analogues == null) {
+			analogues = new ArrayList<>();
+		}
+		return analogues;
+	}
+
+	public void setAnalogues(List<Analogue> analogues) {
+		this.analogues = analogues;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("\nResponse -- contains:\n");
-
-		if (descriptorValues != null) {
-			sb.append("Values: ").append(descriptorValues.keySet().size()).append("\n");
-			for(String key : descriptorValues.keySet()) {
-				sb.append(key).append(" : ").append(descriptorValues.get(key)).append("\n");
-			}
-			sb.append("\n");
-		}
-
-		if (implementations != null) {
-			sb.append("Implementations: ").append(implementations.keySet().size()).append("\n");
-			for(String key : implementations.keySet()) {
-				sb.append(key).append(" : ").append(implementations.get(key)).append("\n");
-			}
-			sb.append("\n");
-		}
+		StringBuilder sb = new StringBuilder("PredictorResponse");
+		sb.append(":").append(result);
+		sb.append(":").append(resultUnits);
+		sb.append(":").append(getDescriptorValues());
+		sb.append(":").append(getImplementations());
+		sb.append(":").append(getAnalogues());
 
 		return sb.toString();
 	}
