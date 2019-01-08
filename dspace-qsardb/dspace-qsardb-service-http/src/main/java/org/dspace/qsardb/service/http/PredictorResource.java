@@ -3,6 +3,8 @@
  */
 package org.dspace.qsardb.service.http;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -22,14 +24,20 @@ import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
 import org.dspace.content.QdbParameterUtil;
 import org.dspace.content.QdbUtil;
+import org.dspace.qsardb.rpc.gwt.Analogue;
 import org.dspace.qsardb.rpc.gwt.PredictorRequest;
 import org.dspace.qsardb.rpc.gwt.PredictorResponse;
 import org.dspace.qsardb.service.ItemUtil;
 import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
+import org.dspace.qsardb.service.Distance;
+import org.dspace.qsardb.service.DistanceCalculator;
 import org.qsardb.cargo.bodo.BODOCargo;
+import org.qsardb.cargo.structure.ChemicalMimeData;
+import org.qsardb.model.Compound;
 import org.qsardb.model.Descriptor;
 import org.qsardb.model.Model;
+import org.qsardb.model.Prediction;
 import org.qsardb.model.Qdb;
 
 @Path("/predictor")
@@ -132,7 +140,46 @@ public class PredictorResource {
 				r.setResult(result.getEquation());
 				r.getPredictionValues().put(propertyId, result.getValue());
 
+				if (req == null) { // it's a GET request
+					return r;
+				}
+
+				DistanceCalculator calc = new DistanceCalculator(model);
+				ArrayList<Distance> dists = calc.calculateDistances(params);
+
+				Map<String, String> propValues = QdbParameterUtil.loadStringValues(model.getProperty());
+
+				LinkedHashMap<String, String> predValues = new LinkedHashMap<>();
+				for (Prediction p: qdb.getPredictionRegistry()) {
+					predValues.putAll(QdbParameterUtil.loadStringValues(p));
+				}
+
+				for (int i=0; i<Math.min(5, dists.size()); i++) {
+					String cid = dists.get(i).getCompoundId();
+					Compound c = qdb.getCompound(cid);
+
+					Analogue a = new Analogue(cid);
+					a.setDistance(dists.get(i).getDistance());
+					a.setName(c.getName());
+					a.setCas(c.getCas());
+					a.setSmiles(loadSmiles(c));
+
+					a.getPropertyValues().put(propertyId, propValues.get(cid));
+					a.getPredictionValues().put(propertyId, predValues.get(cid));
+
+					r.getAnalogues().add(a);
+				}
+
 				return r;
+			}
+
+			private String loadSmiles(Compound c) throws IOException {
+				String cargoID = ChemicalMimeData.DAYLIGHT_SMILES.getId();
+				if (c.hasCargo(cargoID)) {
+					return c.getCargo(cargoID).loadString();
+				}
+
+				return "";
 			}
 		};
 
@@ -180,5 +227,4 @@ public class PredictorResource {
 		}
 		return descs;
 	}
-
 }
