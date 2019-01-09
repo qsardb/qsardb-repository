@@ -134,7 +134,7 @@ public class PredictorResource {
 				String propertyId = model.getProperty().getId();
 
 				String units = QdbParameterUtil.loadUnits(model.getProperty());
-				r.setResultUnits(units);
+				r.getPredictionUnits().put(propertyId, units);
 
 				PredictorUtil.Result result = PredictorUtil.evaluate(model, params);
 				r.setResult(result.getEquation());

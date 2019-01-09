@@ -1,6 +1,7 @@
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.user.client.ui.*;
+import java.util.Map;
 import org.dspace.qsardb.rpc.gwt.ModelTable;
 import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 
@@ -38,9 +39,10 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 		PropertyColumn property = modelTable.getColumn(PropertyColumn.class);
 		FlowPanel propertyPanel = new FlowPanel();
 
-		String propertyUnits = event.getResponse().getResultUnits();
-		if (propertyUnits != null && !propertyUnits.trim().equals("")) {
-			propertyPanel.add(new InlineLabel(parts[0] + " [" + propertyUnits + "]"));
+		Map<String, String> predictionUnits = event.getResponse().getPredictionUnits();
+		String unit = predictionUnits.get(property.getId());
+		if (unit != null && !unit.trim().equals("")) {
+			propertyPanel.add(new InlineLabel(parts[0] + " [" + unit + "]"));
 		} else {
 			propertyPanel.add(new InlineLabel(parts[0]));
 		}
