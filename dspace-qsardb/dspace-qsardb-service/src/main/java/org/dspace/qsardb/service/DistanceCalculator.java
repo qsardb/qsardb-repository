@@ -34,7 +34,7 @@ public class DistanceCalculator {
 		}
 	}
 
-	public ArrayList<Distance> calculateDistances(Map<String, String> params) throws Exception {
+	public ArrayList<Distance> calculateDistances(Map<String, String> params) {
 		double[] query = new double[descriptorIds.length];
 		for (int j=0; j<descriptorIds.length; j++) {
 			if (!params.containsKey(descriptorIds[j])) {
@@ -55,6 +55,39 @@ public class DistanceCalculator {
 		Collections.sort(dists);
 
 		return dists;
+	}
+
+	public ArrayList<Distance> calculateDistances(String cid) {
+		int idx = -1;
+		for (int i=0; i<compoundIds.length; i++) {
+			if (compoundIds[i].equals(cid)) {
+				idx = i;
+			}
+		}
+		if (idx == -1) {
+			throw new IllegalArgumentException("Compound not found: " + cid);
+		}
+
+		double[] query = data[idx];
+
+		ArrayList<Distance> dists = new ArrayList<>(compoundIds.length);
+		for (int i=0; i<compoundIds.length; i++) {
+			if (i == idx) {
+				continue;
+			}
+			double dist = 0.0;
+			for (int j=0; j<descriptorIds.length; j++) {
+				dist += Math.pow(query[j] - data[i][j], 2.0);
+			}
+			dists.add(new Distance(compoundIds[i], Math.sqrt(dist)));
+		}
+		Collections.sort(dists);
+
+		return dists;
+	}
+
+	public String getCompoundId(int i) {
+		return compoundIds[i];
 	}
 
 	private double norm(int j, double v) {
