@@ -33,4 +33,14 @@ public class QdbParameterUtil {
 		return Collections.emptyMap();
 	}
 
+	public static Map<String, Double> loadDoubleValues(Parameter<?, ?> parameter) {
+		if (parameter != null && parameter.hasCargo(ValuesCargo.class)) {
+			try {
+				ValuesCargo cargo = parameter.getCargo(ValuesCargo.class);
+				return cargo.loadDoubleMap();
+			} catch (IOException ignore) {
+			}
+		}
+		return Collections.emptyMap();
+	}
 }
