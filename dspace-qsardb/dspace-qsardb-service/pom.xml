@@ -26,6 +26,10 @@
 			<groupId>org.qsardb</groupId>
 			<artifactId>model</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.qsardb</groupId>
+			<artifactId>statistics</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
