@@ -4,8 +4,8 @@
 package org.dspace.qsardb.service.http;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -27,11 +27,11 @@ import org.dspace.content.QdbUtil;
 import org.dspace.qsardb.rpc.gwt.Analogue;
 import org.dspace.qsardb.rpc.gwt.PredictorRequest;
 import org.dspace.qsardb.rpc.gwt.PredictorResponse;
+import org.dspace.qsardb.service.ApplicabilityDomain;
 import org.dspace.qsardb.service.ItemUtil;
 import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
 import org.dspace.qsardb.service.Distance;
-import org.dspace.qsardb.service.DistanceCalculator;
 import org.qsardb.cargo.bodo.BODOCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
 import org.qsardb.model.Compound;
@@ -144,8 +144,10 @@ public class PredictorResource {
 					return r;
 				}
 
-				DistanceCalculator calc = new DistanceCalculator(model);
-				ArrayList<Distance> dists = calc.calculateDistances(params);
+				// TODO: add caching
+				ApplicabilityDomain ad = new ApplicabilityDomain(model);
+				ApplicabilityDomain.Result adResult = ad.estimate(params);
+				r.setApplicabilityDomain(adResult.isWithinAD() ? "YES" : "NO");
 
 				Map<String, String> propValues = QdbParameterUtil.loadStringValues(model.getProperty());
 
@@ -154,12 +156,13 @@ public class PredictorResource {
 					predValues.putAll(QdbParameterUtil.loadStringValues(p));
 				}
 
-				for (int i=0; i<Math.min(5, dists.size()); i++) {
-					String cid = dists.get(i).getCompoundId();
+				List<Distance> analogues = adResult.getAnalogues();
+				for (int i=0; i<Math.min(5, analogues.size()); i++) {
+					String cid = analogues.get(i).getCompoundId();
 					Compound c = qdb.getCompound(cid);
 
 					Analogue a = new Analogue(cid);
-					a.setDistance(dists.get(i).getDistance());
+					a.setDistance(analogues.get(i).getDistance());
 					a.setName(c.getName());
 					a.setCas(c.getCas());
 					a.setSmiles(loadSmiles(c));

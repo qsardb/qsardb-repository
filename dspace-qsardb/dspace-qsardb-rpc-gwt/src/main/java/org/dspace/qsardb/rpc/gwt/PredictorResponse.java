@@ -23,6 +23,8 @@ public class PredictorResponse {
 
 	private List<Analogue> analogues;
 
+	private String applicabilityDomain;
+
 	public String getResult() {
 		return result;
 	}
@@ -84,6 +86,14 @@ public class PredictorResponse {
 
 	public void setAnalogues(List<Analogue> analogues) {
 		this.analogues = analogues;
+	}
+
+	public String getApplicabilityDomain() {
+		return applicabilityDomain;
+	}
+
+	public void setApplicabilityDomain(String applicabilityDomain) {
+		this.applicabilityDomain = applicabilityDomain;
 	}
 
 	@Override
