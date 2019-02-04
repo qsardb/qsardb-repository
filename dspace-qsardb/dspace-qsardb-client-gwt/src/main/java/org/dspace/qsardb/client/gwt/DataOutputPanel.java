@@ -67,5 +67,11 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 
 			formatter.setVerticalAlign(row, HasVerticalAlignment.ALIGN_TOP);
 		}
+
+		if (property.isNumeric()) {
+			this.table.setHTML(parts.length, 0, "Inside applicability domain");
+			this.table.setHTML(parts.length, 1, "=");
+			this.table.setHTML(parts.length, 2, event.getResponse().getApplicabilityDomain());
+		}
 	}
 }
