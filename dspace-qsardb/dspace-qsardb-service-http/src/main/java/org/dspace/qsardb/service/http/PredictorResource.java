@@ -28,10 +28,10 @@ import org.dspace.qsardb.rpc.gwt.Analogue;
 import org.dspace.qsardb.rpc.gwt.PredictorRequest;
 import org.dspace.qsardb.rpc.gwt.PredictorResponse;
 import org.dspace.qsardb.service.ApplicabilityDomain;
+import org.dspace.qsardb.service.Distance;
 import org.dspace.qsardb.service.ItemUtil;
 import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
-import org.dspace.qsardb.service.Distance;
 import org.qsardb.cargo.bodo.BODOCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
 import org.qsardb.model.Compound;
@@ -48,6 +48,8 @@ public class PredictorResource {
 
 	@Context
 	UriInfo uriInfo;
+
+	private static final CacheAD adCache = new CacheAD(500);
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -144,8 +146,7 @@ public class PredictorResource {
 					return r;
 				}
 
-				// TODO: add caching
-				ApplicabilityDomain ad = new ApplicabilityDomain(model);
+				ApplicabilityDomain ad = adCache.get(handle, model);
 				ApplicabilityDomain.Result adResult = ad.estimate(params);
 				r.setApplicabilityDomain(adResult.isWithinAD() ? "YES" : "NO");
 
@@ -230,4 +231,5 @@ public class PredictorResource {
 		}
 		return descs;
 	}
+
 }
