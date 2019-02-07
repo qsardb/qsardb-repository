@@ -12,6 +12,8 @@ public class PredictorRequest {
 
 	private Map<String, String> descriptorValues;
 
+	private Integer limitAnalogues;
+
 	public PredictorRequest() {
 	}
 	
@@ -40,6 +42,18 @@ public class PredictorRequest {
 	
 	public void setDescriptorValues(Map<String, String> params) {
 		descriptorValues = params;
+	}
+
+	public Integer getLimitAnalogues() {
+		if (limitAnalogues == null) {
+			return 5;
+		} else {
+			return limitAnalogues;
+		}
+	}
+
+	public void setLimitAnalogues(Integer limit) {
+		this.limitAnalogues = limit;
 	}
 
 	@Override

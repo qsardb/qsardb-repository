@@ -158,7 +158,8 @@ public class PredictorResource {
 				}
 
 				List<Distance> analogues = adResult.getAnalogues();
-				for (int i=0; i<Math.min(5, analogues.size()); i++) {
+				Integer limit = req.getLimitAnalogues();
+				for (int i=0; i<Math.min(limit, analogues.size()); i++) {
 					String cid = analogues.get(i).getCompoundId();
 					Compound c = qdb.getCompound(cid);
 
