@@ -9,19 +9,21 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import net.sf.blueobelisk.BODODescriptor;
+import net.sf.blueobelisk.BODODescriptor.Implementation;
 import org.dspace.content.Item;
 import org.dspace.content.QdbCallable;
+import org.dspace.content.QdbModelUtil;
 import org.dspace.content.QdbParameterUtil;
 import org.dspace.content.QdbUtil;
 import org.dspace.qsardb.rpc.gwt.Analogue;
@@ -34,6 +36,7 @@ import org.dspace.qsardb.service.PredictorUtil;
 import org.dspace.qsardb.service.QdbContext;
 import org.qsardb.cargo.bodo.BODOCargo;
 import org.qsardb.cargo.structure.ChemicalMimeData;
+import org.qsardb.evaluation.Evaluator;
 import org.qsardb.model.Compound;
 import org.qsardb.model.Descriptor;
 import org.qsardb.model.Model;
@@ -62,6 +65,19 @@ public class PredictorResource {
 			return r.getResult();
 		} catch (Exception ex) {
 			throw new WebApplicationException("Evaluation failed", 400);
+		}
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{handle: \\d+/\\d+}/models/{modelId}/info")
+	public PredictorInfoResponse getPredictorInfo(
+			@PathParam("handle") String handle,
+			@PathParam("modelId") final String modelId) {
+		try {
+			return predictorInfo(handle, modelId);
+		} catch (Exception ex) {
+			throw new WebApplicationException("Error: "+ex.getMessage(), 400);
 		}
 	}
 
@@ -233,4 +249,64 @@ public class PredictorResource {
 		return descs;
 	}
 
+	private String getApplication(Descriptor descriptor) throws Exception {
+		String app = descriptor.getApplication();
+
+		if (app == null) {
+			return "N/A";
+		}
+
+		if (app.trim().isEmpty() && descriptor.hasCargo(BODOCargo.class)) {
+			BODODescriptor bodoDescriptor = descriptor.getCargo(BODOCargo.class).loadBodoDescriptor();
+			for (Implementation impl: bodoDescriptor.getImplementations()) {
+				if (impl.getTitle().contains("org.openscience.cdk")) {
+					app = "CDK " + org.openscience.cdk.CDK.getVersion();
+				}
+				break;
+			}
+		}
+
+		return app;
+	}
+
+	private PredictorInfoResponse predictorInfo(String handle, final String modelId) throws Exception {
+		QdbCallable<PredictorInfoResponse> callback = new QdbCallable<PredictorInfoResponse>() {
+			@Override
+			public PredictorInfoResponse call(Qdb qdb) throws Exception {
+				Model model = qdb.getModel(modelId);
+				if (model == null) {
+					throw new NotFoundException("Model not found: "+modelId);
+				}
+
+				Evaluator evaluator = QdbModelUtil.getEvaluator(model);
+
+				evaluator.init();
+
+				PredictorInfoResponse r = new PredictorInfoResponse();
+				boolean acceptSMILES = true;
+				try {
+					List<Descriptor> descriptors = evaluator.getDescriptors();
+					for (Descriptor d: descriptors) {
+						r.getDescriptorNames().put(d.getId(), d.getName());
+						r.getDescriptorApplications().put(d.getId(), getApplication(d));
+						acceptSMILES &= d.hasCargo(BODOCargo.class);
+					}
+					r.setAcceptSMILES(acceptSMILES);
+				} finally {
+					evaluator.destroy();
+				}
+
+				return r;
+			}
+		};
+
+		org.dspace.core.Context context = QdbContext.getContext();
+		Item item = ItemUtil.obtainItem(context, handle);
+		if (item == null || item.isWithdrawn()) {
+			throw new NotFoundException(handle + " not found or unavailable");
+		}
+
+		PredictorInfoResponse r = QdbUtil.invokeInternal(context, item, callback);
+		return r;
+	}
 }
