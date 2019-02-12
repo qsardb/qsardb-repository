@@ -19,7 +19,7 @@ public class PredictorResponse {
 
 	private Map<String, String> descriptorValues;
 
-	private Map<String, String> implementations;
+	private Map<String, String> descriptorApplications;
 
 	private List<Analogue> analogues;
 
@@ -66,15 +66,15 @@ public class PredictorResponse {
 		this.descriptorValues = parameters;
 	}
 
-	public Map<String, String> getImplementations() {
-		if (implementations == null) {
-			implementations = new LinkedHashMap<>();
+	public Map<String, String> getDescriptorApplications() {
+		if (descriptorApplications == null) {
+			descriptorApplications = new LinkedHashMap<>();
 		}
-		return implementations;
+		return descriptorApplications;
 	}
 
-	public void setImplementations(Map<String, String> implementations) {
-		this.implementations = implementations;
+	public void setDescriptorApplications(Map<String, String> descriptorApplications) {
+		this.descriptorApplications = descriptorApplications;
 	}
 
 	public List<Analogue> getAnalogues() {
@@ -102,7 +102,7 @@ public class PredictorResponse {
 		sb.append(":").append(result);
 		sb.append(":").append(getPredictionUnits());
 		sb.append(":").append(getDescriptorValues());
-		sb.append(":").append(getImplementations());
+		sb.append(":").append(getDescriptorApplications());
 		sb.append(":").append(getAnalogues());
 
 		return sb.toString();

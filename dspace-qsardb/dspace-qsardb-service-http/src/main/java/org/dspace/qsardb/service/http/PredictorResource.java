@@ -115,10 +115,10 @@ public class PredictorResource {
 			if (bodoDescriptor.getImplementations().size() > 0) {
 				String app = bodoDescriptor.getImplementations().get(0).getTitle();
 				if (app.contains("org.openscience.cdk")) {
-					app = "CDK, version " + org.openscience.cdk.CDK.getVersion();
+					app = "CDK " + org.openscience.cdk.CDK.getVersion();
 				}
 
-				r.getImplementations().put(descriptor.getId(), app);
+				r.getDescriptorApplications().put(descriptor.getId(), app);
 			}
 		}
 
