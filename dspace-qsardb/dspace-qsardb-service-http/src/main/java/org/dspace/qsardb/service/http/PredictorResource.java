@@ -4,6 +4,8 @@
 package org.dspace.qsardb.service.http;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,6 +167,14 @@ public class PredictorResource {
 				ApplicabilityDomain ad = adCache.get(handle, model);
 				ApplicabilityDomain.Result adResult = ad.estimate(params);
 				r.setApplicabilityDomain(adResult.isWithinAD() ? "YES" : "NO");
+
+				// round z-score values
+				Map<String, Double> zScores = adResult.getDescriptorZScores();
+				for (Map.Entry<String, Double> e: zScores.entrySet()) {
+					double z = e.getValue();
+					e.setValue(BigDecimal.valueOf(z).setScale(2, RoundingMode.HALF_UP).doubleValue());
+				}
+				r.setDescriptorZScores(zScores);
 
 				Map<String, String> propValues = QdbParameterUtil.loadStringValues(model.getProperty());
 

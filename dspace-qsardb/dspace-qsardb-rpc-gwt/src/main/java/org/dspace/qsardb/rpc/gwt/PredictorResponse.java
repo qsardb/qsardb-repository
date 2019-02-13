@@ -21,6 +21,8 @@ public class PredictorResponse {
 
 	private Map<String, String> descriptorApplications;
 
+	private Map<String, Double> descriptorZScores;
+
 	private List<Analogue> analogues;
 
 	private String applicabilityDomain;
@@ -75,6 +77,17 @@ public class PredictorResponse {
 
 	public void setDescriptorApplications(Map<String, String> descriptorApplications) {
 		this.descriptorApplications = descriptorApplications;
+	}
+
+	public Map<String, Double> getDescriptorZScores() {
+		if (descriptorZScores == null) {
+			descriptorZScores = new LinkedHashMap<>();
+		}
+		return descriptorZScores;
+	}
+
+	public void setDescriptorZScores(Map<String, Double> descriptorZScores) {
+		this.descriptorZScores = descriptorZScores;
 	}
 
 	public List<Analogue> getAnalogues() {

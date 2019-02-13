@@ -97,14 +97,18 @@ public class ApplicabilityDomain {
 			}
 		}
 
+		Map<String, Double> zScores = admDescriptorRanges.zScores(descriptorValues);
+
 		int adScore = 0;
-		adScore += admDescriptorRanges.estimate(descriptorValues) ? 1 : 0;
+		adScore += admDescriptorRanges.estimate(zScores) ? 1 : 0;
 		adScore += admDistances.estimate(nnList) ? 1 : 0;
 		adScore += admResponses.estimate(nnList) ? 1 : 0;
 
 		Result result = new Result();
 		result.withinAD = adScore >= 2;
 		result.analogues = nn;
+		result.zScores =  zScores;
+
 		return result;
 	}
 
@@ -125,6 +129,7 @@ public class ApplicabilityDomain {
 	public static class Result {
 		private List<Distance> analogues;
 		private boolean withinAD;
+		private Map<String, Double> zScores;
 
 		public List<Distance> getAnalogues() {
 			return analogues;
@@ -132,6 +137,10 @@ public class ApplicabilityDomain {
 
 		public boolean isWithinAD() {
 			return withinAD;
+		}
+
+		public Map<String, Double> getDescriptorZScores() {
+			return zScores;
 		}
 	}
 }

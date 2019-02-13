@@ -1,23 +1,22 @@
 /*
- *  Copyright (c) 2018 University of Tartu
+ *  Copyright (c) 2019 University of Tartu
  */
 package org.dspace.qsardb.service;
 
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.Map;
-
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-
+import java.util.Set;
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 import org.qsardb.model.Descriptor;
 
 class DescriptorRangesModel {
 
-	private final LinkedHashMap<String, DescriptiveStatistics> ranges = new LinkedHashMap<>();
+	private final LinkedHashMap<String, SummaryStatistics> ranges = new LinkedHashMap<>();
+	private final double limit = 3.0;
 
 	public DescriptorRangesModel(Set<String> trSet, Map<Descriptor, Map<String, Double>> descValues) {
 		for (Map.Entry<Descriptor, Map<String, Double>> e: descValues.entrySet()) {
-			DescriptiveStatistics stats = new DescriptiveStatistics();
+			SummaryStatistics stats = new SummaryStatistics();
 			for (String cid: trSet) {
 				stats.addValue(e.getValue().get(cid));
 			}
@@ -25,18 +24,29 @@ class DescriptorRangesModel {
 		}
 	}
 
-	public boolean estimate(Map<String, String> params) {
-		int score = 0;
-		for (Map.Entry<String, DescriptiveStatistics> e: ranges.entrySet()) {
-			DescriptiveStatistics stats = e.getValue();
+	public Map<String, Double> zScores(Map<String, String> params) {
+		LinkedHashMap<String, Double> r = new LinkedHashMap<>(ranges.size());
+		for (Map.Entry<String, SummaryStatistics> e: ranges.entrySet()) {
+			SummaryStatistics stats = e.getValue();
 			double dv = Double.parseDouble(params.get(e.getKey()));
 
-			double limit = 3.0;
-			if (Math.abs(dv - stats.getMean()) > limit*stats.getStandardDeviation()) {
-				++score;
+			if (stats.getStandardDeviation() != 0) {
+				double z = (dv - stats.getMean()) / stats.getStandardDeviation();
+				r.put(e.getKey(), z);
 			}
 		}
 
-		return score == 0;
+		return r;
+	}
+
+	boolean estimate(Map<String, Double> zScores) {
+		int countAbove = 0;
+		for (Double z: zScores.values()) {
+			if (Math.abs(z) > limit) {
+				countAbove++;
+			}
+		}
+
+		return countAbove == 0;
 	}
 }
