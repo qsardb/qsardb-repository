@@ -32,7 +32,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 
 	@Override
 	public void onEvaluate(EvaluationEvent event){
-		String result = event.getResponse().getResult();
+		String result = event.getResponse().getEquation();
 
 		String[] parts = result.split("=");
 

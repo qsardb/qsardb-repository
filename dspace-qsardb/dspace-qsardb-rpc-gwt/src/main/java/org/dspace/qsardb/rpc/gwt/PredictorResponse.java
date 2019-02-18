@@ -10,8 +10,7 @@ import java.util.Map;
 
 public class PredictorResponse {
 
-	//predicted value
-	private String result;
+	private String equation;
 
 	private Map<String, String> predictionValues;
 
@@ -27,12 +26,12 @@ public class PredictorResponse {
 
 	private String applicabilityDomain;
 
-	public String getResult() {
-		return result;
+	public String getEquation() {
+		return equation;
 	}
 
-	public void setResult(String result) {
-		this.result = result;
+	public void setEquation(String result) {
+		this.equation = result;
 	}
 
 	public Map<String, String> getPredictionValues() {
@@ -112,7 +111,7 @@ public class PredictorResponse {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("PredictorResponse");
-		sb.append(":").append(result);
+		sb.append(":").append(getEquation());
 		sb.append(":").append(getPredictionUnits());
 		sb.append(":").append(getDescriptorValues());
 		sb.append(":").append(getDescriptorApplications());

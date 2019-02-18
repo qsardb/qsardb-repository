@@ -64,7 +64,7 @@ public class PredictorResource {
 			@PathParam("modelId") final String modelId) throws Exception {
 		try {
 			PredictorResponse r = evaluate(handle, modelId, null);
-			return r.getResult();
+			return r.getEquation();
 		} catch (Exception ex) {
 			throw new WebApplicationException("Evaluation failed", 400);
 		}
@@ -157,7 +157,7 @@ public class PredictorResource {
 				r.getPredictionUnits().put(propertyId, units);
 
 				PredictorUtil.Result result = PredictorUtil.evaluate(model, params);
-				r.setResult(result.getEquation());
+				r.setEquation(result.getEquation());
 				r.getPredictionValues().put(propertyId, result.getValue());
 
 				if (req == null) { // it's a GET request
