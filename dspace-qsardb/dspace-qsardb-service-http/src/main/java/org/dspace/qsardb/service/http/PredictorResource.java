@@ -183,14 +183,14 @@ public class PredictorResource {
 					predValues.putAll(QdbParameterUtil.loadStringValues(p));
 				}
 
-				List<Distance> analogues = adResult.getAnalogues();
 				Integer limit = req.getLimitAnalogues();
-				for (int i=0; i<Math.min(limit, analogues.size()); i++) {
-					String cid = analogues.get(i).getCompoundId();
+				List<Distance> analogues = adResult.getTrainingAnalogues(limit);
+				for (Distance i: analogues) {
+					String cid = i.getCompoundId();
 					Compound c = qdb.getCompound(cid);
 
 					Analogue a = new Analogue(cid);
-					a.setDistance(analogues.get(i).getDistance());
+					a.setDistance(i.getDistance());
 					a.setName(c.getName());
 					a.setCas(c.getCas());
 					a.setSmiles(loadSmiles(c));
@@ -198,7 +198,7 @@ public class PredictorResource {
 					a.getPropertyValues().put(propertyId, propValues.get(cid));
 					a.getPredictionValues().put(propertyId, predValues.get(cid));
 
-					r.getAnalogues().add(a);
+					r.getTrainingAnalogues().add(a);
 				}
 
 				return r;

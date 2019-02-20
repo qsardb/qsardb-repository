@@ -22,7 +22,7 @@ public class PredictorResponse {
 
 	private Map<String, Double> descriptorZScores;
 
-	private List<Analogue> analogues;
+	private List<Analogue> trainingAnalogues;
 
 	private String applicabilityDomain;
 
@@ -89,15 +89,15 @@ public class PredictorResponse {
 		this.descriptorZScores = descriptorZScores;
 	}
 
-	public List<Analogue> getAnalogues() {
-		if (analogues == null) {
-			analogues = new ArrayList<>();
+	public List<Analogue> getTrainingAnalogues() {
+		if (trainingAnalogues == null) {
+			trainingAnalogues = new ArrayList<>();
 		}
-		return analogues;
+		return trainingAnalogues;
 	}
 
-	public void setAnalogues(List<Analogue> analogues) {
-		this.analogues = analogues;
+	public void setTrainingAnalogues(List<Analogue> analogues) {
+		this.trainingAnalogues = analogues;
 	}
 
 	public String getApplicabilityDomain() {
@@ -115,7 +115,7 @@ public class PredictorResponse {
 		sb.append(":").append(getPredictionUnits());
 		sb.append(":").append(getDescriptorValues());
 		sb.append(":").append(getDescriptorApplications());
-		sb.append(":").append(getAnalogues());
+		sb.append(":").append(getTrainingAnalogues());
 
 		return sb.toString();
 	}

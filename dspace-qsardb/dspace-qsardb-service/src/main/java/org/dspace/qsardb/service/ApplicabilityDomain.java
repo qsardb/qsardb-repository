@@ -104,7 +104,7 @@ public class ApplicabilityDomain {
 		adScore += admDistances.estimate(nnList) ? 1 : 0;
 		adScore += admResponses.estimate(nnList) ? 1 : 0;
 
-		Result result = new Result();
+		Result result = new Result(trSet);
 		result.withinAD = adScore >= 2;
 		result.analogues = nn;
 		result.zScores =  zScores;
@@ -127,12 +127,26 @@ public class ApplicabilityDomain {
 	}
 
 	public static class Result {
+		private final Set<String> trSet;
 		private List<Distance> analogues;
 		private boolean withinAD;
 		private Map<String, Double> zScores;
 
-		public List<Distance> getAnalogues() {
-			return analogues;
+		private Result(Set<String> trSet) {
+			this.trSet = trSet;
+		}
+
+		public List<Distance> getTrainingAnalogues(int limit) {
+			ArrayList<Distance> r = new ArrayList<>();
+			for (Distance i: analogues) {
+				if (trSet.contains(i.getCompoundId())) {
+					r.add(i);
+				}
+				if (r.size() >= limit) {
+					break;
+				}
+			}
+			return r;
 		}
 
 		public boolean isWithinAD() {
