@@ -62,12 +62,8 @@ public class PredictorResource {
 	public String get(
 			@PathParam("handle") String handle,
 			@PathParam("modelId") final String modelId) throws Exception {
-		try {
-			PredictorResponse r = evaluate(handle, modelId, null);
-			return r.getEquation();
-		} catch (Exception ex) {
-			throw new WebApplicationException("Evaluation failed", 400);
-		}
+		PredictorResponse r = evaluate(handle, modelId, null);
+		return r.getEquation();
 	}
 
 	@GET
@@ -75,12 +71,8 @@ public class PredictorResource {
 	@Path("{handle: \\d+/\\d+}/models/{modelId}/info")
 	public PredictorInfoResponse getPredictorInfo(
 			@PathParam("handle") String handle,
-			@PathParam("modelId") final String modelId) {
-		try {
-			return predictorInfo(handle, modelId);
-		} catch (Exception ex) {
-			throw new WebApplicationException("Error: "+ex.getMessage(), 400);
-		}
+			@PathParam("modelId") final String modelId) throws Exception {
+		return predictorInfo(handle, modelId);
 	}
 
 	@POST
@@ -91,12 +83,8 @@ public class PredictorResource {
 			@PathParam("handle") String handle,
 			@PathParam("modelId") final String modelId,
 			PredictorRequest predictorRequest) throws Exception {
-		try {
-			PredictorResponse r = evaluate(handle, modelId, predictorRequest);
-			return r;
-		} catch (Exception ex) {
-			throw new WebApplicationException("Evaluation failed", 400);
-		}
+		PredictorResponse r = evaluate(handle, modelId, predictorRequest);
+		return r;
 	}
 
 	protected PredictorResponse calculateDescriptors(String handle, Model model, String structure) throws Exception {
@@ -142,10 +130,17 @@ public class PredictorResource {
 
 				String structure = getStructure(req, params);
 
+				if (params.isEmpty() && structure == null) {
+					throw new WebApplicationException("Missing input for the model.", 400);
+				}
+
 				PredictorResponse r;
 				if (structure != null) {
 					r = calculateDescriptors(handle, model, structure);
 					params = r.getDescriptorValues();
+					if (params.isEmpty()) {
+						throw new WebApplicationException("Descriptor calculation is not supported for this model.", 400);
+					}
 				} else {
 					r = new PredictorResponse();
 					r.setDescriptorValues(params);

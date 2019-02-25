@@ -157,11 +157,14 @@ public class PredictorUtil {
 		return converter.getAtomContainer();
 	}
 
-	static
-	private IAtomContainer parseSmilesMolecule(String string) throws InvalidSmilesException {
+	private static IAtomContainer parseSmilesMolecule(String string) {
 		SmilesParser parser = new SmilesParser(DefaultChemObjectBuilder.getInstance());
 
-		return parser.parseSmiles(string);
+		try {
+			return parser.parseSmiles(string);
+		} catch (InvalidSmilesException e) {
+			throw new IllegalArgumentException("Invalid SMILES: "+e.getMessage());
+		}
 	}
 
 	private static <V> Map<Descriptor, V> mapValues(List<Descriptor> descriptors, Map<String, V> parameters){

@@ -14,13 +14,38 @@ public class QdbExceptionMapper implements ExceptionMapper<Exception> {
 
 	@Override
 	public Response toResponse(Exception ex) {
+		Error error = new Error();
+		error.errorMessage = ex.getMessage();
+
 		if (ex instanceof WebApplicationException) {
-			return ((WebApplicationException)ex).getResponse();
+			Response orig = ((WebApplicationException)ex).getResponse();
+			return makeResponse(orig.getStatus(), error);
+		}
+
+		if (ex instanceof IllegalArgumentException) {
+			return makeResponse(400, error);
 		}
 		
 		logger.error(ex.getMessage(), ex);
-		return Response.status(500).entity(ex.getMessage()).type(MediaType.TEXT_PLAIN).build();
+		return makeResponse(500, error);
 	}
+
+	private Response makeResponse(int statusCode, Error error) {
+		return Response
+				.status(statusCode)
+				.entity(error)
+				.type(MediaType.APPLICATION_JSON)
+				.build();
+	}
+
+	public static class Error {
+		String errorMessage;
+
+		public String getErrorMessage() {
+			return errorMessage;
+		}
+	}
+
 
 	private static final Logger logger = LoggerFactory.getLogger(QdbExceptionMapper.class);
 }
