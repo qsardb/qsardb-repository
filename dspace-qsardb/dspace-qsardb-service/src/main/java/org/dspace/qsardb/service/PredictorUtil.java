@@ -12,6 +12,7 @@ import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.inchi.InChIGeneratorFactory;
 import org.openscience.cdk.inchi.InChIToStructure;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.qsar.BODOUtil;
 import org.openscience.cdk.qsar.DescriptorUtil;
 import org.openscience.cdk.qsar.DescriptorValueCache;
@@ -161,7 +162,11 @@ public class PredictorUtil {
 		SmilesParser parser = new SmilesParser(DefaultChemObjectBuilder.getInstance());
 
 		try {
-			return parser.parseSmiles(string);
+			IMolecule ac = parser.parseSmiles(string);
+			if (ac.getAtomCount() == 0) {
+				throw new IllegalArgumentException("Invalid SMILES: "+string);
+			}
+			return ac;
 		} catch (InvalidSmilesException e) {
 			throw new IllegalArgumentException("Invalid SMILES: "+e.getMessage());
 		}
