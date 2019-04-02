@@ -1,33 +1,39 @@
 package org.dspace.qsardb.client.gwt;
 
-import java.util.*;
-
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.ui.*;
-
-import org.dspace.qsardb.rpc.gwt.*;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.dspace.qsardb.rpc.gwt.DescriptorColumn;
+import org.dspace.qsardb.rpc.gwt.PredictionColumn;
+import org.dspace.qsardb.rpc.gwt.PredictorResponse;
+import org.dspace.qsardb.rpc.gwt.PropertyColumn;
+import org.dspace.qsardb.rpc.gwt.QdbTable;
 
 public class ModelInputPanel extends Composite implements InputChangeEventHandler {
 
-	private final List<DescriptorInputComponent> descriptorInputList = new ArrayList<DescriptorInputComponent>();
+	private final List<DescriptorInputComponent> descriptorInputList = new ArrayList<>();
 
-	public ModelInputPanel(QdbTable table){
+	public ModelInputPanel(QdbTable table) {
 		Panel panel = new VerticalPanel();
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
-
 		List<PredictionColumn> trainings = PredictionColumn.filter(predictions, PredictionColumn.Type.TRAINING);
-		if(trainings.size() != 1){
+		if (trainings.size() != 1) {
 			throw new IllegalStateException();
 		}
-
 		PredictionColumn training = trainings.get(0);
 
-		DescriptorValueChangeEventHandler changeHandler = new DescriptorValueChangeEventHandler(){
+		DescriptorValueChangeEventHandler changeHandler = new DescriptorValueChangeEventHandler() {
 			@Override
-			public void onDescriptorValueChanged(DescriptorValueChangeEvent event){
+			public void onDescriptorValueChanged(DescriptorValueChangeEvent event) {
 				fireInputChangeEvent();
 			}
 		};
@@ -35,7 +41,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		panel.add(new HTML("<u>Descriptor input</u>:"));
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
-		for(DescriptorColumn descriptor : descriptors){
+		for (DescriptorColumn descriptor : descriptors) {
 			DescriptorInputComponent descriptorInput = new DescriptorInputComponent(property, descriptor, training);
 			descriptorInputList.add(descriptorInput);
 			descriptorInput.addDescriptorValueChangeEventHandler(changeHandler);
@@ -51,22 +57,22 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		fireInputChangeEvent();
 	}
 
-	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
+	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler) {
 		return addHandler(handler, InputChangeEvent.TYPE);
 	}
 
-	private void fireInputChangeEvent(){
+	private void fireInputChangeEvent() {
 		fireEvent(new InputChangeEvent(getDescriptorValues()));
 	}
 
 	@Override
-	public void onInputChanged(InputChangeEvent event){
+	public void onInputChanged(InputChangeEvent event) {
 		//need to turn it off atm to prevent clearing combobox
-		for(DescriptorInputComponent dip : descriptorInputList) {
+		for (DescriptorInputComponent dip : descriptorInputList) {
 			dip.setEnableSlideEvents(false);
 		}
 		setDescriptorValues(event.getValues());
-		for(DescriptorInputComponent dip : descriptorInputList) {
+		for (DescriptorInputComponent dip : descriptorInputList) {
 			dip.setEnableSlideEvents(true);
 			if (dip.getSlider() != null) {
 				dip.getSlider().normaliseMoreAndLess();
@@ -77,11 +83,11 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
 			predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
 
-			for(DescriptorInputComponent dip : descriptorInputList) {
+			for (DescriptorInputComponent dip : descriptorInputList) {
 				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor(), event.getResponse()));
 			}
 		} else if (event.getSource().getClass() == CompoundSelectionPanel.class) {
-			for(DescriptorInputComponent dip : descriptorInputList) {
+			for (DescriptorInputComponent dip : descriptorInputList) {
 				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor().getApplication()));
 			}
 		}
@@ -108,42 +114,24 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		return result;
 	}
 
-	public Map<String, String> getDescriptorValues(){
-		Map<String, String> values = new LinkedHashMap<String, String>();
+	public Map<String, String> getDescriptorValues() {
+		Map<String, String> values = new LinkedHashMap<>();
 
-		List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
-		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
+		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
 			values.put(descriptorInput.getId(), String.valueOf(descriptorInput.getValue()));
 		}
 
 		return values;
 	}
 
-	public void setDescriptorValues(Map<String, String> values){
-		List<DescriptorInputComponent> descriptorInputPanels = getDescriptorInputPanels();
-		for(DescriptorInputComponent descriptorInput : descriptorInputPanels){
+	public void setDescriptorValues(Map<String, String> values) {
+		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
 			String value = values.get(descriptorInput.getId());
 
-			if(value != null){
+			if (value != null) {
 				descriptorInput.setValue(value);
 			}
 		}
 
-	}
-
-	private List<DescriptorInputComponent> getDescriptorInputPanels(){
-		List<DescriptorInputComponent> result = new ArrayList<DescriptorInputComponent>();
-
-		ComplexPanel panel = (ComplexPanel)getWidget();
-
-		for(int i = 0; i < panel.getWidgetCount(); i++){
-			Widget widget = panel.getWidget(i);
-
-			if(widget instanceof DescriptorInputComponent){
-				result.add((DescriptorInputComponent)widget);
-			}
-		}
-
-		return result;
 	}
 }
