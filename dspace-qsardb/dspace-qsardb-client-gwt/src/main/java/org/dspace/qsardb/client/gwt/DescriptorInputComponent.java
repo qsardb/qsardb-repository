@@ -101,7 +101,6 @@ public class DescriptorInputComponent extends Composite {
 		collapseButton.getElement().appendChild(expandFace.getElement());
 
 		setDescriptor(descriptor);
-		ParameterUtil.ensureConverted(descriptor);
 
 		final Map<String, ?> trainingValues = training.getValues();
 		trainingDescriptorValues = ParameterUtil.subset(trainingValues.keySet(), descriptor.getValues());
@@ -301,7 +300,7 @@ public class DescriptorInputComponent extends Composite {
 		return addHandler(handler, DescriptorValueChangeEvent.TYPE);
 	}
 
-	public MathContext getContext(){
+	private MathContext getContext(){
 		return this.context;
 	}
 
@@ -317,7 +316,7 @@ public class DescriptorInputComponent extends Composite {
 		setValue(formatValue(Double.valueOf(value)));
 	}
 
-	public void setValue(BigDecimal value){
+	private void setValue(BigDecimal value){
 		this.value = value;
 
 		if(this.slider == null){
@@ -337,7 +336,7 @@ public class DescriptorInputComponent extends Composite {
 		return getDescriptor().getId();
 	}
 
-	public String getFormat(){
+	private String getFormat(){
 		return getDescriptor().getFormat();
 	}
 
@@ -347,9 +346,10 @@ public class DescriptorInputComponent extends Composite {
 
 	private void setDescriptor(DescriptorColumn descriptor){
 		this.descriptor = descriptor;
+		ParameterUtil.ensureConverted(descriptor);
 	}
 
-	public boolean isEnableSlideEvents() {
+	private boolean isEnableSlideEvents() {
 		return enableSlideEvents;
 	}
 
