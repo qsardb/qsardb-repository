@@ -293,10 +293,10 @@ public class DescriptorInputComponent extends Composite {
 
 	private void fireDescriptorValueChangedEvent(){
 		DescriptorColumn descriptor = getDescriptor();
-		fireEvent(new DescriptorValueChangeEvent(descriptor));
+		fireEvent(new DescriptorValueChangeEvent());
 	}
 
-	public HandlerRegistration addDescriptorValueChangeEventHandler(DescriptorValueChangeEventHandler handler){
+	public HandlerRegistration addDescriptorValueChangeEventHandler(DescriptorValueChangeEvent.Handler handler){
 		return addHandler(handler, DescriptorValueChangeEvent.TYPE);
 	}
 

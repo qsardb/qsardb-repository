@@ -31,7 +31,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		}
 		PredictionColumn training = trainings.get(0);
 
-		DescriptorValueChangeEventHandler changeHandler = new DescriptorValueChangeEventHandler() {
+		DescriptorValueChangeEvent.Handler changeHandler = new DescriptorValueChangeEvent.Handler() {
 			@Override
 			public void onDescriptorValueChanged(DescriptorValueChangeEvent event) {
 				fireInputChangeEvent();
