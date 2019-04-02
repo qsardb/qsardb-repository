@@ -3,7 +3,6 @@ package org.dspace.qsardb.client.gwt;
 import java.util.*;
 
 import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 
 import org.dspace.qsardb.rpc.gwt.*;
@@ -43,15 +42,13 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			panel.add(descriptorInput);
 		}
 
-		Timer timer = new Timer(){
-			@Override
-			public void run(){
-				fireInputChangeEvent();
-			}
-		};
-		timer.schedule(1000);
-
 		initWidget(panel);
+	}
+
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		fireInputChangeEvent();
 	}
 
 	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
