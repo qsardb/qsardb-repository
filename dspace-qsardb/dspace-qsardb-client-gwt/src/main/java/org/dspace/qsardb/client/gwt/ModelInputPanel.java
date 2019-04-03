@@ -70,13 +70,13 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		//need to turn it off atm to prevent clearing combobox
 		for (DescriptorInputComponent dip : descriptorInputList) {
 			dip.setEnableSlideEvents(false);
+			if (dip.getSlider() != null) {
+				dip.getSlider().normaliseMoreAndLess();
+			}
 		}
 		setDescriptorValues(event.getValues());
 		for (DescriptorInputComponent dip : descriptorInputList) {
 			dip.setEnableSlideEvents(true);
-			if (dip.getSlider() != null) {
-				dip.getSlider().normaliseMoreAndLess();
-			}
 		}
 
 		if (event.getSource().getClass() == CompoundInputPanel.class) {
