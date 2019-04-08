@@ -117,15 +117,15 @@ public class DescriptorInputComponent extends Composite {
 		descriptorValue.setUserValue(value);
 
 		modelSoftLabel = new Label();
-		if ((descriptor.getApplication() == null || descriptor.getApplication().trim().equals(""))) {
-			modelSoftLabel.setText("Descriptor in original model calculated with <N/A>");
-		} else {
-			modelSoftLabel.setText("Descriptor in original model calculated with " + descriptor.getApplication());
+		String modelSoft = descriptor.getApplication();
+		if (modelSoft == null || modelSoft.trim().isEmpty()) {
+			modelSoft = "<N/A>";
 		}
-		predictionSoftLabel = new Label("Current prediction is made with mean value");
-
-		predictionSoftLabel.getElement().setAttribute("style", "white-space: normal;");
+		modelSoftLabel.setText( "Descriptor values in the original model were calculated with "+modelSoft);
 		modelSoftLabel.getElement().setAttribute("style", "white-space: normal;");
+
+		predictionSoftLabel = new Label("This value is the mean descriptor value");
+		predictionSoftLabel.getElement().setAttribute("style", "white-space: normal;");
 
 		collapsiblePanel = new FlowPanel();
 		initWidget(binder.createAndBindUi(this));
@@ -225,7 +225,7 @@ public class DescriptorInputComponent extends Composite {
 			fireDescriptorValueChangedEvent();
 		} finally {
 			enableSlideEvents = true;
-			predictionSoftLabel.setText("Current prediction is made with value entered by user");
+			predictionSoftLabel.setText("This value is entered by the user");
 		}
 	}
 
@@ -253,7 +253,7 @@ public class DescriptorInputComponent extends Composite {
 							descriptorValue.setUserValue(value);
 							predictor.getDataInputPanel().cleanCompoundData();
 
-							predictionSoftLabel.setText("Current prediction is made with value entered by user");
+							predictionSoftLabel.setText("This value is entered by the user");
 
 							//TODO: move inside slider, should handle this by itself
 							slider.normaliseMoreAndLess();

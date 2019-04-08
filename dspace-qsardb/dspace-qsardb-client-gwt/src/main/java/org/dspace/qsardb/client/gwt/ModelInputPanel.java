@@ -94,24 +94,17 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 	}
 
 	private String getLabelText(DescriptorColumn d, PredictorResponse response) {
-		String result;
 		String application = response.getDescriptorApplications().get(d.getId());
-		if (application == null || application.trim().equals("")) {
-			result = "Prediction value calculated with <N/A>";
-		} else {
-			result = "Current prediction is made with value calculated with " + application;
-		}
-		return result;
+		return getLabelText(application);
 	}
 
 	private String getLabelText(String application) {
-		String result;
+		String prefix = "This value is calculated with ";
 		if (application == null || application.trim().equals("")) {
-			result = "Prediction value calculated with <N/A>";
+			return prefix + "<N/A>";
 		} else {
-			result = "Current prediction is made with value calculated with " + application;
+			return prefix + application;
 		}
-		return result;
 	}
 
 	public Map<String, String> getDescriptorValues() {
