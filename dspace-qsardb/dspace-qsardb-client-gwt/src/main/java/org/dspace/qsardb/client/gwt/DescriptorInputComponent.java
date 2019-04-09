@@ -152,21 +152,20 @@ public class DescriptorInputComponent extends Composite {
 
 		BigDecimal range = xBounds.getRange();
 
-		if((range).compareTo(BigDecimal.ZERO) == 0){
+		if (range.compareTo(BigDecimal.ZERO) == 0) {
 			return new Label("(Not adjustable)");
 		}
 
 		int categories = 0;
 
 		int scale = MathUtil.getScale(getFormat());
-		if(scale == 0){
-
-			if(range.intValue() <= 10){
+		if (scale == 0) {
+			if (range.intValue() <= 10) {
 				categories = range.intValue();
 			}
-		} // End if
+		}
 
-		if(categories > 0){
+		if (categories > 0) {
 			slider = new DescriptorValueSliderBarHorizontal(xBounds, categories);
 		} else {
 			slider = new DescriptorValueSliderBarHorizontal(xBounds);
@@ -181,9 +180,9 @@ public class DescriptorInputComponent extends Composite {
 
 		HistogramPlot histogramPlot;
 
-		if(categories > 0){
-			Double min = Double.valueOf((xBounds.getMin()).intValue() - 0.5);
-			Double max = Double.valueOf((xBounds.getMax()).intValue() + 0.5);
+		if (categories > 0) {
+			Double min = xBounds.getMin().intValue() - 0.5;
+			Double max = xBounds.getMax().intValue() + 0.5;
 
 			histogramPlot = new HistogramPlot(min, max, categories + 1);
 		} else {
@@ -216,10 +215,6 @@ public class DescriptorInputComponent extends Composite {
 			value = formatValue(new BigDecimal(evt.getValue()));
 			if (slider != null) {
 				slider.setUserValue(value);
-				if (!outOfBounds(value)) {
-					//TODO: move inside slider, should handle this by itself
-					slider.normaliseMoreAndLess();
-				}
 			}
 
 			fireDescriptorValueChangedEvent();
@@ -245,9 +240,9 @@ public class DescriptorInputComponent extends Composite {
 				collapsiblePanel.add(createPanel());
 
 				//adding this here, if in constructor, pics up the first event and messes things up
-				BarValueChangedHandler valueHandler = new BarValueChangedHandler(){
+				BarValueChangedHandler valueHandler = new BarValueChangedHandler() {
 					@Override
-					public void onBarValueChanged(BarValueChangedEvent event){
+					public void onBarValueChanged(BarValueChangedEvent event) {
 						if (enableSlideEvents) {
 							value = formatValue(slider.getUserValue());
 							descriptorValue.setUserValue(value);
@@ -255,8 +250,6 @@ public class DescriptorInputComponent extends Composite {
 
 							predictionSoftLabel.setText("This value is entered by the user");
 
-							//TODO: move inside slider, should handle this by itself
-							slider.normaliseMoreAndLess();
 							fireDescriptorValueChangedEvent();
 						}
 					}
@@ -268,89 +261,73 @@ public class DescriptorInputComponent extends Composite {
 		}
 	}
 
-	private BigDecimal formatValue(Number value){
+	private BigDecimal formatValue(Number value) {
 		BigDecimal result = new BigDecimal(value.doubleValue(), getContext());
 
 		int scale = MathUtil.getScale(getFormat());
 
-		if(result.scale() > scale){
+		if (result.scale() > scale) {
 			result = result.setScale(scale, RoundingMode.HALF_UP);
 		}
 
 		return result;
 	}
 
-	private boolean outOfBounds(Number value) {
-		BigDecimal min = xBounds.getMin();
-		BigDecimal max = xBounds.getMax();
-
-		if (min != null && max != null && (value.doubleValue() >= min.doubleValue()) && (value.doubleValue() <= max.doubleValue())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	private void fireDescriptorValueChangedEvent(){
-		DescriptorColumn descriptor = getDescriptor();
+	private void fireDescriptorValueChangedEvent() {
 		fireEvent(new DescriptorValueChangeEvent());
 	}
 
-	public HandlerRegistration addDescriptorValueChangeEventHandler(DescriptorValueChangeEvent.Handler handler){
+	public HandlerRegistration addDescriptorValueChangeEventHandler(DescriptorValueChangeEvent.Handler handler) {
 		return addHandler(handler, DescriptorValueChangeEvent.TYPE);
 	}
 
-	private MathContext getContext(){
+	private MathContext getContext() {
 		return this.context;
 	}
 
-	private void setContext(MathContext context){
+	private void setContext(MathContext context) {
 		this.context = context;
 	}
 
-	public BigDecimal getValue(){
+	public BigDecimal getValue() {
 		return this.value;
 	}
 
-	public void setValue(String value){
+	public void setValue(String value) {
 		setValue(formatValue(Double.valueOf(value)));
 	}
 
-	private void setValue(BigDecimal value){
+	private void setValue(BigDecimal value) {
 		this.value = value;
 
-		if(this.slider == null){
-			if(this.descriptorValue != null){
+		if (this.slider == null) {
+			if (this.descriptorValue != null) {
 				this.descriptorValue.setValue(value.toPlainString(), false);
 			}
 		}
-		if(this.slider != null){
+		if (this.slider != null) {
 			slider.setUserValue(value);
 		}
-		if(this.descriptorValue != null){
+		if (this.descriptorValue != null) {
 			this.descriptorValue.setValue(value.toPlainString(), false);
 		}
 	}
 
-	public String getId(){
+	public String getId() {
 		return getDescriptor().getId();
 	}
 
-	private String getFormat(){
+	private String getFormat() {
 		return getDescriptor().getFormat();
 	}
 
-	public DescriptorColumn getDescriptor(){
+	public DescriptorColumn getDescriptor() {
 		return this.descriptor;
 	}
 
-	private void setDescriptor(DescriptorColumn descriptor){
+	private void setDescriptor(DescriptorColumn descriptor) {
 		this.descriptor = descriptor;
 		ParameterUtil.ensureConverted(descriptor);
-	}
-
-	private boolean isEnableSlideEvents() {
-		return enableSlideEvents;
 	}
 
 	public void setEnableSlideEvents(boolean enableSlideEvents) {
