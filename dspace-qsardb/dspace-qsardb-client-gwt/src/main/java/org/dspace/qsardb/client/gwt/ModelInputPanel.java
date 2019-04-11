@@ -14,7 +14,7 @@ import org.dspace.qsardb.rpc.gwt.PredictionColumn;
 import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 import org.dspace.qsardb.rpc.gwt.QdbTable;
 
-public class ModelInputPanel extends Composite implements InputChangeEventHandler {
+public class ModelInputPanel extends Composite {
 
 	private final List<DescriptorInputComponent> descriptorInputList = new ArrayList<>();
 
@@ -64,12 +64,6 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		fireEvent(new InputChangeEvent(getDescriptorValues()));
 	}
 
-	@Override
-	public void onInputChanged(InputChangeEvent event) {
-
-		setDescriptorValues(event);
-	}
-
 	public Map<String, String> getDescriptorValues() {
 		Map<String, String> values = new LinkedHashMap<>();
 
@@ -80,15 +74,7 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		return values;
 	}
 
-	private void setDescriptorValues(InputChangeEvent event) {
-		Map<String, String> values = event.getValues();
-		Class source = event.getSource().getClass();
-
-		Map<String, String> descApps = new LinkedHashMap();
-		if (event.getResponse() != null) {
-			descApps.putAll(event.getResponse().getDescriptorApplications());
-		}
-
+	public void setDescriptorValues(Map<String, String> values, boolean fromArchive) {
 		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
 			String did = descriptorInput.getId();
 
@@ -98,16 +84,21 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 			}
 
 			descriptorInput.setValue(value);
-
-			if (source == CompoundInputPanel.class) {
-				QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-				predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
-
-				String app = descApps.getOrDefault(did, "N/A");
-				descriptorInput.setDescriptorSource("This value is calculated with "+app);
-			} else if (source == CompoundSelectionPanel.class) {
+			if (fromArchive) {
 				descriptorInput.setDescriptorSource("This value is from the original model");
 			}
+		}
+	}
+
+	public void setDescriptorApplications(Map<String, String> apps) {
+		if (apps == null || apps.isEmpty()) {
+			return;
+		}
+
+		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
+			String did = descriptorInput.getId();
+			String app = apps.getOrDefault(did, "N/A");
+			descriptorInput.setDescriptorSource("This value is calculated with "+app);
 		}
 	}
 }

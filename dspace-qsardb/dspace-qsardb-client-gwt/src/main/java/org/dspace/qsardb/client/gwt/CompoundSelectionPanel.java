@@ -52,17 +52,12 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 	}
 
 	public void updateSelection(String compoundId) {
-		Map<String, String> descValues = new LinkedHashMap<String, String>();
+		Map<String, String> descValues = new LinkedHashMap<>();
 		for (DescriptorColumn d: table.getAllColumns(DescriptorColumn.class)) {
 			descValues.put(d.getId(), d.getValue(compoundId).toString());
 		}
 
-		QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-		if (predictor.getDataInputPanel().compoundInputPanel.textBox.isEnabled()) {
-			predictor.getDataInputPanel().compoundInputPanel.textBox.setValue("", false);
-		}
-
-		fireEvent(new InputChangeEvent(descValues));
+		fireEvent(new InputChangeEvent(compoundId, descValues));
 	}
 
 	@UiHandler("browseButton")
@@ -89,7 +84,7 @@ class CompoundSelectionPanel extends Composite implements CompoundBrowseEvent.Ha
 		updateSelection(e.compoundId);
 	}
 
-	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
+	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler) {
 		return addHandler(handler, InputChangeEvent.TYPE);
 	}
 

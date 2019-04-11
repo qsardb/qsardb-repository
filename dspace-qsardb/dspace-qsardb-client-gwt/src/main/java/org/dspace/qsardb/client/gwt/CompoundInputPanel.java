@@ -1,20 +1,22 @@
 package org.dspace.qsardb.client.gwt;
 
-import java.util.*;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.shared.*;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
-
-import org.dspace.qsardb.rpc.gwt.*;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
+import org.dspace.qsardb.rpc.gwt.DescriptorColumn;
+import org.dspace.qsardb.rpc.gwt.QdbTable;
 
 public class CompoundInputPanel extends Composite {
 	interface Binder extends UiBinder<Widget, CompoundInputPanel> {}
@@ -59,7 +61,7 @@ public class CompoundInputPanel extends Composite {
 			keyCode = event.getNativeEvent().getKeyCode();
 		}
 		if (keyCode == KeyCodes.KEY_ENTER) {
-			calculate();
+			fireInputChangeEvent();
 		}
 	}
 
@@ -83,26 +85,15 @@ public class CompoundInputPanel extends Composite {
 
 	@UiHandler("calculateButton")
 	public void handleCalculateButton(ClickEvent event) {
-		calculate();
+		fireInputChangeEvent();
 	}
 
-	public void calculate(){
+	private void fireInputChangeEvent() {
 		String inputStructure = textBox.getText() != null ? textBox.getText().trim() : "";
-		if ("".equals(inputStructure)) {
+		if (inputStructure.isEmpty()) {
 			return;
 		}
 
-		PredictorRequest request = new PredictorRequest(inputStructure);
-		PredictorClient.predict(request, new MethodCallback<PredictorResponse>() {
-			@Override
-			public void onFailure(Method method, Throwable ex) {
-				Window.alert("Calculation failed: " + ex.getMessage());
-			}
-
-			@Override
-			public void onSuccess(Method method, PredictorResponse response) {
-				fireEvent(new InputChangeEvent(response));
-			}
-		});
+		fireEvent(new InputChangeEvent(inputStructure));
 	}
 }

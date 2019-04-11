@@ -16,8 +16,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 public class DataInputPanel extends Composite implements InputChangeEventHandler {
 
-	private Timer timer = new Timer(){
-
+	private final Timer timer = new Timer(){
 		@Override
 		public void run(){
 			evaluate();
@@ -25,6 +24,8 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	};
 
 	private Map<String, String> values = null;
+	private String structure = null;
+	private String compoundId = null;
 
 	interface Binder extends UiBinder<Widget, DataInputPanel> {}
 	private static Binder binder = GWT.create(Binder.class);
@@ -55,15 +56,25 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		compoundInputPanel.addInputChangeEventHandler(this);
 		modelInputPanel.addInputChangeEventHandler(this);
 
-		compoundSelectionPanel.addInputChangeEventHandler(modelInputPanel);
-		compoundInputPanel.addInputChangeEventHandler(modelInputPanel);
-
 		return binder.createAndBindUi(this);
 	}
 
 	@Override
 	public void onInputChanged(InputChangeEvent event){
-		setValues(event.getValues());
+		this.values = event.getValues();
+		this.compoundId = event.getCompoundId();
+		this.structure = event.getStructure();
+
+		Object source = event.getSource();
+
+		if (source == compoundSelectionPanel || source == modelInputPanel) {
+			if (compoundInputPanel.textBox.isEnabled()) {
+				compoundInputPanel.textBox.setValue("", false);
+			}
+		}
+		if (source == compoundInputPanel || source == modelInputPanel) {
+			compoundSelectionPanel.suggestBox.setValue("", false);
+		}
 
 		this.timer.schedule(1000);
 	}
@@ -73,7 +84,12 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	}
 
 	public void evaluate(){
-		PredictorRequest request = new PredictorRequest(getValues());
+		PredictorRequest request;
+		if (structure != null) {
+			request = new PredictorRequest(structure);
+		} else {
+			request = new PredictorRequest(getValues());
+		}
 		PredictorClient.predict(request, new MethodCallback<PredictorResponse>() {
 			@Override
 			public void onFailure(Method method, Throwable ex) {
@@ -82,6 +98,8 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 			@Override
 			public void onSuccess(Method method, PredictorResponse response) {
+				modelInputPanel.setDescriptorValues(response.getDescriptorValues(), compoundId != null);
+				modelInputPanel.setDescriptorApplications(response.getDescriptorApplications());
 				fireEvent(new EvaluationEvent(response));
 			}
 		});
@@ -93,12 +111,5 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 	private void setValues(Map<String, String> values){
 		this.values = values;
-	}
-
-	public void cleanCompoundData() {
-		compoundSelectionPanel.suggestBox.setValue("", false);
-		if (compoundInputPanel.textBox.isEnabled()) {
-			compoundInputPanel.textBox.setValue("", false);
-		}
 	}
 }

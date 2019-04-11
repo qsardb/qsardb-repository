@@ -61,7 +61,6 @@ public class DescriptorInputComponent extends Composite {
 
 	interface Binder extends UiBinder<Widget, DescriptorInputComponent> {
 	}
-	final QdbPredictor predictor = (QdbPredictor) Application.getInstance();
 
 	public DescriptorInputComponent(final PropertyColumn property, final DescriptorColumn descriptor, final PredictionColumn training) {
 		this.training = training;
@@ -212,8 +211,6 @@ public class DescriptorInputComponent extends Composite {
 
 				last = event.getValue();
 
-				predictor.getDataInputPanel().cleanCompoundData();
-
 				value = formatValue(slider.getUserValue());
 				descriptorValue.setValue(value.toPlainString(), false);
 
@@ -231,8 +228,6 @@ public class DescriptorInputComponent extends Composite {
 	@UiHandler("descriptorValue")
 	void handleDescriptorValue(ValueChangeEvent<String> evt) {
 		try {
-			predictor.getDataInputPanel().cleanCompoundData();
-
 			setValue(formatValue(new BigDecimal(evt.getValue())));
 			predictionSoftLabel.setText("This value is entered by the user");
 
