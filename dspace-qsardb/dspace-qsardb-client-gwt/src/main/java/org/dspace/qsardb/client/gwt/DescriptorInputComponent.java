@@ -1,6 +1,6 @@
 /*
-*  Copyright (c) 2015 University of Tartu
-*/
+ *  Copyright (c) 2015 University of Tartu
+ */
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.core.shared.GWT;
@@ -59,8 +59,9 @@ public class DescriptorInputComponent extends Composite {
 
 	private static final Binder binder = GWT.create(Binder.class);
 
-	interface Binder extends UiBinder<Widget, DescriptorInputComponent> {}
-	final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
+	interface Binder extends UiBinder<Widget, DescriptorInputComponent> {
+	}
+	final QdbPredictor predictor = (QdbPredictor) Application.getInstance();
 
 	public DescriptorInputComponent(final PropertyColumn property, final DescriptorColumn descriptor, final PredictionColumn training) {
 		this.training = training;
@@ -121,7 +122,7 @@ public class DescriptorInputComponent extends Composite {
 		if (modelSoft == null || modelSoft.trim().isEmpty()) {
 			modelSoft = "<N/A>";
 		}
-		modelSoftLabel.setText( "Descriptor values in the original model were calculated with "+modelSoft);
+		modelSoftLabel.setText("Descriptor values in the original model were calculated with " + modelSoft);
 		modelSoftLabel.getElement().setAttribute("style", "white-space: normal;");
 
 		predictionSoftLabel = new Label("This value is the mean descriptor value");
@@ -129,6 +130,7 @@ public class DescriptorInputComponent extends Composite {
 
 		collapsiblePanel = new FlowPanel();
 		initWidget(binder.createAndBindUi(this));
+
 		collapsiblePanel.setVisible(false);
 
 		if (descriptor.getDescription() != null) {
@@ -186,11 +188,11 @@ public class DescriptorInputComponent extends Composite {
 
 			histogramPlot = new HistogramPlot(min, max, categories + 1);
 		} else {
-			histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int)Math.sqrt(trainingDescriptorValues.size()), 10));
+			histogramPlot = new HistogramPlot(xBounds.getMin(), xBounds.getMax(), Math.max((int) Math.sqrt(trainingDescriptorValues.size()), 10));
 		}
 
 		histogramPlot.addXAxisOptions(xBounds);
-		histogramPlot.addYAxisOptions((String)null);
+		histogramPlot.addYAxisOptions((String) null);
 
 		histogramPlot.addSeries(PredictionSeries.create(training), trainingDescriptorValues);
 
@@ -199,28 +201,44 @@ public class DescriptorInputComponent extends Composite {
 
 		histogramPlot.changeSeriesVisibility(new SeriesDisplayEvent(Collections.singletonMap(training, Boolean.TRUE)));
 
+		BarValueChangedHandler valueHandler = new BarValueChangedHandler() {
+			private int last = -1;
+
+			@Override
+			public void onBarValueChanged(BarValueChangedEvent event) {
+				if (!enableSlideEvents || last == event.getValue()) {
+					return;
+				}
+
+				last = event.getValue();
+
+				predictor.getDataInputPanel().cleanCompoundData();
+
+				value = formatValue(slider.getUserValue());
+				descriptorValue.setValue(value.toPlainString(), false);
+
+				predictionSoftLabel.setText("This value is entered by the user");
+
+				fireDescriptorValueChangedEvent();
+			}
+		};
+		
+		slider.addBarValueChangedHandler(valueHandler);
+		
 		return panel;
 	}
 
 	@UiHandler("descriptorValue")
 	void handleDescriptorValue(ValueChangeEvent<String> evt) {
-		enableSlideEvents = false;
 		try {
 			predictor.getDataInputPanel().cleanCompoundData();
-			try {
-				value = formatValue(new BigDecimal(evt.getValue()));
-			} catch (NumberFormatException e) {
-					return;
-			}
-			value = formatValue(new BigDecimal(evt.getValue()));
-			if (slider != null) {
-				slider.setUserValue(value);
-			}
+
+			setValue(formatValue(new BigDecimal(evt.getValue())));
+			predictionSoftLabel.setText("This value is entered by the user");
 
 			fireDescriptorValueChangedEvent();
-		} finally {
-			enableSlideEvents = true;
-			predictionSoftLabel.setText("This value is entered by the user");
+		} catch (NumberFormatException e) {
+			// ignored
 		}
 	}
 
@@ -232,31 +250,16 @@ public class DescriptorInputComponent extends Composite {
 			collapseButton.getElement().appendChild(expandFace.getElement());
 		} else {
 			collapsiblePanel.setVisible(true);
-
 			collapseButton.getElement().removeAllChildren();
 			collapseButton.getElement().appendChild(collapseFace.getElement());
 
 			if (slider == null) {
-				collapsiblePanel.add(createPanel());
-
-				//adding this here, if in constructor, pics up the first event and messes things up
-				BarValueChangedHandler valueHandler = new BarValueChangedHandler() {
-					@Override
-					public void onBarValueChanged(BarValueChangedEvent event) {
-						if (enableSlideEvents) {
-							value = formatValue(slider.getUserValue());
-							descriptorValue.setUserValue(value);
-							predictor.getDataInputPanel().cleanCompoundData();
-
-							predictionSoftLabel.setText("This value is entered by the user");
-
-							fireDescriptorValueChangedEvent();
-						}
-					}
-				};
-
-				slider.addBarValueChangedHandler(valueHandler);
-				enableSlideEvents = true;
+				enableSlideEvents = false;
+				try {
+					collapsiblePanel.add(createPanel());
+				} finally {
+					enableSlideEvents = true;
+				}
 			}
 		}
 	}
@@ -298,19 +301,26 @@ public class DescriptorInputComponent extends Composite {
 	}
 
 	private void setValue(BigDecimal value) {
-		this.value = value;
+		boolean oldValue = enableSlideEvents;
+		enableSlideEvents = false;
 
-		if (this.slider == null) {
-			if (this.descriptorValue != null) {
-				this.descriptorValue.setValue(value.toPlainString(), false);
+		try {
+			this.value = value;
+
+			if (descriptorValue != null) {
+				descriptorValue.setValue(value.toPlainString(), false);
 			}
+
+			if (slider != null) {
+				slider.setUserValue(value);
+			}
+		} finally {
+			enableSlideEvents = oldValue;
 		}
-		if (this.slider != null) {
-			slider.setUserValue(value);
-		}
-		if (this.descriptorValue != null) {
-			this.descriptorValue.setValue(value.toPlainString(), false);
-		}
+	}
+
+	public void setDescriptorSource(String source) {
+		predictionSoftLabel.setText(source);
 	}
 
 	public String getId() {
@@ -330,22 +340,15 @@ public class DescriptorInputComponent extends Composite {
 		ParameterUtil.ensureConverted(descriptor);
 	}
 
-	public void setEnableSlideEvents(boolean enableSlideEvents) {
-		this.enableSlideEvents = enableSlideEvents;
-	}
-
-	public DescriptorValueSliderBarHorizontal getSlider() {
-		return slider;
-	}
-
 	interface Images extends ClientBundle {
-		@ClientBundle.Source (
-			value = "com/google/gwt/user/client/ui/disclosurePanelClosed.png"
+
+		@ClientBundle.Source(
+				value = "com/google/gwt/user/client/ui/disclosurePanelClosed.png"
 		)
 		ImageResource expand();
 
-		@ClientBundle.Source (
-			value = "com/google/gwt/user/client/ui/disclosurePanelOpen.png"
+		@ClientBundle.Source(
+				value = "com/google/gwt/user/client/ui/disclosurePanelOpen.png"
 		)
 		ImageResource collapse();
 	}

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.dspace.qsardb.rpc.gwt.DescriptorColumn;
 import org.dspace.qsardb.rpc.gwt.PredictionColumn;
-import org.dspace.qsardb.rpc.gwt.PredictorResponse;
 import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 import org.dspace.qsardb.rpc.gwt.QdbTable;
 
@@ -67,41 +66,8 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 
 	@Override
 	public void onInputChanged(InputChangeEvent event) {
-		//need to turn it off atm to prevent clearing combobox
-		for (DescriptorInputComponent dip : descriptorInputList) {
-			dip.setEnableSlideEvents(false);
-		}
-		setDescriptorValues(event.getValues());
-		for (DescriptorInputComponent dip : descriptorInputList) {
-			dip.setEnableSlideEvents(true);
-		}
 
-		if (event.getSource().getClass() == CompoundInputPanel.class) {
-			final QdbPredictor predictor = (QdbPredictor)Application.getInstance();
-			predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
-
-			for (DescriptorInputComponent dip : descriptorInputList) {
-				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor(), event.getResponse()));
-			}
-		} else if (event.getSource().getClass() == CompoundSelectionPanel.class) {
-			for (DescriptorInputComponent dip : descriptorInputList) {
-				dip.predictionSoftLabel.setText(getLabelText(dip.getDescriptor().getApplication()));
-			}
-		}
-	}
-
-	private String getLabelText(DescriptorColumn d, PredictorResponse response) {
-		String application = response.getDescriptorApplications().get(d.getId());
-		return getLabelText(application);
-	}
-
-	private String getLabelText(String application) {
-		String prefix = "This value is calculated with ";
-		if (application == null || application.trim().equals("")) {
-			return prefix + "<N/A>";
-		} else {
-			return prefix + application;
-		}
+		setDescriptorValues(event);
 	}
 
 	public Map<String, String> getDescriptorValues() {
@@ -114,14 +80,34 @@ public class ModelInputPanel extends Composite implements InputChangeEventHandle
 		return values;
 	}
 
-	public void setDescriptorValues(Map<String, String> values) {
-		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
-			String value = values.get(descriptorInput.getId());
+	private void setDescriptorValues(InputChangeEvent event) {
+		Map<String, String> values = event.getValues();
+		Class source = event.getSource().getClass();
 
-			if (value != null) {
-				descriptorInput.setValue(value);
-			}
+		Map<String, String> descApps = new LinkedHashMap();
+		if (event.getResponse() != null) {
+			descApps.putAll(event.getResponse().getDescriptorApplications());
 		}
 
+		for (DescriptorInputComponent descriptorInput : descriptorInputList) {
+			String did = descriptorInput.getId();
+
+			String value = values.get(did);
+			if (value == null) {
+				continue;
+			}
+
+			descriptorInput.setValue(value);
+
+			if (source == CompoundInputPanel.class) {
+				QdbPredictor predictor = (QdbPredictor)Application.getInstance();
+				predictor.getDataInputPanel().compoundSelectionPanel.suggestBox.setValue("", false);
+
+				String app = descApps.getOrDefault(did, "N/A");
+				descriptorInput.setDescriptorSource("This value is calculated with "+app);
+			} else if (source == CompoundSelectionPanel.class) {
+				descriptorInput.setDescriptorSource("This value is from the original model");
+			}
+		}
 	}
 }
