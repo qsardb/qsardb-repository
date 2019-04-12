@@ -88,7 +88,7 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		if (structure != null) {
 			request = new PredictorRequest(structure);
 		} else {
-			request = new PredictorRequest(getValues());
+			request = new PredictorRequest(values);
 		}
 		PredictorClient.predict(request, new MethodCallback<PredictorResponse>() {
 			@Override
@@ -104,7 +104,6 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 			}
 		});
 	}
-
 	public Map<String, String> getValues(){
 		return this.values;
 	}

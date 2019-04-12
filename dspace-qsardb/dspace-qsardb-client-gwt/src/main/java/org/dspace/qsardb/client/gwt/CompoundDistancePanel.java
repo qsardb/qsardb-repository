@@ -1,22 +1,31 @@
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.ui.*;
-import com.reveregroup.gwt.imagepreloader.*;
-import java.util.*;
-import org.dspace.qsardb.rpc.gwt.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
+import com.reveregroup.gwt.imagepreloader.ImageLoadEvent;
+import com.reveregroup.gwt.imagepreloader.ImageLoadHandler;
+import com.reveregroup.gwt.imagepreloader.ImagePreloader;
+import java.util.List;
+import org.dspace.qsardb.rpc.gwt.Analogue;
+import org.dspace.qsardb.rpc.gwt.AttributeColumn;
+import org.dspace.qsardb.rpc.gwt.DescriptionColumn;
+import org.dspace.qsardb.rpc.gwt.LabelsColumn;
+import org.dspace.qsardb.rpc.gwt.ModelTable;
+import org.dspace.qsardb.rpc.gwt.ParameterColumn;
+import org.dspace.qsardb.rpc.gwt.PredictionColumn;
+import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 
 public class CompoundDistancePanel extends Composite implements EvaluationEventHandler {
 	private final ModelTable table;
-	private final CompoundDistances distances;
 	private final FlowPanel panel;
 
 	CompoundDistancePanel(ModelTable table) {
 		this.table = table;
 		this.panel = new FlowPanel();
-		PropertyColumn property = table.getColumn(PropertyColumn.class);
-		Set<String> compIds = property.getValues().keySet();
-		this.distances = new CompoundDistances(table, compIds);
 		panel.add(new HTML("Loading ..."));
 		initWidget(panel);
 	}
@@ -25,8 +34,10 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 	public void onEvaluate(EvaluationEvent event) {
 		panel.clear();
 
-		DataInputPanel input = (DataInputPanel)event.getSource(); // XXX
-		distances.calculate(input.getValues());
+		List<Analogue> analogues = event.getResponse().getTrainingAnalogues();
+		if (analogues.isEmpty()) {
+			return;
+		}
 
 		Resolver resolver = new Resolver(table);
 
@@ -39,15 +50,17 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		NumberFormat fmt = NumberFormat.getFormat("0.0000");
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
-		for (int i=0; i<Math.min(5, distances.size()); i++) {
+		for (int i=0; i<Math.min(5, analogues.size()); i++) {
+			Analogue analogue = analogues.get(i);
+
 			if (i > 0) {
 				int separatorRow = flexTable.getRowCount();
 				flexTable.setHTML(separatorRow, 0, "<hr/>");
 				flexTable.getFlexCellFormatter().setColSpan(separatorRow, 0, 5);
 			}
 
-			String compId = distances.getId(i);
-			double distance = distances.getDistance(i);
+			String compId = analogue.getCompoundId();
+			double distance = analogue.getDistance();
 
 			final int row = flexTable.getRowCount();
 
