@@ -56,6 +56,13 @@ public class PredictorResource {
 
 	private static final CacheAD adCache = new CacheAD(500);
 
+	/**
+	 * Use model for prediction.
+	 *
+	 * @param handle QDB archive handle
+	 * @param modelId model identifier in the archive
+	 * @return a predicted value as a string
+	 */
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("{handle: \\d+/\\d+}/models/{modelId}")
@@ -75,6 +82,14 @@ public class PredictorResource {
 		return predictorInfo(handle, modelId);
 	}
 
+	/**
+	 * Use model for prediction.
+	 *
+	 * @param handle QDB archive handle
+	 * @param modelId model identifier in the archive
+	 * @param predictorRequest
+	 * @return PredictorResponse object
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -162,7 +177,8 @@ public class PredictorResource {
 				ApplicabilityDomain ad = adCache.get(handle, model);
 				ApplicabilityDomain.Result adResult = ad.estimate(params);
 				r.setApplicabilityDomain(adResult.isWithinAD() ? "YES" : "NO");
-
+				r.setApplicabilityDomainDetails(adResult.getDetails());
+				
 				// round z-score values
 				Map<String, Double> zScores = adResult.getDescriptorZScores();
 				for (Map.Entry<String, Double> e: zScores.entrySet()) {

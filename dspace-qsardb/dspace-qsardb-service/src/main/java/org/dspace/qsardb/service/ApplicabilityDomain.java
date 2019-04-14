@@ -97,14 +97,23 @@ public class ApplicabilityDomain {
 			}
 		}
 
-		Map<String, Double> zScores = admDescriptorRanges.zScores(descriptorValues);
+		Result result = new Result(trSet);
 
 		int adScore = 0;
-		adScore += admDescriptorRanges.estimate(zScores) ? 1 : 0;
-		adScore += admDistances.estimate(nnList) ? 1 : 0;
-		adScore += admResponses.estimate(nnList) ? 1 : 0;
 
-		Result result = new Result(trSet);
+		Map<String, Double> zScores = admDescriptorRanges.zScores(descriptorValues);
+		boolean scoreDescs = admDescriptorRanges.estimate(zScores);
+		adScore += scoreDescs ? 1 : 0;
+		result.details.put("descriptors", scoreDescs ? "YES" : "NO");
+
+		boolean scoreAnalogs = admDistances.estimate(nnList);
+		adScore += scoreAnalogs ? 1 : 0;
+		result.details.put("analogues", scoreAnalogs ? "YES" : "NO");
+
+		boolean scoreResponses = admResponses.estimate(nnList);
+		adScore += admResponses.estimate(nnList) ? 1 : 0;
+		result.details.put("responses", scoreResponses ? "YES" : "NO");
+
 		result.withinAD = adScore >= 2;
 		result.analogues = nn;
 		result.zScores =  zScores;
@@ -131,6 +140,7 @@ public class ApplicabilityDomain {
 		private List<Distance> analogues;
 		private boolean withinAD;
 		private Map<String, Double> zScores;
+		private Map<String, String> details = new LinkedHashMap<>();
 
 		private Result(Set<String> trSet) {
 			this.trSet = trSet;
@@ -155,6 +165,10 @@ public class ApplicabilityDomain {
 
 		public Map<String, Double> getDescriptorZScores() {
 			return zScores;
+		}
+
+		public Map<String, String> getDetails() {
+			return details;
 		}
 	}
 }

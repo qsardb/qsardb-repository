@@ -26,6 +26,8 @@ public class PredictorResponse {
 
 	private String applicabilityDomain;
 
+	private Map<String, String> applicabilityDomainDetails;
+
 	public String getEquation() {
 		return equation;
 	}
@@ -106,6 +108,17 @@ public class PredictorResponse {
 
 	public void setApplicabilityDomain(String applicabilityDomain) {
 		this.applicabilityDomain = applicabilityDomain;
+	}
+
+	public Map<String, String> getApplicabilityDomainDetails() {
+		return applicabilityDomainDetails;
+	}
+
+	public void setApplicabilityDomainDetails(Map<String, String> applicabilityDomainDetails) {
+		if (applicabilityDomainDetails == null) {
+			applicabilityDomainDetails = new LinkedHashMap<>();
+		}
+		this.applicabilityDomainDetails = applicabilityDomainDetails;
 	}
 
 	@Override
