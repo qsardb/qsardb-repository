@@ -8,7 +8,7 @@ import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 public class DataOutputPanel extends Composite implements EvaluationEventHandler {
 
 	private final ModelTable modelTable;
-	private FlexTable table;
+	private final FlexTable table;
 
 
 	public DataOutputPanel(ModelTable modelTable){
@@ -69,9 +69,16 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 		}
 
 		if (property.isNumeric()) {
+			String ad = event.getResponse().getApplicabilityDomain();
+			Map<String, String> details = event.getResponse().getApplicabilityDomainDetails();
+
+			FlowPanel adPanel = new FlowPanel();
+			adPanel.add(new InlineLabel(ad));
+			adPanel.add(new DescriptionLabel(new ApplicabilityDomainTooltip(details)));
+
 			this.table.setHTML(parts.length, 0, "Inside applicability domain");
 			this.table.setHTML(parts.length, 1, "=");
-			this.table.setHTML(parts.length, 2, event.getResponse().getApplicabilityDomain());
+			this.table.setWidget(parts.length, 2, adPanel);
 		}
 	}
 }
