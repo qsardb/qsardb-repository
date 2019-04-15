@@ -48,7 +48,7 @@ class PredictionSelection extends Composite{
 			this.checkBoxes.add(checkBox);
 
 			if (p.getDescription() != null) {
-				predictionPanel.add(new DescriptionLabel(p));
+				predictionPanel.add(new DescriptionLabel(new DescriptionTooltip(p)));
 			}
 
 			panel.add(predictionPanel);

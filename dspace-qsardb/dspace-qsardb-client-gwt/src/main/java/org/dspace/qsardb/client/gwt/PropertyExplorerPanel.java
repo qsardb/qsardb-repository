@@ -56,7 +56,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 		FlowPanel titlePanel = new FlowPanel();
 		titlePanel.add(new InlineLabel(title));
 		if (property.getDescription() != null) {
-			titlePanel.add(new DescriptionLabel(property));
+			titlePanel.add(new DescriptionLabel(new DescriptionTooltip(property)));
 		}
 		return titlePanel;
 	}

@@ -10,20 +10,13 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
-import org.dspace.qsardb.rpc.gwt.ModelTable;
-import org.dspace.qsardb.rpc.gwt.ParameterColumn;
 
 class DescriptionLabel extends Composite {
-	private final DescriptionTooltip tooltip;
+	private final Tooltip tooltip;
 	private final PopupHandler handler = new PopupHandler();
 
-	public DescriptionLabel(ParameterColumn parameter) {
-		tooltip = new DescriptionTooltip(parameter);
-		init();
-	}
-
-	public DescriptionLabel(ModelTable table) {
-		tooltip = new DescriptionTooltip(table);
+	public  DescriptionLabel(Tooltip tooltip) {
+		this.tooltip = tooltip;
 		init();
 	}
 

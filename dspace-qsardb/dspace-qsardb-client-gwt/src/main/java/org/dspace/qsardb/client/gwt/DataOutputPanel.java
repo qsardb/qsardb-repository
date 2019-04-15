@@ -48,7 +48,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 		}
 
 		if (property.getDescription() != null){
-			propertyPanel.add(new DescriptionLabel(property));
+			propertyPanel.add(new DescriptionLabel(new DescriptionTooltip(property)));
 		}
 
 		this.table.setWidget(0, 0, propertyPanel);

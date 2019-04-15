@@ -1,13 +1,18 @@
 package org.dspace.qsardb.client.gwt;
 
-import com.google.gwt.dom.client.Style;
-import java.util.*;
-
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.*;
-
-import com.reveregroup.gwt.imagepreloader.*;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.reveregroup.gwt.imagepreloader.Dimensions;
+import com.reveregroup.gwt.imagepreloader.ImageLoadEvent;
+import com.reveregroup.gwt.imagepreloader.ImageLoadHandler;
+import com.reveregroup.gwt.imagepreloader.ImagePreloader;
+import java.util.Map;
+import java.util.Set;
 
 public class ResolverTooltip extends Tooltip {
 
@@ -16,7 +21,7 @@ public class ResolverTooltip extends Tooltip {
 
 	private FlexTable table = null;
 
-	public ResolverTooltip(Resolver resolver){
+	public ResolverTooltip(Resolver resolver) {
 		this.resolver = resolver;
 		this.table = new FlexTable();
 		this.table.addStyleName("resolver-tooltip");
@@ -26,7 +31,7 @@ public class ResolverTooltip extends Tooltip {
 	@Override
 	protected void render() {
 		final String resolveKey = scheduledKey;
-		if(resolveKey == null){
+		if (resolveKey == null) {
 			return;
 		}
 
@@ -36,15 +41,15 @@ public class ResolverTooltip extends Tooltip {
 		resetTable(null, values, resolveMethod);
 		setPopupPositionAndShow(getPositionCallback());
 
-		ImageLoadHandler loadHandler = new ImageLoadHandler(){
+		ImageLoadHandler loadHandler = new ImageLoadHandler() {
 
 			@Override
-			public void imageLoaded(ImageLoadEvent event){
-				if(resolveKey.equals(scheduledKey)){
+			public void imageLoaded(ImageLoadEvent event) {
+				if (resolveKey.equals(scheduledKey)) {
 					Image image = null;
 
 					Dimensions size = event.getDimensions();
-					if(size != null){
+					if (size != null) {
 						image = new Image(event.getImageUrl());
 						image.setPixelSize(size.getWidth(), size.getHeight());
 					}
@@ -59,29 +64,29 @@ public class ResolverTooltip extends Tooltip {
 
 	}
 
-	private void resetTable(Image image, Map<String, String> values, String method){
+	private void resetTable(Image image, Map<String, String> values, String method) {
 
-		if(this.table.getRowCount() > 0){
+		if (this.table.getRowCount() > 0) {
 			this.table.removeAllRows();
 		}
 
-		FlexTable.FlexCellFormatter formatter = (FlexTable.FlexCellFormatter)this.table.getCellFormatter();
+		FlexTable.FlexCellFormatter formatter = this.table.getFlexCellFormatter();
 
 		int row = 0;
 
 		formatter.setColSpan(row, 0, 2);
 
-		resetImage(image, "Resolving "+method+"...");
+		resetImage(image, "Resolving " + method + "...");
 		formatter.setHorizontalAlignment(row, 0, HasHorizontalAlignment.ALIGN_LEFT);
 
 		row++;
 
 		Set<Map.Entry<String, String>> entries = values.entrySet();
-		for(Map.Entry<String, String> entry : entries){
+		for (Map.Entry<String, String> entry : entries) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 
-			if(value == null || value.isEmpty()){
+			if (value == null || value.isEmpty()) {
 				continue;
 			}
 
@@ -95,12 +100,12 @@ public class ResolverTooltip extends Tooltip {
 		}
 	}
 
-	private void resetImage(Image image, String method){
+	private void resetImage(Image image, String method) {
 		FlowPanel w = new FlowPanel();
 		w.setStylePrimaryName("depict");
 		if (image != null) {
 			w.add(image);
-			w.add(new InlineLabel("[ "+method+" ]"));
+			w.add(new InlineLabel("[ " + method + " ]"));
 		}
 
 		this.table.setWidget(0, 0, w);
@@ -115,13 +120,8 @@ public class ResolverTooltip extends Tooltip {
 		}
 	}
 
-	public void schedule(String id, final int x, final int y){
+	public void schedule(String id, final int x, final int y) {
 		scheduledKey = id;
 		super.schedule(x, y);
-	}
-
-	@Override
-	public void cancel(){
-		super.cancel();
 	}
 }

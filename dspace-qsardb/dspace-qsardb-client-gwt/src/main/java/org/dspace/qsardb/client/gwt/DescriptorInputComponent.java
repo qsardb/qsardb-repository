@@ -133,7 +133,7 @@ public class DescriptorInputComponent extends Composite {
 		collapsiblePanel.setVisible(false);
 
 		if (descriptor.getDescription() != null) {
-			DescriptionLabel descLabel = new DescriptionLabel(descriptor);
+			DescriptionLabel descLabel = new DescriptionLabel(new DescriptionTooltip(descriptor));
 			descLabel.getElement().getStyle().setProperty("float", "left");
 			inputPanel.insert(descLabel, 1);
 		}

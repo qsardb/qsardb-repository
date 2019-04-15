@@ -41,7 +41,7 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 				FlowPanel headerPanel = new FlowPanel();
 				headerPanel.add(new InlineLabel(descriptor.getId()+": "+descriptor.getName()));
 				if (descriptor.getDescription() != null){
-					headerPanel.add(new DescriptionLabel(descriptor));
+					headerPanel.add(new DescriptionLabel(new DescriptionTooltip(descriptor)));
 				}
 				return headerPanel;
 			}

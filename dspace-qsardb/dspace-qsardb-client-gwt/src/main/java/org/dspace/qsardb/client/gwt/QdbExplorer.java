@@ -27,7 +27,7 @@ public class QdbExplorer extends QdbApplication {
 		HTMLPanel modelHead = new HTMLPanel("h2", modelName);
 		panel.add(modelHead);
 		if (table.getDescription() != null){
-			modelHead.add(new DescriptionLabel(table));
+			modelHead.add(new DescriptionLabel(new DescriptionTooltip(table)));
 		}
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
