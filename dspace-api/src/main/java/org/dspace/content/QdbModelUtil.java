@@ -5,6 +5,8 @@ package org.dspace.content;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -23,12 +25,14 @@ import org.dmg.pmml.Segment;
 import org.dmg.pmml.Segmentation;
 import org.dmg.pmml.TreeModel;
 import org.qsardb.cargo.map.FrequencyMap;
+import org.qsardb.cargo.map.ValuesCargo;
 import org.qsardb.cargo.pmml.PMMLCargo;
 import org.qsardb.cargo.rds.RDSCargo;
 import org.qsardb.cargo.rds.RDSObject;
 import org.qsardb.evaluation.Evaluator;
 import org.qsardb.evaluation.PMMLEvaluator;
 import org.qsardb.model.Model;
+import org.qsardb.model.Property;
 import org.qsardb.model.Qdb;
 
 public class QdbModelUtil {
@@ -59,6 +63,27 @@ public class QdbModelUtil {
 			return new QdbRDSEvaluator(qdb, rdsCargo.loadRdsObject());
 		}
 		throw new IllegalArgumentException();
+	}
+
+	public static boolean isRegression(Model qdbModel) {
+		String type = QdbModelUtil.detectType(qdbModel);
+		if (type.toLowerCase().contains("classification")) {
+			return false;
+		} else
+			if (type.toLowerCase().contains("regression")) {
+			return true;
+		}
+
+		try {
+			Property property = qdbModel.getProperty();
+			Map<String, Double> map = property.getCargo(ValuesCargo.class).loadDoubleMap();
+			HashSet<Double> uniq = new HashSet<>(map.values());
+			return uniq.size() > 5;
+		} catch (NumberFormatException ex) {
+			return false;
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	public static String detectType(Model qdbModel) {

@@ -144,15 +144,15 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 			columns.add(column);
 		}
 
+		Property property = model.getProperty();
+		PropertyColumn propertyColumn = loadPropertyColumn(property, keys);
+		propertyColumn.setRegression(QdbModelUtil.isRegression(model));
+		columns.add(propertyColumn);
+
 		Evaluator evaluator = QdbModelUtil.getEvaluator(model);
-
-		if(evaluator != null){
+		if (evaluator != null) {
 			evaluator.init();
-
 			try {
-				Property property = evaluator.getProperty();
-				columns.add(loadPropertyColumn(property, keys));
-
 				List<Descriptor> descriptors = evaluator.getDescriptors();
 				for(Descriptor descriptor : descriptors){
 					columns.add(loadDescriptorColumn(descriptor, keys));
@@ -160,11 +160,6 @@ public class QdbServiceServlet extends RemoteServiceServlet implements QdbServic
 			} finally {
 				evaluator.destroy();
 			}
-		} else
-
-		{
-			Property property = model.getProperty();
-			columns.add(loadPropertyColumn(property, keys));
 		}
 
 		AttributeCollector idValues = new AttributeCollector(){

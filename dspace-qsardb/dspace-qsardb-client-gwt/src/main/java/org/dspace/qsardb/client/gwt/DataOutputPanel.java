@@ -11,7 +11,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 	private final FlexTable table;
 
 
-	public DataOutputPanel(ModelTable modelTable){
+	public DataOutputPanel(ModelTable modelTable) {
 		this.modelTable = modelTable;
 
 		Panel panel = new FlowPanel();
@@ -31,7 +31,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 	}
 
 	@Override
-	public void onEvaluate(EvaluationEvent event){
+	public void onEvaluate(EvaluationEvent event) {
 		String result = event.getResponse().getEquation();
 
 		String[] parts = result.split("=");
@@ -47,7 +47,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 			propertyPanel.add(new InlineLabel(parts[0]));
 		}
 
-		if (property.getDescription() != null){
+		if (property.getDescription() != null) {
 			propertyPanel.add(new DescriptionLabel(new DescriptionTooltip(property)));
 		}
 
@@ -55,10 +55,10 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 
 		FlexTable.RowFormatter formatter = this.table.getRowFormatter();
 
-		for(int i = 1; i < parts.length; i++){
+		for (int i = 1; i < parts.length; i++) {
 			int row = (i - 1);
 
-			if(i == (parts.length - 1)){
+			if(i == (parts.length - 1)) {
 				parts[i] = ("<b>" + parts[i] + "</b>");
 			}
 
@@ -68,7 +68,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 			formatter.setVerticalAlign(row, HasVerticalAlignment.ALIGN_TOP);
 		}
 
-		if (property.isNumeric()) {
+		if (property.isRegression()) {
 			String ad = event.getResponse().getApplicabilityDomain();
 			Map<String, String> details = event.getResponse().getApplicabilityDomainDetails();
 

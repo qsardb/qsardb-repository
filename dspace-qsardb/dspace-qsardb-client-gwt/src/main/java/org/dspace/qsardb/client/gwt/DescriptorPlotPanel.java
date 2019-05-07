@@ -35,7 +35,7 @@ public class DescriptorPlotPanel extends PlotPanel {
 		QdbPlot.Bounds descriptorBounds = QdbPlot.bounds(descriptorValues);
 
 		ScatterPlot scatterPlot = new ScatterPlot(resolver);
-		if (property.isNumeric()) {
+		if (property.isRegression()) {
 			scatterPlot.addXAxisOptions(descriptorBounds, "Descriptor");
 			scatterPlot.addYAxisOptions(propertyBounds, "Experimental property");
 

@@ -64,17 +64,12 @@ public class ParameterUtil {
 		Map<String, Object> values = column.getValues();
 
 		Collection<Map.Entry<String, Object>> entries = values.entrySet();
-		int stringValuesCount = 0;
 		for(Map.Entry<String, Object> entry : entries){
 			Object value = convertValue(entry.getValue());
 			entry.setValue(value);
-			if (value instanceof String) {
-				stringValuesCount++;
-			}
 		}
 
 		column.setConverted(true);
-		column.setNumeric(stringValuesCount <  entries.size());
 	}
 
 	static

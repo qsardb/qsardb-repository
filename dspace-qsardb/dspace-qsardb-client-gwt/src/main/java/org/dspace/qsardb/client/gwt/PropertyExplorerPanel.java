@@ -18,11 +18,11 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 		initWidget(panel);
 	}
 
-	private Widget createPropertyPanel(QdbTable table){
+	private Widget createPropertyPanel(QdbTable table) {
 		Panel panel = new VerticalPanel();
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
-		if (property.isNumeric()) {
+		if (property.isRegression()) {
 			panel.add(createPropertyPlotPanel(table));
 			panel.add(createResidualErrorPlotPanel(table));
 		} else {

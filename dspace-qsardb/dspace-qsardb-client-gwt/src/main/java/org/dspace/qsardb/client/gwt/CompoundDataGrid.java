@@ -11,7 +11,7 @@ import com.google.gwt.user.cellview.client.*;
 
 public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDisplayEventHandler {
 
-	public CompoundDataGrid(QdbTable table){
+	public CompoundDataGrid(QdbTable table) {
 		super(50);
 
 		Resolver resolver = new Resolver(table);
@@ -23,7 +23,7 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 		addColumn(new NameTextColumn(resolver, name), "Name");
 
 		CasColumn cas = table.getColumn(CasColumn.class);
-		if(cas != null){
+		if (cas != null) {
 			addColumn(new CasTextColumn(cas), "CAS");
 		}
 
@@ -31,25 +31,25 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 		addColumn(new PropertyTextColumn(property), new PropertyTextHeader(property));
 
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
-		for(PredictionColumn prediction : predictions){
+		for (PredictionColumn prediction : predictions) {
 			addColumn(new PredictionTextColumn(prediction), new PredictionTextHeader(prediction));
-			if (prediction.isNumeric()) {
+			if (property.isRegression()) {
 				addColumn(new PredictionErrorTextColumn(prediction), "Error");
 			}
 		}
 
 		LeverageColumn leverage = table.getColumn(LeverageColumn.class);
-		if(leverage != null){
+		if (leverage != null) {
 			addColumn(new LeverageTextColumn(leverage), "Leverage");
 		}
 
 		MahalanobisDistanceColumn mahalanobisDistance = table.getColumn(MahalanobisDistanceColumn.class);
-		if(mahalanobisDistance != null){
+		if (mahalanobisDistance != null) {
 			addColumn(new MahalanobisDistanceTextColumn(mahalanobisDistance), "Mahalanobis distance");
 		}
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
-		for(DescriptorColumn descriptor : descriptors){
+		for (DescriptorColumn descriptor : descriptors) {
 			addColumn(new DescriptorTextColumn(descriptor), new DescriptorTextHeader(descriptor));
 		}
 

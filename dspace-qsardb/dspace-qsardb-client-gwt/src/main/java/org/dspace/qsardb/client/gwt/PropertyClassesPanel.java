@@ -47,7 +47,9 @@ class PropertyClassesPanel extends FlowPanel implements SeriesDisplayEventHandle
 				String ci = classes.get(i);
 				for (int j=0; j<classes.size(); ++j) {
 					String cj = classes.get(j);
-					if (actual.get(k).equals(ci) && predicted.get(k).equals(cj)) {
+					String av = String.valueOf(actual.get(k));
+					String pv = String.valueOf(predicted.get(k));
+					if (av.equals(ci) && pv.equals(cj)) {
 						confusion[i][j]++;
 					}
 				}
