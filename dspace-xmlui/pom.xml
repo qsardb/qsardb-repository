@@ -34,35 +34,20 @@
 				</executions>
 				<configuration>
 					<target>
-						<copy
-							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Explorer"
-						>
-							<fileset
-								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Explorer"
-							/>
+						<copy todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Explorer">
+							<fileset dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Explorer"/>
 						</copy>
-						<copy
-							todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Predictor"
-						>
-							<fileset
-								dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Predictor"
-							/>
+						<copy todir="${basedir}/target/${pom.artifactId}-${pom.version}/static/org.dspace.qsardb.client.Predictor">
+							<fileset dir="${basedir}/../dspace-qsardb/dspace-qsardb-client-gwt/target/dspace-qsardb-client-gwt-${pom.version}/org.dspace.qsardb.client.Predictor"/>
 						</copy>
 
-						<get
-							src="http://peter-ertl.com/jsme/download/JSME_2016-07-31.zip"
-							dest="${basedir}/target/JSME.zip"
-							skipexisting="true"
-							/>
-						<unzip
-							src="${basedir}/target/JSME.zip"
-							dest="${basedir}/target/${pom.artifactId}-${pom.version}/static"
-							>
+						<get src="http://peter-ertl.com/jsme/download/JSME_2016-07-31.zip" dest="${basedir}/target/JSME.zip" skipexisting="true"/>
+						<unzip src="${basedir}/target/JSME.zip" dest="${basedir}/target/${pom.artifactId}-${pom.version}/static">
 							<patternset>
 								<include name="*/jsme/"/>
 							</patternset>
 							<mapper>
-								<cutdirsmapper dirs="1" />
+								<cutdirsmapper dirs="1"/>
 							</mapper>
 						</unzip>
 					</target>
@@ -168,7 +153,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>2.22.1</version>
+			<version>2.26</version>
 		</dependency>
 
 		<dependency>
