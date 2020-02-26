@@ -124,6 +124,16 @@
 			<field>
 				<dc-schema>bibtex</dc-schema>
 				<dc-element>entry</dc-element>
+				<dc-qualifier>institution</dc-qualifier>
+				<repeatable>false</repeatable>
+				<label>Institution</label>
+				<input-type>onebox</input-type>
+				<hint>Institution sponsoring a technical report</hint>
+				<required></required>
+			</field>
+			<field>
+				<dc-schema>bibtex</dc-schema>
+				<dc-element>entry</dc-element>
 				<dc-qualifier>journal</dc-qualifier>
 				<repeatable>false</repeatable>
 				<label>Journal</label>
