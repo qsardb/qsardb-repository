@@ -15,6 +15,7 @@ public class ACSReferenceStyle extends ReferenceStyle {
 		addFormat(BibTeXEntry.TYPE_INCOLLECTION, createInCollectionFormat());
 		addFormat(BibTeXEntry.TYPE_INPROCEEDINGS, createInProceedingsFormat());
 		addFormat(BibTeXEntry.TYPE_MISC, createMiscFormat());
+		addFormat(BibTeXEntry.TYPE_TECHREPORT, createTechreportFormat());
 		addFormat(BibTeXEntry.TYPE_UNPUBLISHED, createUnpublishedFormat());
 	}
 
@@ -84,6 +85,21 @@ public class ACSReferenceStyle extends ReferenceStyle {
 			new ACSAuthorFormat(null),
 			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
 			new FieldFormat(BibTeXEntry.KEY_HOWPUBLISHED, ","),
+			new YearFormat("."),
+			new URLFormat(null),
+			new DOIFormat(null)
+		);
+
+		return new EntryFormat(fields);
+	}
+
+	static private EntryFormat createTechreportFormat() {
+		List<FieldFormat> fields = Arrays.asList(
+			new ACSAuthorFormat(null),
+			new FieldFormat(BibTeXEntry.KEY_TITLE, "."),
+			new FieldFormat(BibTeXEntry.KEY_NUMBER, "."),
+			new FieldFormat(BibTeXEntry.KEY_INSTITUTION, ","),
+			new FieldFormat(BibTeXEntry.KEY_ADDRESS, ","),
 			new YearFormat("."),
 			new URLFormat(null),
 			new DOIFormat(null)
