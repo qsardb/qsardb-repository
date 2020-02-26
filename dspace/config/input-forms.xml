@@ -660,6 +660,14 @@ it, please enter the types and the actual numbers or codes.</hint>
 			<stored-value>incollection</stored-value>
 		</pair>
 		<pair>
+			<displayed-value>Technical report</displayed-value>
+			<stored-value>techreport</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Miscellaneous</displayed-value>
+			<stored-value>misc</stored-value>
+		</pair>
+		<pair>
 			<displayed-value>(Unpublished work)</displayed-value>
 			<stored-value>unpublished</stored-value>
 		</pair>
