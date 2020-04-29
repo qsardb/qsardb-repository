@@ -34,7 +34,7 @@ public class DataOutputPanel extends Composite implements EvaluationEventHandler
 	public void onEvaluate(EvaluationEvent event) {
 		String result = event.getResponse().getEquation();
 
-		String[] parts = result.split("=");
+		String[] parts = result.split(" = ");
 
 		PropertyColumn property = modelTable.getColumn(PropertyColumn.class);
 		FlowPanel propertyPanel = new FlowPanel();
