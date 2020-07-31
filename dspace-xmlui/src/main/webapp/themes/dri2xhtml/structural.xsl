@@ -157,6 +157,7 @@
     <xsl:template name="buildHead">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta content="telephone=no" name="format-detection"/>
             <meta name="Generator">
               <xsl:attribute name="content">
                 <xsl:text>DSpace</xsl:text>
