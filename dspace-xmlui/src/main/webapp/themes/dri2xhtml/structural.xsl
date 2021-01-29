@@ -235,6 +235,8 @@
                                 //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
                                 function disableEnterKey(e)
                                 {
+                                     if (e.target.tagName === 'TEXTAREA') return true;
+
                                      var key;
                                 
                                      if(window.event)
@@ -257,16 +259,6 @@
                     </xsl:attribute>&#160;</script>
             </xsl:for-each>
 
-            <!-- add "shared" javascript from static, path is relative to webapp root -->
-            <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='static']">
-                <script type="text/javascript">
-                    <xsl:attribute name="src">
-                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
-                        <xsl:text>/</xsl:text>
-                        <xsl:value-of select="."/>
-                    </xsl:attribute>&#160;</script>
-            </xsl:for-each>
-
             <!-- Add theme javascript  -->
             <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][not(@qualifier)]">
                 <script type="text/javascript">
@@ -279,6 +271,16 @@
                     </xsl:attribute>&#160;</script>
             </xsl:for-each>
             
+            <!-- add "shared" javascript from static, path is relative to webapp root -->
+            <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='static']">
+                <script type="text/javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                        <xsl:text>/</xsl:text>
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>&#160;</script>
+            </xsl:for-each>
+
             <xsl:call-template name="buildHead-google-analytics" />
             
             <!-- Add the title in -->
