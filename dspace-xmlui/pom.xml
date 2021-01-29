@@ -50,7 +50,7 @@
 						</copy>
 
 						<get
-							src="http://peter-ertl.com/jsme/download/JSME_2016-07-31.zip"
+							src="https://jsme-editor.github.io/downloads/JSME_2020-12-26.zip"
 							dest="${basedir}/target/JSME.zip"
 							skipexisting="true"
 							/>
