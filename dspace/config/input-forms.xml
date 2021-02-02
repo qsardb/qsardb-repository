@@ -1033,6 +1033,146 @@ it, please enter the types and the actual numbers or codes.</hint>
 			<displayed-value>6. Other</displayed-value>
 			<stored-value>6. Other</stored-value>
 		</pair>
+		<pair>
+			<displayed-value>6. Other (Abraham descriptor)</displayed-value>
+			<stored-value>6. Other (Abraham descriptor)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Abraham model solvent coefficient)</displayed-value>
+			<stored-value>6. Other (Abraham model solvent coefficient)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Acute toxicity to ciliate protozoa)</displayed-value>
+			<stored-value>6. Other (Acute toxicity to ciliate protozoa)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Antioxidant activity)</displayed-value>
+			<stored-value>6. Other (Antioxidant activity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Antiproliferative activity)</displayed-value>
+			<stored-value>6. Other (Antiproliferative activity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Antiviral binding affinity)</displayed-value>
+			<stored-value>6. Other (Antiviral binding affinity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Binding affinity to CAII)</displayed-value>
+			<stored-value>6. Other (Binding affinity to CAII)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Biotransformation half-lives in fish)</displayed-value>
+			<stored-value>6. Other (Biotransformation half-lives in fish)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Cetane number)</displayed-value>
+			<stored-value>6. Other (Cetane number)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Critical micelle concentration)</displayed-value>
+			<stored-value>6. Other (Critical micelle concentration)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Critical pressure)</displayed-value>
+			<stored-value>6. Other (Critical pressure)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Critical temperature)</displayed-value>
+			<stored-value>6. Other (Critical temperature)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Cytotoxicity)</displayed-value>
+			<stored-value>6. Other (Cytotoxicity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Double-layer capacitance)</displayed-value>
+			<stored-value>6. Other (Double-layer capacitance)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Enthalphy)</displayed-value>
+			<stored-value>6. Other (Enthalphy)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Enthalpy of vaporization)</displayed-value>
+			<stored-value>6. Other (Enthalpy of vaporization)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Global half-life index)</displayed-value>
+			<stored-value>6. Other (Global half-life index)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat capacity)</displayed-value>
+			<stored-value>6. Other (Heat capacity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat of atomization)</displayed-value>
+			<stored-value>6. Other (Heat of atomization)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat of decomposition)</displayed-value>
+			<stored-value>6. Other (Heat of decomposition)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat of formation in gas)</displayed-value>
+			<stored-value>6. Other (Heat of formation in gas)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat of formation in liquid)</displayed-value>
+			<stored-value>6. Other (Heat of formation in liquid)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Heat of vaporization)</displayed-value>
+			<stored-value>6. Other (Heat of vaporization)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (MOA of aquatic toxicity)</displayed-value>
+			<stored-value>6. Other (MOA of aquatic toxicity)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Molar refraction)</displayed-value>
+			<stored-value>6. Other (Molar refraction)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Molar volume)</displayed-value>
+			<stored-value>6. Other (Molar volume)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Nucleoside activity against Leishmania donovani)</displayed-value>
+			<stored-value>6. Other (Nucleoside activity against Leishmania donovani)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (PBT Index)</displayed-value>
+			<stored-value>6. Other (PBT Index)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Polarizability)</displayed-value>
+			<stored-value>6. Other (Polarizability)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Rate constant)</displayed-value>
+			<stored-value>6. Other (Rate constant)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Redox potential)</displayed-value>
+			<stored-value>6. Other (Redox potential)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Refraction index)</displayed-value>
+			<stored-value>6. Other (Refraction index)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Solubility in 1-octanol)</displayed-value>
+			<stored-value>6. Other (Solubility in 1-octanol)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Solubility in n-heptane)</displayed-value>
+			<stored-value>6. Other (Solubility in n-heptane)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>6. Other (Standard heat of formation)</displayed-value>
+			<stored-value>6. Other (Standard heat of formation)</stored-value>
+		</pair>
 	</value-pairs>
 
  </form-value-pairs>
