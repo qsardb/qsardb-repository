@@ -35,6 +35,14 @@ public class QdbUtil {
 	private QdbUtil(){
 	}
 
+	public static boolean containsQdb(Context context, Item item) {
+		try {
+			return getOriginalBitstream(context, item) != null;
+		} catch (SQLException|QdbConfigurationException ex) {
+			return false;
+		}
+	}
+
 	static
 	public <X> X invokeOriginal(Context context, Item item, QdbCallable<X> callable) throws Exception {
 		Bitstream bitstream = getOriginalBitstream(context, item);

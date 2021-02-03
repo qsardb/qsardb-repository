@@ -10,10 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
+import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.qsardb.conversion.qmrf.QmrfUtil;
 import org.xml.sax.SAXException;
@@ -24,6 +26,10 @@ import org.xml.sax.SAXException;
 public class QmrfArchive {
 
 	private static final BitstreamService bitstreamService = ContentServiceFactory.getInstance().getBitstreamService();
+
+	public static boolean containsQmrf(Context context, Item item) {
+		return !findBitstreams(context, item, "QMRF").isEmpty();
+	}
 
 	static boolean isQmrf(Context context, Bitstream bitstream) {
 		try {
@@ -48,5 +54,22 @@ public class QmrfArchive {
 		} catch (FileNotFoundException | JAXBException | SAXException ex) {
 			throw new IOException("Can't parse QMRF: " + file + " " + bitstream.getID(), ex);
 		}
+	}
+
+	private static ArrayList<Bitstream> findBitstreams(Context context, Item item, String shortDescription) {
+		ArrayList<Bitstream> result = new ArrayList<>();
+		for (Bundle bundle : item.getBundles(Constants.DEFAULT_BUNDLE_NAME)) {
+			for (Bitstream bs : bundle.getBitstreams()) {
+				try {
+					BitstreamFormat format = bs.getFormat(context);
+					if (shortDescription.equals(format.getShortDescription())) {
+						result.add(bs);
+					}
+				} catch (SQLException ex) {
+					throw new RuntimeException(ex);
+				}
+			}
+		}
+		return result;
 	}
 }
