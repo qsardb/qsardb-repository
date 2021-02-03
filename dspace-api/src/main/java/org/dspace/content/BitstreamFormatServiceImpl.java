@@ -275,6 +275,14 @@ public class BitstreamFormatServiceImpl implements BitstreamFormatService {
 
         List<BitstreamFormat> bitstreamFormats = bitstreamFormatDAO.findByFileExtension(context, extension);
 
+        for (BitstreamFormat bs : bitstreamFormats) {
+            if (bs.getShortDescription().equals("QMRF")) {
+                if (QmrfArchive.isQmrf(context, bitstream)) {
+                    return bs;
+                }
+            }
+        }
+
         if(CollectionUtils.isNotEmpty(bitstreamFormats))
         {
             return bitstreamFormats.get(0);

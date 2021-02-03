@@ -752,4 +752,13 @@
       <extension>zip</extension>
     </bitstream-type>
 
+    <bitstream-type>
+      <mimetype>application/qmrf-xml</mimetype>
+      <short_description>QMRF</short_description>
+      <description>QSAR Model Reporting Format</description>
+      <support_level>2</support_level>
+      <internal>false</internal>
+      <extension>xml</extension>
+    </bitstream-type>
+
 </dspace-bitstream-types>
