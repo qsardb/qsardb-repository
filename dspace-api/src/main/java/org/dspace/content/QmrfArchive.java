@@ -27,8 +27,27 @@ public class QmrfArchive {
 
 	private static final BitstreamService bitstreamService = ContentServiceFactory.getInstance().getBitstreamService();
 
+	private QMRF qmrf;
+
+	public QmrfArchive(Context context, Item item) {
+		for (Bitstream bs : findBitstreams(context, item, "QMRF")) {
+			try {
+				qmrf = parse(context, bs);
+				return;
+			} catch (IOException ex) {
+				throw new RuntimeException(ex.getMessage(), ex);
+			}
+		}
+
+		throw new IllegalArgumentException("Unable to find the QMRF file");
+	}
+
 	public static boolean containsQmrf(Context context, Item item) {
 		return !findBitstreams(context, item, "QMRF").isEmpty();
+	}
+
+	public static boolean containsPdf(Context context, Item item) {
+		return !findBitstreams(context, item, "Adobe PDF").isEmpty();
 	}
 
 	static boolean isQmrf(Context context, Bitstream bitstream) {

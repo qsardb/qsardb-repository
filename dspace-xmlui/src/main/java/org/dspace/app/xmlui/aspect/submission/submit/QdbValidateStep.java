@@ -10,6 +10,8 @@ import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
+import org.dspace.content.QdbUtil;
+import org.dspace.content.QmrfArchive;
 import org.dspace.submit.step.*;
 import org.dspace.submit.step.QdbValidation.Level;
 
@@ -24,26 +26,37 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 		Item item = super.submissionInfo.getSubmissionItem().getItem();
 
 		Collection collection = super.submission.getCollection();
-
-		Request request = ObjectModelHelper.getRequest(getObjectModel());
-		String level = (String)request.get("level");
-
 		String actionUrl = super.contextPath + "/handle/" + collection.getHandle() + "/submit/" + super.knot.getId() + ".continue";
 		Division division = body.addInteractiveDivision("submit-validate", actionUrl, Division.METHOD_POST, "primary submission");
 		division.setHead(T_submission_head);
 
 		addSubmissionProgressList(division);
 
+		if (QdbUtil.containsQdb(context, item)) {
+			addQdbValidationForm(item, division);
+		} else if (QmrfArchive.containsQmrf(context, item)) {
+			addQmrfValidationForm(item, division);
+		} else {
+			List content = division.addList("validate", List.TYPE_FORM);
+			content.setHead("QDB archive validation");
+			content.addItem("Please uoload a valid QDB archive or QMRF document.");
+		}
+
+		List controls = division.addList("controls", List.TYPE_FORM);
+		addControlButtons(controls);
+	}
+
+	private void addQdbValidationForm(Item item, Division division) throws WingException {
+		Request request = ObjectModelHelper.getRequest(getObjectModel());
+		String level = (String)request.get("level");
+
 		java.util.List<org.qsardb.validation.Message> messages = new ArrayList<org.qsardb.validation.Message>();
 
 		try {
 			ItemMessageCollector collector = ItemMessageCollector.load(item);
-
 			if(collector != null){
-
 				if(level == null){
 					level = collector.getLevel();
-
 					super.errorFlag = org.dspace.submit.step.QdbValidateStep.getStatus(collector);
 				}
 
@@ -55,32 +68,23 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 
 		renderValidationForm(division, messages, level, super.contextPath);
 
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE){
-
-			if(level == null){
+		if (super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_COMPLETE) {
+			if (level == null) {
 				division.addPara(T_status_init);
-			} else
-
-			{
+			} else {
 				division.addPara(T_status_success);
 			}
-		} else
-
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR){
+		} else if (super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_QDB_ERROR) {
 			division.addPara(T_status_qdb_error);
-		} else
-
-		if(super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR){
+		} else if (super.errorFlag == org.dspace.submit.step.QdbValidateStep.STATUS_VALIDATION_ERROR) {
 			division.addPara(T_status_error);
 		}
-
-		List controls = division.addList("controls", List.TYPE_FORM);
-		addControlButtons(controls);
 	}
 
 	static
 	public void renderValidationForm(Division division, java.util.List<org.qsardb.validation.Message> messages, String level, String contextPath) throws WingException {
 		List content = division.addList("validate", List.TYPE_FORM);
+		content.setHead("QDB archive validation");
 
 		Radio levelRadio = (content.addItem()).addRadio("level");
 		levelRadio.setLabel(T_level);
@@ -144,6 +148,41 @@ public class QdbValidateStep extends AbstractSubmissionStep {
 			}
 		} // End if
 
+	}
+
+	private void addQmrfValidationForm(Item item, Division division) throws WingException {
+		List form = division.addList("qmrf-validation", List.TYPE_FORM);
+		form.setHead("QMRF validation");
+
+		boolean isValid = true;
+
+		// check that QMRF file can be parsed
+		CheckBox qmrf = form.addItem().addCheckBox("qmrf");
+		qmrf.setLabel("QMRF file");
+		try {
+			new QmrfArchive(context, item);
+			qmrf.addOption(true, "qmrf");
+		} catch (RuntimeException ex) {
+			isValid = false;
+			qmrf.addOption(false, "qmrf");
+			qmrf.addError("Please upload a valid QMRF file!");
+		}
+		qmrf.setDisabled();
+
+		// check that PDF file is present
+		boolean havePdf = QmrfArchive.containsPdf(context, item);
+		CheckBox pdf = form.addItem().addCheckBox("pdf");
+		pdf.setLabel("PDF file");
+		pdf.addOption(havePdf, "pdf");
+		if (!havePdf) {
+			isValid = false;
+			pdf.addError("Please upload the corresponding PDF file!");
+		}
+		pdf.setDisabled();
+
+		if (isValid) {
+			form.addItem().addHidden("qmrfSubmission").setValue("isValid");
+		}
 	}
 
 	@Override

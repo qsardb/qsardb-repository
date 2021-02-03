@@ -23,6 +23,16 @@ public class QdbValidateStep extends AbstractProcessingStep {
 	public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo){
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
+		if (QdbUtil.containsQdb(context, item)) {
+			return verifyQdbSubmission(context, request, item);
+		} else if (QmrfArchive.containsQmrf(context, item)) {
+			return verifyQmrfSubmission(request, item);
+		} else {
+			return STATUS_VALIDATION_ERROR;
+		}
+	}
+
+	private int verifyQdbSubmission(Context context, HttpServletRequest request, Item item) {
 		String level = request.getParameter("level");
 
 		QdbValidation validator = new QdbValidation(level);
@@ -35,6 +45,14 @@ public class QdbValidateStep extends AbstractProcessingStep {
 			logger.error("Validation failed", e);
 			return STATUS_QDB_ERROR;
 		}
+	}
+
+	private int verifyQmrfSubmission(HttpServletRequest request, Item item) {
+		String qmrfSubmission = request.getParameter("qmrfSubmission");
+		if ("isValid".equals(qmrfSubmission)) {
+			return STATUS_COMPLETE;
+		}
+		return STATUS_VALIDATION_ERROR;
 	}
 
 	public static int getStatus(ItemMessageCollector collector){
