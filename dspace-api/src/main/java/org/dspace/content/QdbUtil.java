@@ -559,8 +559,9 @@ public class QdbUtil {
 	private String formatReference(BibTeXEntry entry){
 		ReferenceFormatter formatter = new ReferenceFormatter(new ACSReferenceStyle());
 
-		// Don't want to have the DOI as part of the title
+		// Don't want to have the DOI or URL as a part of the title
 		entry.removeField(BibTeXEntry.KEY_DOI);
+		entry.removeField(BibTeXEntry.KEY_URL);
 
 		return formatter.format(entry, false, false);
 	}

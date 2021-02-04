@@ -4,8 +4,14 @@
 package org.dspace.content;
 
 import it.jrc.ecb.qmrf.AuthorRef;
+import it.jrc.ecb.qmrf.EndpointRef;
+import it.jrc.ecb.qmrf.ModelEndpoint;
 import it.jrc.ecb.qmrf.QMRF;
+import it.jrc.ecb.qmrf.QSARAlgorithm;
+import it.jrc.ecb.qmrf.QSAREndpoint;
 import it.jrc.ecb.qmrf.QSARGeneralInformation;
+import it.jrc.ecb.qmrf.QSARIdentifier;
+import it.jrc.ecb.qmrf.SoftwareRef;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.dspace.authorize.AuthorizeException;
@@ -111,6 +118,11 @@ public class QmrfArchive {
 		}
 
 		collectBibTeXMetadata();
+
+		collectPropertyMetadata();
+		collectDescriptorMetadata();
+		collectModelMetadata();
+		collectPredictionMetadata();
 	}
 
 	private void collectBibTeXMetadata() throws SQLException {
@@ -128,6 +140,58 @@ public class QmrfArchive {
 
 		String title = strip(qmrf.getQMRFChapters().getQSARIdentifier().getQSARTitle().getContent());
 		itemService.addMetadata(context, item, "bibtex", "entry", "title", null, title);
+	}
+
+	private void collectPropertyMetadata() throws SQLException {
+		QSAREndpoint endpointElement = qmrf.getQMRFChapters().getQSAREndpoint();
+
+		LinkedHashSet<String> endpoints = new LinkedHashSet<>();
+		ModelEndpoint modelEndpoint = endpointElement.getModelEndpoint();
+		for (EndpointRef ref : modelEndpoint.getEndpointRef()) {
+			endpoints.add(ref.getIdref().getName());
+		}
+		if (!endpoints.isEmpty()) {
+			itemService.addMetadata(context, item, "qdb", "property", "endpoint", null, new ArrayList(endpoints));
+		}
+
+		String species = strip(endpointElement.getModelSpecies().getContent());
+		if (!species.isEmpty()) {
+			itemService.addMetadata(context, item, "qdb", "property", "species", null, species);
+		}
+	}
+
+	private void collectDescriptorMetadata() throws SQLException {
+		LinkedHashSet<String> apps = new LinkedHashSet<>();
+		QSARAlgorithm algo = qmrf.getQMRFChapters().getQSARAlgorithm();
+		for (SoftwareRef ref : algo.getDescriptorsGenerationSoftware().getSoftwareRef()) {
+			String name = ref.getIdref().getName();
+			apps.add(name);
+		}
+
+		if (!apps.isEmpty()) {
+			itemService.addMetadata(context, item, "qdb", "descriptor", "application", null, new ArrayList<>(apps));
+		}
+	}
+
+	private void collectModelMetadata() throws SQLException {
+		for (Bitstream bs : findBitstreams(context, item, "Adobe PDF")) {
+			String value = bs.getName().replaceFirst("(?i)\\.pdf$", "");
+			itemService.addMetadata(context, item, "qdb", "model", "qmrf", null, value);
+			break;
+		}
+	}
+
+	private void collectPredictionMetadata() throws SQLException {
+		LinkedHashSet<String> apps = new LinkedHashSet<>();
+
+		QSARIdentifier qid = qmrf.getQMRFChapters().getQSARIdentifier();
+		for (SoftwareRef ref : qid.getQSARSoftware().getSoftwareRef()) {
+			apps.add(ref.getIdref().getName());
+		}
+
+		if(!apps.isEmpty()){
+			itemService.addMetadata(context, item, "qdb", "prediction", "application", null, new ArrayList<>(apps));
+		}
 	}
 
 	private static String strip(String content) {
