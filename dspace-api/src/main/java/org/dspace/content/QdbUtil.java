@@ -307,7 +307,7 @@ public class QdbUtil {
 	}
 
 	static
-	private void clearMetadata(Context context, Item item) throws SQLException {
+	public void clearMetadata(Context context, Item item) throws SQLException {
 		clearDcMetadata(context, item);
 		clearBibTeXMetadata(context, item);
 		clearQdbMetadata(context, item);

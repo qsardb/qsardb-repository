@@ -24,15 +24,25 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 
 	@Override
 	public int doProcessing(final Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo submissionInfo) throws AuthorizeException, IOException, SQLException {
-
-
-		final
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
 		if (isComplete(item)) {
 			return STATUS_COMPLETE;
 		}
 
+		if (QdbUtil.containsQdb(context, item)) {
+			qdbCrosswalk(context, item);
+		} else if (QmrfArchive.containsQmrf(context, item)) {
+			qmrfCrosswalk(context, item);
+		}
+
+		itemService.update(context, item);
+		context.dispatchEvents();
+
+		return STATUS_COMPLETE;
+	}
+
+	private void qdbCrosswalk(final Context context, final Item item) throws IOException {
 		QdbCallable<Object> callable = new QdbCallable<Object>(){
 
 			@Override
@@ -50,11 +60,12 @@ public class QdbCrosswalkStep extends AbstractProcessingStep {
 		} catch(Exception e){
 			throw new RuntimeException(e);
 		}
+	}
 
-		itemService.update(context, item);
-		context.dispatchEvents();
-
-		return STATUS_COMPLETE;
+	private void qmrfCrosswalk(Context context, Item item) throws SQLException {
+		QdbUtil.clearMetadata(context, item);
+		QmrfArchive qmrf = new QmrfArchive(context, item);
+		qmrf.collectMetadata();
 	}
 
 	private boolean isComplete(Item item){
