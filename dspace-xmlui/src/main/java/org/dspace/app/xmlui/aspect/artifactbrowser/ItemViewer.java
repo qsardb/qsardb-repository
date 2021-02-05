@@ -57,6 +57,8 @@ import org.dspace.content.citation.ACSReferenceStyle;
 import org.dspace.content.citation.ReferenceFormatter;
 import org.jbibtex.BibTeXEntry;
 import org.dspace.app.xmlui.wing.element.Metadata;
+import org.dspace.content.QdbUtil;
+import org.dspace.content.QmrfArchive;
 import org.dspace.core.factory.CoreServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -372,8 +374,13 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
         }
 
         Division contentPanel = division.addDivision("item-content", "primary");
-        contentPanel.setHead(T_item_content_head);
-        ItemContentPanel.generate(this, item, contentPanel);
+        if (QdbUtil.containsQdb(context, item)) {
+            contentPanel.setHead(T_item_content_head);
+            ItemContentPanel.generate(this, item, contentPanel);
+        } else if (QmrfArchive.containsQmrf(context, item)) {
+            contentPanel.setHead("QMRF document");
+            QmrfContentPanel.generate(this, item, contentPanel);
+        }
 
         generateCitingDivision(item, division);
 
