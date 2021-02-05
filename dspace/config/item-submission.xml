@@ -199,6 +199,9 @@
 			<workflow-editable>true</workflow-editable>
 		</step>
 		<step>
+			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
+		</step>
+		<step>
 			<heading>submit.progressbar.access</heading>
 			<processing-class>org.dspace.submit.step.AccessStep</processing-class>
 			<jspui-binding>org.dspace.app.webui.submit.step.JSPAccessStep</jspui-binding>
@@ -210,9 +213,6 @@
 			<processing-class>org.dspace.submit.step.CCLicenseStep</processing-class>
 			<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.CCLicenseStep</xmlui-binding>
 			<workflow-editable>false</workflow-editable>
-		</step>
-		<step>
-			<processing-class>org.dspace.submit.step.QdbReferenceStep</processing-class>
 		</step>
 		<step>
 			<processing-class>org.dspace.submit.step.QdbOptimizeStep</processing-class>

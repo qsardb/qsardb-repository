@@ -26,6 +26,10 @@ public class QdbOptimizeStep extends AbstractProcessingStep {
 
 		Item item = submissionInfo.getSubmissionItem().getItem();
 
+		if (!QdbUtil.containsQdb(context, item)) {
+			return STATUS_COMPLETE;
+		}
+
 		QdbValidateStep.cleanup(item);
 
 		Bitstream original = QdbUtil.getOriginalBitstream(context, item);
