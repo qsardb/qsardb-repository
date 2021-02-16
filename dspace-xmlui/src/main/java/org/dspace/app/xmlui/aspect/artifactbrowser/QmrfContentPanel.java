@@ -15,6 +15,14 @@ class QmrfContentPanel {
 	static void generate(ItemViewer viewer, Item item, Division div) throws WingException {
 		Context context = viewer.getContext();
 		QmrfArchive qmrf = new QmrfArchive(context, item);
-		div.addPara();
+
+		Para para = div.addPara();
+		if (qmrf.pdfLink().isEmpty() || qmrf.previewLink().isEmpty()) {
+			return;
+		}
+
+		String pdfLink = viewer.getContextPath() + qmrf.pdfLink();
+		String previewImage = viewer.getContextPath() + qmrf.previewLink();
+		para.addFigure(previewImage, pdfLink, null);
 	}
 }

@@ -12,6 +12,9 @@ import it.jrc.ecb.qmrf.QSAREndpoint;
 import it.jrc.ecb.qmrf.QSARGeneralInformation;
 import it.jrc.ecb.qmrf.QSARIdentifier;
 import it.jrc.ecb.qmrf.SoftwareRef;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,10 +24,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBException;
+import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.citation.ACSAuthorFormat;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
@@ -37,9 +45,11 @@ import org.xml.sax.SAXException;
  * Support for QMRF reports.
  */
 public class QmrfArchive {
+	private static final Logger log = Logger.getLogger(QmrfArchive.class);
 
 	private static final ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 	private static final BitstreamService bitstreamService = ContentServiceFactory.getInstance().getBitstreamService();
+	private static final BitstreamFormatService bitstreamFormatService = ContentServiceFactory.getInstance().getBitstreamFormatService();
 
 	private QMRF qmrf;
 	private final Context context;
@@ -203,4 +213,74 @@ public class QmrfArchive {
 		}
 		return "";
 	}
+
+	public String previewLink() {
+		Bitstream bs;
+
+		String bundleName = "INTERNAL";
+		List<Bitstream> bitstreams = findBitstreams(context, item, bundleName, "JPEG");
+		if (!bitstreams.isEmpty()) {
+			bs = bitstreams.get(0);
+		} else {
+			try (InputStream is = makePreview()) {
+				List<Bundle> bundles = itemService.getBundles(item, bundleName);
+				if (bundles.isEmpty()) {
+					bs = itemService.createSingleBitstream(context, is, item, bundleName);
+				} else {
+					bs = bitstreamService.create(context, bundles.get(0), is);
+				}
+
+				bs.setName(context, "QMRF-Preview.jpg");
+				bs.setFormat(bitstreamFormatService.guessFormat(context, bs));
+
+				bitstreamService.update(context, bs);
+				itemService.update(context, item);
+			} catch (IOException|SQLException|AuthorizeException ex) {
+				log.error("Can't create QMRF preview: "+ex.getMessage(), ex);
+				return "";
+			}
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/bitstream/handle/").append(item.getHandle()).append("/");
+		sb.append(bs.getName()).append("?sequence=").append(bs.getSequenceID());
+		return sb.toString();
+	}
+
+	private InputStream makePreview() throws IOException {
+		File pdfFile;
+		List<Bitstream> bitstreams = findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "Adobe PDF");
+		if (bitstreams.isEmpty()) {
+			throw new IOException("PDF file missing");
+		}
+		try {
+			pdfFile = bitstreamService.getFile(context, bitstreams.get(0));
+		} catch (IOException | SQLException | AuthorizeException ex) {
+			throw new IOException("Can't open PDF: "+bitstreams.get(0).getID(), ex);
+		}
+
+		try (PDDocument doc = PDDocument.load(pdfFile)) {
+			PDFRenderer renderer = new PDFRenderer(doc);
+			BufferedImage img = renderer.renderImage(0);
+
+			// crop page
+			int h = img.getHeight() / 3;
+			int w = img.getWidth();
+			img = img.getSubimage(0, 0, w, h);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(img, "jpg", baos);
+			return new ByteArrayInputStream(baos.toByteArray());
+		}
+	}
+
+	public String pdfLink() {
+		List<Bitstream> bitstreams = findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "Adobe PDF");
+		if (bitstreams.isEmpty()) {
+			return "";
+		}
+		Bitstream bs = bitstreams.get(0);
+		return String.format("/bitstream/handle/%s/%s?sequence=%d", item.getHandle(), bs.getName(), bs.getSequenceID());
+	}
+
 }
