@@ -49,7 +49,7 @@ public class QmrfArchive {
 		this.context = context;
 		this.item = item;
 		
-		for (Bitstream bs : findBitstreams(context, item, "QMRF")) {
+		for (Bitstream bs : findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "QMRF")) {
 			try {
 				qmrf = parse(context, bs);
 				return;
@@ -62,11 +62,11 @@ public class QmrfArchive {
 	}
 
 	public static boolean containsQmrf(Context context, Item item) {
-		return !findBitstreams(context, item, "QMRF").isEmpty();
+		return !findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "QMRF").isEmpty();
 	}
 
 	public static boolean containsPdf(Context context, Item item) {
-		return !findBitstreams(context, item, "Adobe PDF").isEmpty();
+		return !findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "Adobe PDF").isEmpty();
 	}
 
 	static boolean isQmrf(Context context, Bitstream bitstream) {
@@ -94,9 +94,9 @@ public class QmrfArchive {
 		}
 	}
 
-	private static ArrayList<Bitstream> findBitstreams(Context context, Item item, String shortDescription) {
+	private static ArrayList<Bitstream> findBitstreams(Context context, Item item, String bundleName, String shortDescription) {
 		ArrayList<Bitstream> result = new ArrayList<>();
-		for (Bundle bundle : item.getBundles(Constants.DEFAULT_BUNDLE_NAME)) {
+		for (Bundle bundle : item.getBundles(bundleName)) {
 			for (Bitstream bs : bundle.getBitstreams()) {
 				try {
 					BitstreamFormat format = bs.getFormat(context);
@@ -174,7 +174,7 @@ public class QmrfArchive {
 	}
 
 	private void collectModelMetadata() throws SQLException {
-		for (Bitstream bs : findBitstreams(context, item, "Adobe PDF")) {
+		for (Bitstream bs : findBitstreams(context, item, Constants.DEFAULT_BUNDLE_NAME, "Adobe PDF")) {
 			String value = bs.getName().replaceFirst("(?i)\\.pdf$", "");
 			itemService.addMetadata(context, item, "qdb", "model", "qmrf", null, value);
 			break;
