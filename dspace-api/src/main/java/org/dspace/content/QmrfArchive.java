@@ -12,6 +12,7 @@ import it.jrc.ecb.qmrf.QSAREndpoint;
 import it.jrc.ecb.qmrf.QSARGeneralInformation;
 import it.jrc.ecb.qmrf.QSARIdentifier;
 import it.jrc.ecb.qmrf.SoftwareRef;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -261,17 +262,59 @@ public class QmrfArchive {
 
 		try (PDDocument doc = PDDocument.load(pdfFile)) {
 			PDFRenderer renderer = new PDFRenderer(doc);
-			BufferedImage img = renderer.renderImage(0);
-
-			// crop page
-			int h = img.getHeight() / 3;
-			int w = img.getWidth();
-			img = img.getSubimage(0, 0, w, h);
+			BufferedImage img = cropPage(renderer.renderImage(0, 1.25f));
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(img, "jpg", baos);
 			return new ByteArrayInputStream(baos.toByteArray());
 		}
+	}
+
+	private BufferedImage cropPage(BufferedImage img) {
+		int height = img.getHeight() / 3;
+		int width = img.getWidth();
+		img = img.getSubimage(0, 0, width, height);
+
+		// remove the white margin from the top
+		final int whiteRGB = Color.WHITE.getRGB();
+		int tmargin;
+		for (tmargin = 0; tmargin < height; tmargin++) {
+			int n;
+			for (n = 0; n < width && img.getRGB(n, tmargin) == whiteRGB; n++) {
+			}
+			if (n != width) {
+				break;
+			}
+		}
+		tmargin = Math.max(tmargin-5, 0);
+		height -= tmargin;
+
+		// remove the white margin from the right side
+		int rmargin;
+		for (rmargin = width-1; rmargin >= 0; rmargin--) {
+			int n;
+			for (n = 0; n < height && img.getRGB(rmargin, n) == whiteRGB; n++) {
+			}
+			if (n != height) {
+				break;
+			}
+		}
+		width = Math.min(rmargin+5, width);
+
+		// remove the white margin from the left side
+		int lmargin;
+		for (lmargin = 0; lmargin < width; lmargin++) {
+			int n;
+			for (n = 0; n < height && img.getRGB(lmargin, n) == whiteRGB; n++) {
+			}
+			if (n != height) {
+				break;
+			}
+		}
+		lmargin = Math.max(lmargin-5, 0);
+		width -= lmargin;
+
+		return img.getSubimage(lmargin, tmargin, width, height);
 	}
 
 	public String pdfLink() {
