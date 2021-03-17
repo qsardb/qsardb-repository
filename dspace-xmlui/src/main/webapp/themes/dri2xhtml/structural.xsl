@@ -2449,8 +2449,21 @@
                             <xsl:if test="dri:value/i18n:text">
                                 <xsl:attribute name="i18n:attr">value</xsl:attribute>
                             </xsl:if>
+                            <!-- QsarDB: add completion options to the input box -->
+                            <xsl:if test="./dri:option">
+                                <xsl:attribute name="list"><xsl:value-of select="@n"/></xsl:attribute>
+                            </xsl:if>
                             <xsl:apply-templates />
                         </input>
+
+                        <!-- QsarDB: add completion options to the input box -->
+                        <xsl:if test="./dri:option">
+                            <datalist id="{@n}">
+                                <xsl:for-each select="./dri:option">
+                                    <option value="{@returnValue}" />
+                                </xsl:for-each>
+                            </datalist>
+                        </xsl:if>
 
                         <xsl:variable name="confIndicatorID" select="concat(@id,'_confidence_indicator')"/>
                         <xsl:if test="dri:params/@authorityControlled">

@@ -1231,6 +1231,16 @@ public class DescribeStep extends AbstractSubmissionStep
             text.setDisabled();
         }
 
+        // Setup field's completions if value-pairs are defined
+        java.util.List<String> pairs = dcInput.getPairs();
+        if (pairs != null) {
+            for (int i = 0; i < pairs.size(); i += 2)
+            {
+                String value = pairs.get(i + 1);
+                text.addCompletion(value);
+            }
+        }
+
         // Setup the field's values
         if (dcInput.isRepeatable() || dcValues.size() > 1)
         {

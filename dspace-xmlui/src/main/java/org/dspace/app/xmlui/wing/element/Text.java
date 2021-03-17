@@ -167,6 +167,21 @@ public class Text extends Field
         values.add(value);
         return value;
     }
+
+    /**
+     * Add a completion option to the text field.
+     *
+     * @param value String with a completion option
+     * @return the new option.
+     * @throws org.dspace.app.xmlui.wing.WingException passed through.
+     */
+    public Option addCompletion(String value) throws WingException
+    {
+        Option option = new Option(context, value);
+        options.add(option);
+
+        return option;
+    }
     
     /**
      * Add a field instance

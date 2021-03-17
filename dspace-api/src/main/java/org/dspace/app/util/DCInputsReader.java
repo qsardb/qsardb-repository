@@ -387,6 +387,14 @@ public class DCInputsReader
                         field.put(tagName, value);
                         if (tagName.equals("input-type"))
                         {
+                            if (value.equals("onebox"))
+                            {
+                                    String pairTypeName = getAttribute(nd, PAIR_TYPE_NAME);
+                                    if (pairTypeName != null)
+                                    {
+                                            field.put(PAIR_TYPE_NAME, pairTypeName);
+                                    }
+                            }
                             if (value.equals("dropdown")
                                     || value.equals("qualdrop_value")
                                     || value.equals("list"))
