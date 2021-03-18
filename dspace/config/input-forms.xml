@@ -270,7 +270,7 @@
 				<dc-qualifier>type</dc-qualifier>
 				<repeatable>true</repeatable>
 				<label>Model type</label>
-				<input-type>onebox</input-type>
+				<input-type value-pairs-name="qdb_model_type">onebox</input-type>
 				<hint>The type of the statistical or data mining model</hint>
 				<required></required>
 			</field>
@@ -281,7 +281,7 @@
 				<repeatable>true</repeatable>
 				<label>QMRF reference</label>
 				<input-type>onebox</input-type>
-				<hint>QSAR Model Reporting Format Inventory (http://qsardb.jrc.it/qmrf/index.jsp) code</hint>
+				<hint>Link QDB arhives with QMRFs as follows: "model_id=filename_without_extension", the filename part is optional if the QMRF is named as "model_id.pdf".</hint>
 				<required></required>
 			</field>
 		</page>
@@ -1175,6 +1175,104 @@ it, please enter the types and the actual numbers or codes.</hint>
 		</pair>
 	</value-pairs>
 
+	<value-pairs value-pairs-name="qdb_model_type" dc-term="qdb.model.type">
+		<pair>
+			<displayed-value>Classification model (classification)</displayed-value>
+			<stored-value>Classification model (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Counter-propagation neural network (classification)</displayed-value>
+			<stored-value>Counter-propagation neural network (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Counter-propagation neural network (regression)</displayed-value>
+			<stored-value>Counter-propagation neural network (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Decision tree (classification)</displayed-value>
+			<stored-value>Decision tree (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Decision tree (regression)</displayed-value>
+			<stored-value>Decision tree (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Ensemble model (classification)</displayed-value>
+			<stored-value>Ensemble model (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Ensemble model (regression)</displayed-value>
+			<stored-value>Ensemble model (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>k-Nearest neighbors (classification)</displayed-value>
+			<stored-value>k-Nearest neighbors (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>k-Nearest neighbors (regression)</displayed-value>
+			<stored-value>k-Nearest neighbors (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>k-Nearest neighbors ensemble (classification)</displayed-value>
+			<stored-value>k-Nearest neighbors ensemble (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>k-Nearest neighbors ensemble (regression)</displayed-value>
+			<stored-value>k-Nearest neighbors ensemble (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Logistic regression (classification)</displayed-value>
+			<stored-value>Logistic regression (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Neural network (classification)</displayed-value>
+			<stored-value>Neural network (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Neural network (regression)</displayed-value>
+			<stored-value>Neural network (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Neural network ensemble (classification)</displayed-value>
+			<stored-value>Neural network ensemble (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Neural network ensemble (regression)</displayed-value>
+			<stored-value>Neural network ensemble (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Random forest (classification)</displayed-value>
+			<stored-value>Random forest (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Random forest (regression)</displayed-value>
+			<stored-value>Random forest (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Regression model (classification)</displayed-value>
+			<stored-value>Regression model (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Regression model (regression)</displayed-value>
+			<stored-value>Regression model (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Regression model ensemble (classification)</displayed-value>
+			<stored-value>Regression model ensemble (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Regression model ensemble (regression)</displayed-value>
+			<stored-value>Regression model ensemble (regression)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Support vector machine (classification)</displayed-value>
+			<stored-value>Support vector machine (classification)</stored-value>
+		</pair>
+		<pair>
+			<displayed-value>Support vector machine (regression)</displayed-value>
+			<stored-value>Support vector machine (regression)</stored-value>
+		</pair>
+	</value-pairs>
  </form-value-pairs>
 
 </input-forms>
