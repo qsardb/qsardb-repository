@@ -17,6 +17,7 @@ import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import java.util.LinkedHashMap;
+import java.net.URLEncoder;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
@@ -148,7 +149,7 @@ public class QdbCompounds extends ApplicationTransformer implements CacheablePro
 					if (!references.isEmpty()) {
 						row.addCell().addContent(fmtReference(references.get(cid), referenceNumbers));
 					}
-					row.addCell().addXref("?id="+c.getId(), "View");
+					row.addCell().addXref("?id="+URLEncoder.encode(cid, "UTF-8"), "View");
 				}
 
 				if (property != null && property.hasCargo(BibTeXCargo.class)) {
