@@ -167,7 +167,8 @@ public class QdbModelUtil {
 
 		if (pmmlModel instanceof RegressionModel) {
 			RegressionModel model = (RegressionModel) pmmlModel;
-			if (model.getNormalizationMethod() == RegressionNormalizationMethodType.LOGIT) {
+			if (model.getNormalizationMethod() == RegressionNormalizationMethodType.LOGIT ||
+					model.getNormalizationMethod() == RegressionNormalizationMethodType.SOFTMAX) {
 				return "Logistic regression";
 			}
 		}
