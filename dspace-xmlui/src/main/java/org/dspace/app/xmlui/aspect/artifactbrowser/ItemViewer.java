@@ -401,7 +401,7 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
 
         Para para = div.addPara();
         para.addContent("When using this QDB archive, please cite (");
-        para.addXref("http://qsardb.org/qdb/_info/citing", "see details");
+        para.addXref("https://qsardb.org/about/citing", "see details");
         para.addContent(") it together with the original article:");
 
         org.dspace.app.xmlui.wing.element.List list = div.addList("biblio");
