@@ -167,6 +167,7 @@
                 </xsl:if>
               </xsl:attribute>
             </meta>
+            <link rel="shortcut icon" href="/repository/themes/Reference/images/favicon.ico"/>
             <!-- Add stylesheets -->
             <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='stylesheet']">
                 <link rel="stylesheet" type="text/css">
