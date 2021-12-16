@@ -987,7 +987,7 @@ to administer DSpace.
             <!-- Access to Control Panel (limited to Administrators) -->
             <map:match pattern="admin/panel">
                 <map:transform type="IncludePageMeta">
-                    <map:parameter name="javascript#1" value="lib/jquery-1.6.4.min.js"/>
+                    <map:parameter name="javascript#1" value="lib/jquery-3.6.0.min.js"/>
                     <map:parameter name="javascript#2" value="../../static/js/controlpanel.js"/>
                 </map:transform>
                 <map:select type="AuthenticatedSelector">
