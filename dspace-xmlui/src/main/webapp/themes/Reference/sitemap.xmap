@@ -56,46 +56,16 @@
                 <!-- Add page metadata to DRI -->
                 <!-- This adds all Stylesheets (CSS) and Javascript (js) into the DRI XML, 
                      so that they are accessible to the XSLTs -->
-                <map:select type="browser">
-                    <map:when test="explorer6">
-                        <map:transform type="IncludePageMeta">
-                            <map:parameter name="stylesheet.screen#1" value="lib/style.css"/>
-                            <map:parameter name="stylesheet.screen#2" value="lib/style-ie.css"/>
-                            <map:parameter name="stylesheet.screen#3" value="lib/style-ie6.css"/>
-                            <map:parameter name="stylesheet.screen#4" value="lib/jquery-ui-1.13.0.css"/>
+                <map:transform type="IncludePageMeta">
+                    <map:parameter name="stylesheet.screen" value="lib/style.css"/>
+                    <map:parameter name="stylesheet.screen#2" value="lib/jquery-ui-1.13.0.css"/>
 
-                            <map:parameter name="javascript#1" value="lib/jquery-ui-1.13.0.min.js"/>
+                    <map:parameter name="javascript#1" value="lib/jquery-3.6.0.min.js"/>
+                    <map:parameter name="javascript#2" value="lib/jquery-ui-1.13.0.min.js"/>
 
-                            <map:parameter name="theme.path" value="{global:theme-path}"/>
-                            <map:parameter name="theme.name" value="{global:theme-name}"/>
-                        </map:transform>
-                    </map:when>
-                    <map:when test="explorer">
-                        <map:transform type="IncludePageMeta">
-                            <map:parameter name="stylesheet.screen#1" value="lib/style.css"/>
-                            <map:parameter name="stylesheet.screen#2" value="lib/style-ie.css"/>
-                            <map:parameter name="stylesheet.screen#3" value="lib/jquery-ui-1.13.0.css"/>
-
-                            <map:parameter name="javascript#1" value="lib/jquery-3.6.0.min.js"/>
-                            <map:parameter name="javascript#2" value="lib/jquery-ui-1.13.0.min.js"/>
-
-                            <map:parameter name="theme.path" value="{global:theme-path}"/>
-                            <map:parameter name="theme.name" value="{global:theme-name}"/>
-                        </map:transform>
-                    </map:when>
-                    <map:otherwise>
-                        <map:transform type="IncludePageMeta">
-                            <map:parameter name="stylesheet.screen" value="lib/style.css"/>
-                            <map:parameter name="stylesheet.screen#2" value="lib/jquery-ui-1.13.0.css"/>
-
-                            <map:parameter name="javascript#1" value="lib/jquery-3.6.0.min.js"/>
-                            <map:parameter name="javascript#2" value="lib/jquery-ui-1.13.0.min.js"/>
-
-                            <map:parameter name="theme.path" value="{global:theme-path}"/>
-                            <map:parameter name="theme.name" value="{global:theme-name}"/>
-                        </map:transform>
-                    </map:otherwise>
-                </map:select>
+                    <map:parameter name="theme.path" value="{global:theme-path}"/>
+                    <map:parameter name="theme.name" value="{global:theme-name}"/>
+                </map:transform>
 
                 <!-- Debugging output (this is only called when ?XML is passed on querystring) -->
                 <!-- It allows developers to view the final DRI XML, in order to build/debug theme XSLTs -->
