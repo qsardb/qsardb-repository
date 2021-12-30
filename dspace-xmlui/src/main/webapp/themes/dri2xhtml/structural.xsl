@@ -104,7 +104,8 @@
         overriding the dri:document template.
     -->
     <xsl:template match="dri:document">
-        <html>
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
+        <html lang="en">
             <!-- First of all, build the HTML head element -->
             <xsl:call-template name="buildHead"/>
             <!-- Then proceed to the body -->

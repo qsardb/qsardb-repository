@@ -44,6 +44,26 @@
                 The last step sends the XHTML page to the user's browser.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <map:components>
+        <map:transformers>
+            <transformer name="strip-namespaces" src="org.apache.cocoon.transformation.StripNameSpacesTransformer"/>
+        </map:transformers>
+
+        <map:actions>
+            <map:action name="ContextAbortAction" src="org.dspace.app.xmlui.cocoon.ContextAbortAction" />
+        </map:actions>
+
+        <map:serializers>
+            <map:serializer name="html-no-doctype" logger="sitemap.serializer.xhtml"
+                            src="org.apache.cocoon.serialization.HTMLSerializer"
+                            mime-type="text/html; charset=utf-8"
+                            pool-grow="2" pool-max="64" pool-min="2">
+                <encoding>UTF-8</encoding>
+                <indent>yes</indent>
+            </map:serializer>
+        </map:serializers>
+    </map:components>
         <!-- Define global resources that are used in multiple areas of the pipeline. -->
         <map:resources>
             <!-- 
@@ -84,8 +104,7 @@
                 </map:act>
 
                 <!-- Remove any leftover i18n or dri namespaces from the final document -->
-                <map:transform type="NamespaceFilter" src="http://di.tamu.edu/DRI/1.0/"/>
-                <map:transform type="NamespaceFilter" src="http://apache.org/cocoon/i18n/2.1"/>
+                <map:transform type="strip-namespaces" />
             </map:resource>
         </map:resources>
 
@@ -150,7 +169,7 @@
                                 <map:call resource="transform-to-xhtml"/>
                                 
                                 <!-- Step 3: Serialize to the browser -->
-                                <map:serialize type="xhtml"/>
+                                <map:serialize type="html-no-doctype"/>
                                 
                         </map:match>
                 </map:pipeline>
@@ -177,15 +196,16 @@
                     <map:select type="exception">
                         <!-- HTTP 400 Bad Request -->
                         <map:when test="bad-request">
-                            <map:serialize type="xhtml" status-code="400"/>
+                            <map:serialize type="html-no-doctype" status-code="400"/>
                         </map:when>
                         <!-- HTTP 404 Page Not Found -->
                         <map:when test="not-found">
-                            <map:serialize type="xhtml" status-code="404"/>
+                            <map:serialize type="html-no-doctype" status-code="404"/>
                         </map:when>
                         <!-- All other errors (HTTP 500 Internal Server Error) -->
                         <map:otherwise>
-                            <map:serialize type="xhtml" status-code="500"/>
+                    <map:act type="ContextAbortAction"/>
+                            <map:serialize type="html-no-doctype" status-code="500"/>
                         </map:otherwise>
                     </map:select>
                 </map:handle-errors>
