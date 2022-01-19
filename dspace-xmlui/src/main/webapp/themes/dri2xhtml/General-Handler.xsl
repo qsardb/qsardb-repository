@@ -270,7 +270,7 @@
                 <xsl:variable name="license_logo" select="jstring:replaceAll($license_logo, '/.*', '.png')"/>
                 <xsl:variable name="license_logo" select="jstring:replaceAll($license_logo, '^[^c][^c][^-].*$', 'cc-generic.png')"/>
                 <xsl:variable name="license_logo" select="concat(jstring:replaceAll($theme-path, 'Reference', 'Mirage'), '/images/creativecommons/', $license_logo)"/>
-                <img style="float:left; margin-right: 0.7em;">
+                <img>
                     <xsl:attribute name="src">
                         <xsl:value-of select="$license_logo"/>
                     </xsl:attribute>
