@@ -168,7 +168,11 @@
                 </xsl:if>
               </xsl:attribute>
             </meta>
-            <link rel="shortcut icon" href="/repository/themes/Reference/images/favicon.ico"/>
+            <link rel="shortcut icon">
+              <xsl:attribute name="href">
+                <xsl:value-of select="concat($theme-path,'/images/favicon.ico')"/>
+              </xsl:attribute>
+            </link>
             <!-- Add stylesheets -->
             <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='stylesheet']">
                 <link rel="stylesheet" type="text/css">
