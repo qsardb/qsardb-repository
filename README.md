@@ -8,6 +8,10 @@ Website: https://qsardb.org/repository
 QsarDB repository is an extension [DSpace](https://dspace.org/) software and
 provides extra functionality for exploring and visualisation of QSAR/QSPR models
 and related data directly in the web browser.
+## Running DSpace 6 in Docker
+See [Running DSpace 6 with Docker Compose](dspace/src/main/docker-compose/README.md)
+
+https://github.com/DSpace/DSpace/issues
 
 Description:
 - QSAR DataBank repository: open and linked qualitative and quantitative structure–activity

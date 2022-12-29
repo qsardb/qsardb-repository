@@ -40,6 +40,12 @@
 			<groupId>org.openscience.cdk</groupId>
 			<artifactId>cdk-inchi</artifactId>
 			<version>1.4.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.openscience.cdk</groupId>
