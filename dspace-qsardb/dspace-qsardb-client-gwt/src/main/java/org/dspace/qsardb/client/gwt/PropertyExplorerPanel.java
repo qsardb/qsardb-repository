@@ -19,7 +19,7 @@ public class PropertyExplorerPanel extends ExplorerPanel {
 	}
 
 	private Widget createPropertyPanel(QdbTable table) {
-		Panel panel = new VerticalPanel();
+		Panel panel = new FlowPanel();
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		if (property.isRegression()) {

@@ -19,7 +19,7 @@ public class ModelExplorerPanel extends ExplorerPanel {
 	}
 
 	private Widget createModelPanel(QdbTable table){
-		Panel panel = new VerticalPanel();
+		Panel panel = new FlowPanel();
 
 		if(table.hasColumn(LeverageColumn.class)){
 			panel.add(createWilliamsPlotPanel(table, LeverageColumn.class));

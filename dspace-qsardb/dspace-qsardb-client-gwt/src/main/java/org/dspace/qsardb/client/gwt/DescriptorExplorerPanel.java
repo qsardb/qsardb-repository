@@ -21,7 +21,7 @@ public class DescriptorExplorerPanel extends ExplorerPanel {
 	}
 
 	private Widget createDescriptorListPanel(QdbTable table){
-		Panel panel = new VerticalPanel();
+		Panel panel = new FlowPanel();
 
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
