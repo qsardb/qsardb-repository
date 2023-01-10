@@ -38,10 +38,6 @@ public class LazyHeader extends LazyPanel implements OpenHandler<DisclosurePanel
 		Widget left = createLeft();
 		if(left != null){
 			panel.add(left);
-
-			Style style = (left.getElement()).getStyle();
-
-			style.setFloat(Style.Float.LEFT);
 		}
 
 		Label right = createRight();

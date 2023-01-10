@@ -615,10 +615,6 @@ span.subscript {
 	vertical-align: sub;
 }
 
-td div {
-	white-space: nowrap;
-}
-
 span.floatleft {
 	border:none;
 	float:right;

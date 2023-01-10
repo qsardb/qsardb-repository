@@ -23,9 +23,18 @@ table.distances hr {
 }
 
 .gwt-DisclosurePanel {
-	margin: 4px 0px;
+	margin: 6px 0px;
 }
 
+.gwt-DisclosurePanel .content {
+	border-left: none;
+	padding: 4px 0px;
+	margin-left: 0px;
+}
+
+.resolver-tooltip {
+	border: none;
+}
 .resolver-tooltip td {
 	padding: 0 2px 4px 2px;
 	vertical-align: top;
