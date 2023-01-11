@@ -27,7 +27,7 @@ public class QdbPlot<P extends DataPoint> extends SimplePlot {
 		LegendOptions legendOptions = ensureLegendOptions();
 		legendOptions.setShow(false);
 
-		setSize(PLOT_SIZE);
+		setSize(getPlotSize());
 	}
 
 	protected void addSeries(PredictionSeries series, List<P> points){
@@ -109,7 +109,7 @@ public class QdbPlot<P extends DataPoint> extends SimplePlot {
 
 				{
 					// Resize before attach
-					setSize(PLOT_SIZE, true);
+					setSize(getPlotSize(), true);
 
 					parent.setWidget(widget);
 
@@ -385,7 +385,10 @@ public class QdbPlot<P extends DataPoint> extends SimplePlot {
 		}
 	}
 
-	public static final int PLOT_SIZE = 360;
+	static int getPlotSize() {
+		int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 90;
+		return Math.min(size, 360);
+	}
 
 	public static final int PLOT_BORDER_SIZE = 20;
 	public static final int PLOT_LABEL_SIZE = 16;

@@ -22,14 +22,14 @@ public class DescriptorValueSliderBarHorizontal extends SliderBarHorizontal {
 	private final List<Marking> markings = new ArrayList<>();
 
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds) {
-		this(bounds, QdbPlot.PLOT_SIZE);
+		this(bounds, QdbPlot.getPlotSize());
 	}
 
 	public DescriptorValueSliderBarHorizontal(QdbPlot.Bounds bounds, int maxValue) {
 		this.min = bounds.getMin().doubleValue();
 		this.max = bounds.getMax().doubleValue();
 		setMaxValue(maxValue);
-		setWidth(String.valueOf(20 + QdbPlot.PLOT_SIZE + 20) + "px");
+		setWidth(String.valueOf(20 + QdbPlot.getPlotSize() + 20) + "px");
 
 		setLessWidget(new Image(images.less()));
 		setScaleWidget(new Image(images.scale().getSafeUri()), 15);
