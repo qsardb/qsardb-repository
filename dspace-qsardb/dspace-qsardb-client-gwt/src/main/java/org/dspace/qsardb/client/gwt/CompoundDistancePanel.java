@@ -26,6 +26,7 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 	CompoundDistancePanel(ModelTable table) {
 		this.table = table;
 		this.panel = new FlowPanel();
+		panel.getElement().setId("compound-distance-panel");
 		panel.add(new HTML("Loading ..."));
 		initWidget(panel);
 	}
@@ -41,88 +42,92 @@ public class CompoundDistancePanel extends Composite implements EvaluationEventH
 
 		Resolver resolver = new Resolver(table);
 
-		final FlexTable flexTable = new FlexTable();
-		flexTable.setStylePrimaryName("distances");
-
 		DescriptionColumn description = table.getColumn(DescriptionColumn.class);
 		LabelsColumn labels = table.getColumn(LabelsColumn.class);
 
 		PropertyColumn property = table.getColumn(PropertyColumn.class);
 		NumberFormat fmt = NumberFormat.getFormat("0.0000");
 		List<PredictionColumn> predictions = table.getAllColumns(PredictionColumn.class);
+
 		for (int i=0; i<Math.min(5, analogues.size()); i++) {
 			Analogue analogue = analogues.get(i);
-
-			if (i > 0) {
-				int separatorRow = flexTable.getRowCount();
-				flexTable.setHTML(separatorRow, 0, "<hr/>");
-				flexTable.getFlexCellFormatter().setColSpan(separatorRow, 0, 5);
-			}
-
 			String compId = analogue.getCompoundId();
 			double distance = analogue.getDistance();
 
-			final int row = flexTable.getRowCount();
-
-			String depictionUrl = resolver.resolveURL(compId) + "&crop=2";
-			ImagePreloader.load(depictionUrl, new ImageLoadHandler() {
-				@Override
-				public void imageLoaded(ImageLoadEvent event) {
-					if (!event.isLoadFailed()) {
-						flexTable.setWidget(row, 0, new Image(event.getImageUrl()));
-					}
-				}
-			});
-
-			int spanRows = 4;
-			spanRows += hasAttribute(description, compId) ? 1 : 0;
-			spanRows += hasAttribute(labels, compId) ? 1 : 0;
-			flexTable.getFlexCellFormatter().setRowSpan(row, 0, spanRows);
-
-			flexTable.setText(row, 1, "Id:");
-			flexTable.setText(row, 2, compId);
-
-			flexTable.setText(row, 3, "Distance:");
-			flexTable.setText(row, 4, fmt.format(distance));
-
-			flexTable.setText(row+1, 0, "Name:");
-			flexTable.setText(row+1, 1, resolver.getName(compId));
-
-			flexTable.setText(row+1, 2, "Experimental:");
-			flexTable.setText(row+1, 3, fmtParameter(property, compId));
-
-			flexTable.setText(row+2, 0, "CAS:");
-			flexTable.setText(row+2, 1, resolver.getCas(compId));
-
-			flexTable.setText(row+2, 2, "Calculated:");
-
-			flexTable.setText(row+3, 0, "Set:");
-
+			String setID = "N/A";
+			String predictedValue = "N/A";
 			for (PredictionColumn p: predictions) {
 				if (p.getValues().containsKey(compId)) {
-					flexTable.setText(row+2, 3, fmtParameter(p,compId));
-					flexTable.setText(row+3, 1, p.getId());
+					setID = p.getId();
+					predictedValue = fmtParameter(p,compId);
 					break;
 				}
 			}
 
-			spanRows = 4;
+			if (i > 0) {
+				panel.add(new HTML("<hr />"));
+			}
+
+			FlowPanel analogueDiv = new FlowPanel();
+
+			final FlowPanel imgDiv = new FlowPanel();
+			imgDiv.setStylePrimaryName("analogue-depict");
+			analogueDiv.add(imgDiv);
+			String depictionUrl = resolver.resolveURL(compId) + "&width=240&height=180";
+			ImagePreloader.load(depictionUrl, new ImageLoadHandler() {
+				@Override
+				public void imageLoaded(ImageLoadEvent event) {
+					if (!event.isLoadFailed()) {
+						imgDiv.add(new Image(event.getImageUrl()));
+					}
+				}
+			});
+
+			FlexTable analogueAttributes = new FlexTable();
+			analogueAttributes.setStylePrimaryName("analogue-attr");
+
+			int row = -1;
+			analogueAttributes.setText(++row, 0, "Id:");
+			analogueAttributes.setText(row, 1, compId);
+
+			analogueAttributes.setText(++row, 0, "Name:");
+			analogueAttributes.setText(row, 1, resolver.getName(compId));
+
+			analogueAttributes.setText(++row, 0, "CAS:");
+			analogueAttributes.setText(row, 1, resolver.getCas(compId));
+
+			analogueAttributes.setText(++row, 0, "Set:");
+			analogueAttributes.setText(row, 1, setID);
+
 			if (hasAttribute(description, compId)) {
-				flexTable.setText(row+spanRows, 0, "Description:");
-				flexTable.setText(row+spanRows, 1, description.getValue(compId));
-				flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 1, 3);
-				spanRows++;
+				analogueAttributes.setText(++row, 0, "Description:");
+				analogueAttributes.setText(row, 1, description.getValue(compId));
 			}
 
 			if (hasAttribute(labels, compId)) {
-				flexTable.setText(row+spanRows, 0, "Labels:");
-				flexTable.setText(row+spanRows, 1, labels.getValue(compId));
-				flexTable.getFlexCellFormatter().setColSpan(row+spanRows, 1, 3);
-				spanRows++;
+				analogueAttributes.setText(++row, 0, "Labels:");
+				analogueAttributes.setText(row, 1, labels.getValue(compId));
 			}
-		}
 
-		panel.add(flexTable);
+			analogueDiv.add(analogueAttributes);
+
+			FlexTable analogueValues = new FlexTable();
+			analogueValues.setStylePrimaryName("analogue-values");
+
+			row=-1;
+			analogueValues.setText(++row, 0, "Distance:");
+			analogueValues.setText(row, 1, fmt.format(distance));
+
+			analogueValues.setText(++row, 0, "Experimental:");
+			analogueValues.setText(row, 1, fmtParameter(property, compId));
+
+			analogueValues.setText(++row, 0, "Calculated:");
+			analogueValues.setText(row, 1, predictedValue);
+
+			analogueDiv.add(analogueValues);
+
+			panel.add(analogueDiv);
+		}
 	}
 
 	private String fmtParameter(ParameterColumn col, String key) {

@@ -10,16 +10,46 @@
 	margin-left: 2px;
 }
 
-table.distances tr {
-    vertical-align: top; 
+#compound-distance-panel {
+	border: 2px solid #f0f0d2;
 }
-table.distances td {
-    padding-left: 1em;
+#compound-distance-panel hr {
+	border: 1px solid #f0f0d2;
+	width: 96%;
 }
-table.distances hr {
-    height: 2px;
-    background-color: #e7e7e7;
-    border: none;
+#compound-distance-panel > div {
+	display: flex;
+	align-items: flex-start;
+}
+#compound-distance-panel table {
+	border: none;
+}
+#compound-distance-panel td:first-child {
+	white-space: nowrap
+}
+#compound-distance-panel td:last-child {
+	width: 100%;
+}
+.analogue-depict {
+	margin-bottom: 10px;
+}
+table.analogue-attr {
+	flex-grow: 2;
+	width: auto;
+}
+table.analogue-values {
+	width: 16em;
+}
+table.analogue-values td:last-child {
+	word-break: break-all;
+}
+@media only screen and (max-width: 640px) {
+	#compound-distance-panel > div{
+		flex-wrap: wrap;
+	}
+	#compound-distance-panel td:first-child {
+		min-width: 8em;
+	}
 }
 
 .gwt-DisclosurePanel {
