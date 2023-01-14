@@ -2,9 +2,16 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
   <ui:style>
-    .panel div { padding: 3px 2px; }
-    @external .gwt-SuggestBox;
-    .gwt-SuggestBox { width: 30em; }
+    .panel div {
+      padding: 3px 2px;
+      display: flex;
+    }
+    .panel input {
+      margin-left: 6px;
+      max-width: 30em;
+      flex-grow: 1;
+    }
+
     @external .gwt-SuggestBoxPopup;
     .gwt-SuggestBoxPopup { text-align: left; }
     .gwt-SuggestBoxPopup table { border: none; }
