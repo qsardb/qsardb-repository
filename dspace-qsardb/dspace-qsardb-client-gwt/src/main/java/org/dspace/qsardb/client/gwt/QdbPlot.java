@@ -386,7 +386,7 @@ public class QdbPlot<P extends DataPoint> extends SimplePlot {
 	}
 
 	static int getPlotSize() {
-		int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 90;
+		int size = Math.min(Window.getClientWidth(), Window.getClientHeight()) - 110;
 		return Math.min(size, 360);
 	}
 

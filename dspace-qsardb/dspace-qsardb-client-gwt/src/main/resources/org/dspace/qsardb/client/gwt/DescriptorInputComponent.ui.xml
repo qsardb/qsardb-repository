@@ -2,49 +2,58 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:q='urn:import:org.dspace.qsardb.client.gwt'>
   <ui:style>
-      .panel { 
-      margin-bottom: 0px; 
+    .panel {
+      margin-bottom: 0px;
       margin-top: 0px;
       padding: 0px;
       border: none;
       outline: none;
-      }
-      
-      .toggle-button {
-      outline: none;
-      border: none;
-      margin: 0px; /* border size */
-      margin-left: 0px;
-      margin-right: auto;
+    }
+
+    .input-panel {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .desc-value {
+      margin-left: auto;
+    }
+
+    .collapsible-panel {
+      padding: 2px 6px;
+    }
+
+    .button {
+      color: inherit;
+      text-decoration: none;
       cursor: pointer;
-      float: left;
-      }
-      
-      .collapsible-panel {
-      clear: both;
-      }
+    }
 
-      .label {
+    .button:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .label {
       outline: none;
       border: none;
       padding: 2px;
-      }
-
-      td {
-      padding: 2px;
-      }
-
+    }
   </ui:style>
 
   <g:HTMLPanel styleName='{style.panel}'>
-      <g:FlowPanel ui:field='inputPanel'>
-          <g:ToggleButton styleName='{style.toggle-button}' ui:field='collapseButton'></g:ToggleButton>
-          <q:DescriptorValueTextbox ui:field='descriptorValue'></q:DescriptorValueTextbox>
+    <div class='{style.input-panel}'>
+      <g:FlowPanel ui:field='descriptorInfo'>
+        <g:Anchor ui:field='collapseButton' styleName='{style.button}'>
+          <i class="far fa-plus-square"/> <span/>
+        </g:Anchor>
       </g:FlowPanel>
+      <q:DescriptorValueTextbox ui:field='descriptorValue' styleName='{style.desc-value}'></q:DescriptorValueTextbox>
+    </div>
 
-      <g:FlowPanel styleName='{style.collapsible-panel}' ui:field='collapsiblePanel'>
-        <g:Label ui:field='modelSoftLabel' styleName='{style.label}'></g:Label>
-        <g:Label ui:field='predictionSoftLabel' styleName='{style.label}'></g:Label>
+    <g:FlowPanel styleName='{style.collapsible-panel}' ui:field='collapsiblePanel'>
+      <g:Label ui:field='modelSoftLabel' styleName='{style.label}'></g:Label>
+      <g:Label ui:field='predictionSoftLabel' styleName='{style.label}'></g:Label>
     </g:FlowPanel>
   </g:HTMLPanel>
 </ui:UiBinder>

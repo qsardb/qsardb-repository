@@ -4,23 +4,21 @@
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.kiouri.sliderbar.client.event.BarValueChangedEvent;
 import com.kiouri.sliderbar.client.event.BarValueChangedHandler;
@@ -34,13 +32,12 @@ import org.dspace.qsardb.rpc.gwt.PredictionColumn;
 import org.dspace.qsardb.rpc.gwt.PropertyColumn;
 
 public class DescriptorInputComponent extends Composite {
-
-	@UiField FlowPanel inputPanel;
+	@UiField FlowPanel descriptorInfo;
+	@UiField Anchor collapseButton;
 	@UiField(provided = true) DescriptorValueTextbox descriptorValue;
-	@UiField(provided = true) ToggleButton collapseButton;
-	@UiField(provided = true) FlowPanel collapsiblePanel;
-	@UiField(provided = true) Label modelSoftLabel;
-	@UiField(provided = true) Label predictionSoftLabel;
+	@UiField FlowPanel collapsiblePanel;
+	@UiField Label modelSoftLabel;
+	@UiField Label predictionSoftLabel;
 
 	private DescriptorValueSliderBarHorizontal slider;
 	private DescriptorColumn descriptor = null;
@@ -54,9 +51,6 @@ public class DescriptorInputComponent extends Composite {
 	private final BigDecimal sigma;
 	private QdbPlot.Bounds xBounds;
 
-	private final HorizontalPanel expandFace;
-	private final HorizontalPanel collapseFace;
-
 	private static final Binder binder = GWT.create(Binder.class);
 
 	interface Binder extends UiBinder<Widget, DescriptorInputComponent> {
@@ -64,41 +58,6 @@ public class DescriptorInputComponent extends Composite {
 
 	public DescriptorInputComponent(final PropertyColumn property, final DescriptorColumn descriptor, final PredictionColumn training) {
 		this.training = training;
-		collapseButton = new ToggleButton();
-
-		Image ex = new Image(images.expand());
-		Image cl = new Image(images.collapse());
-
-		cl.getElement().setAttribute("style", "padding-left:0px; padding-right:5px; vertical-align:middle; padding-bottom:1px;");
-		ex.getElement().setAttribute("style", "padding-left:0px; padding-right:5px; vertical-align:middle; padding-bottom:1px;");
-
-		expandFace = new HorizontalPanel();
-		collapseFace = new HorizontalPanel();
-
-		collapseFace.getElement().setAttribute("style", "border: none; outline: none;");
-		expandFace.getElement().setAttribute("style", "border: none; outline: none;");
-
-		collapseFace.add(cl);
-		expandFace.add(ex);
-
-		String descriptorUnits = descriptor.getUnits();
-		if (descriptorUnits != null && !descriptorUnits.trim().equals("")) {
-			descriptorUnits = " [" + descriptorUnits + "]";
-		} else {
-			descriptorUnits = "";
-		}
-
-		String labelText = descriptor.getId() + ": " + descriptor.getName() + descriptorUnits;
-		InlineLabel expandLabel = new InlineLabel(labelText);
-		InlineLabel collapseLabel = new InlineLabel(labelText);
-
-		expandFace.add(expandLabel);
-		collapseFace.add(collapseLabel);
-
-		expandLabel.getElement().setAttribute("style", "white-space: normal;");
-		collapseLabel.getElement().setAttribute("style", "white-space: normal;");
-
-		collapseButton.getElement().appendChild(expandFace.getElement());
 
 		setDescriptor(descriptor);
 
@@ -113,10 +72,10 @@ public class DescriptorInputComponent extends Composite {
 		sigma = formatValue(MathUtil.standardDeviation(trainingDescriptorValues.values()));
 
 		descriptorValue = new DescriptorValueTextbox(mean, sigma);
-		descriptorValue.getElement().getStyle().setProperty("float", "right");
 		descriptorValue.setUserValue(value);
 
-		modelSoftLabel = new Label();
+		initWidget(binder.createAndBindUi(this));
+
 		String modelSoft = descriptor.getApplication();
 		if (modelSoft == null || modelSoft.trim().isEmpty()) {
 			modelSoft = "<N/A>";
@@ -124,18 +83,26 @@ public class DescriptorInputComponent extends Composite {
 		modelSoftLabel.setText("Descriptor values in the original model were calculated with " + modelSoft);
 		modelSoftLabel.getElement().setAttribute("style", "white-space: normal;");
 
-		predictionSoftLabel = new Label("This value is the mean descriptor value");
+		predictionSoftLabel.setText("This value is the mean descriptor value");
 		predictionSoftLabel.getElement().setAttribute("style", "white-space: normal;");
-
-		collapsiblePanel = new FlowPanel();
-		initWidget(binder.createAndBindUi(this));
 
 		collapsiblePanel.setVisible(false);
 
+		String descriptorUnits = descriptor.getUnits();
+		if (descriptorUnits != null && !descriptorUnits.trim().equals("")) {
+			descriptorUnits = " [" + descriptorUnits + "]";
+		} else {
+			descriptorUnits = "";
+		}
+
+		String descriptorText = descriptor.getId() + ": " + descriptor.getName() + descriptorUnits;
+
+		Element descriptorSpan = collapseButton.getElement().getElementsByTagName("span").getItem(0);
+		descriptorSpan.setInnerText(descriptorText);
+
 		if (descriptor.getDescription() != null) {
 			DescriptionLabel descLabel = new DescriptionLabel(new DescriptionTooltip(descriptor));
-			descLabel.getElement().getStyle().setProperty("float", "left");
-			inputPanel.insert(descLabel, 1);
+			descriptorInfo.add(descLabel);
 		}
 	}
 
@@ -239,14 +206,13 @@ public class DescriptorInputComponent extends Composite {
 
 	@UiHandler("collapseButton")
 	void handleClick(ClickEvent evt) {
+		Element icon = collapseButton.getElement().getFirstChildElement();
 		if (collapsiblePanel.isVisible()) {
 			collapsiblePanel.setVisible(false);
-			collapseButton.getElement().removeAllChildren();
-			collapseButton.getElement().appendChild(expandFace.getElement());
+			icon.setAttribute("class", "far fa-plus-square");
 		} else {
 			collapsiblePanel.setVisible(true);
-			collapseButton.getElement().removeAllChildren();
-			collapseButton.getElement().appendChild(collapseFace.getElement());
+			icon.setAttribute("class", "far fa-minus-square");
 
 			if (slider == null) {
 				enableSlideEvents = false;
@@ -334,19 +300,4 @@ public class DescriptorInputComponent extends Composite {
 		this.descriptor = descriptor;
 		ParameterUtil.ensureConverted(descriptor);
 	}
-
-	interface Images extends ClientBundle {
-
-		@ClientBundle.Source(
-				value = "com/google/gwt/user/client/ui/disclosurePanelClosed.png"
-		)
-		ImageResource expand();
-
-		@ClientBundle.Source(
-				value = "com/google/gwt/user/client/ui/disclosurePanelOpen.png"
-		)
-		ImageResource collapse();
-	}
-
-	private static final Images images = com.google.gwt.core.client.GWT.create(Images.class);
 }
