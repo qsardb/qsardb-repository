@@ -2,14 +2,22 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
   <ui:style>
-    .panel div { padding: 3px 2px; }
+    .panel div {
+      display: flex;
+      padding: 3px 2px;
+    }
+    .panel input {
+      max-width: 42em;
+      flex-grow: 1;
+      margin-right: 4px;
+    }
   </ui:style>
 
   <g:HTMLPanel styleName='{style.panel}'>
     <div>Chemical structure input (InChI or SMILES format):</div>
 
     <div>
-      <g:TextBox ui:field='textBox' visibleLength='64'/>
+      <g:TextBox ui:field='textBox'/>
       <g:Button ui:field='drawButton'>Draw</g:Button>
     </div>
 	<div>
