@@ -25,20 +25,23 @@
 	border: none;
 }
 #compound-distance-panel td:first-child {
-	white-space: nowrap
+	white-space: nowrap;
+	vertical-align: top;
 }
 #compound-distance-panel td:last-child {
 	width: 100%;
+	vertical-align: top;
 }
 .analogue-depict {
 	margin-bottom: 10px;
 }
 table.analogue-attr {
-	flex-grow: 2;
+	flex-grow: 1;
 	width: auto;
 }
 table.analogue-values {
 	width: 16em;
+	flex-shrink: 0;
 }
 table.analogue-values td:last-child {
 	word-break: break-all;
