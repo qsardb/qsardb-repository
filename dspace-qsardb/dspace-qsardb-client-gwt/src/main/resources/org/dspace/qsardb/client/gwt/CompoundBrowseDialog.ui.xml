@@ -5,10 +5,16 @@
   <ui:style>
     .buttonbar { float: right; }
 
+    @external .gwt-PopupPanelGlass;
+    .gwt-PopupPanelGlass { z-index: 1000; }
+
     @external .gwt-DialogBox;
     .gwt-DialogBox table { border: none; }
     .gwt-DialogBox td { padding: 0; }
-    .gwt-DialogBox { text-align: left; }
+    .gwt-DialogBox {
+      text-align: left;
+      z-index: 1001;
+    }
   </ui:style>
 
   <g:DialogBox ui:field='dialogBox' autoHide='true' glassEnabled='true' modal='true'>
