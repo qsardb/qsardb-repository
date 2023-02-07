@@ -1,24 +1,26 @@
 package org.dspace.qsardb.client.gwt;
 
 import com.google.gwt.core.shared.GWT;
-import java.util.*;
-
-import com.google.gwt.event.shared.*;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.*;
-
-import org.dspace.qsardb.rpc.gwt.*;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
+import java.util.Map;
+import org.dspace.qsardb.rpc.gwt.PredictorRequest;
+import org.dspace.qsardb.rpc.gwt.PredictorResponse;
+import org.dspace.qsardb.rpc.gwt.QdbTable;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
 public class DataInputPanel extends Composite implements InputChangeEventHandler {
 
-	private final Timer timer = new Timer(){
+	private final Timer timer = new Timer() {
 		@Override
-		public void run(){
+		public void run() {
 			evaluate();
 		}
 	};
@@ -27,8 +29,9 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	private String structure = null;
 	private String compoundId = null;
 
-	interface Binder extends UiBinder<Widget, DataInputPanel> {}
-	private static Binder binder = GWT.create(Binder.class);
+	interface Binder extends UiBinder<Widget, DataInputPanel> {
+	}
+	private static final Binder binder = GWT.create(Binder.class);
 
 	@UiField
 	TabPanel tabPanel;
@@ -38,13 +41,20 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 
 	@UiField(provided = true)
 	CompoundInputPanel compoundInputPanel;
-	
+
 	@UiField(provided = true)
 	ModelInputPanel modelInputPanel;
 
-	public DataInputPanel(QdbTable table){
+	public DataInputPanel(QdbTable table) {
 		initWidget(createUI(table));
 		tabPanel.getTabBar().selectTab(0);
+
+		// disable descriptor calculation tab when the calculation is not possible
+		if (!compoundInputPanel.isCalculable()) {
+			// the tab title is renamed by reinserting the panel
+			tabPanel.insert(compoundInputPanel, "Calculate descriptors (N/A)", 1);
+			tabPanel.getTabBar().setTabEnabled(1, false);
+		}
 	}
 
 	private Widget createUI(QdbTable table) {
@@ -60,7 +70,7 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 	}
 
 	@Override
-	public void onInputChanged(InputChangeEvent event){
+	public void onInputChanged(InputChangeEvent event) {
 		this.values = event.getValues();
 		this.compoundId = event.getCompoundId();
 		this.structure = event.getStructure();
@@ -79,11 +89,11 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 		this.timer.schedule(1000);
 	}
 
-	public HandlerRegistration addEvaluationEventHandler(EvaluationEventHandler handler){
+	public HandlerRegistration addEvaluationEventHandler(EvaluationEventHandler handler) {
 		return addHandler(handler, EvaluationEvent.TYPE);
 	}
 
-	public void evaluate(){
+	public void evaluate() {
 		PredictorRequest request;
 		if (structure != null) {
 			request = new PredictorRequest(structure);
@@ -104,11 +114,8 @@ public class DataInputPanel extends Composite implements InputChangeEventHandler
 			}
 		});
 	}
-	public Map<String, String> getValues(){
-		return this.values;
-	}
 
-	private void setValues(Map<String, String> values){
-		this.values = values;
+	public Map<String, String> getValues() {
+		return this.values;
 	}
 }

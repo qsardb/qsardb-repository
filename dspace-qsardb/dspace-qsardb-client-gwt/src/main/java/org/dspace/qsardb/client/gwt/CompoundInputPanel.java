@@ -27,11 +27,12 @@ public class CompoundInputPanel extends Composite {
 	@UiField Button calculateButton;
 
 	private DrawStructureDialog drawDialog;
+	private boolean calculable;
 
 	public CompoundInputPanel(QdbTable table){
 		Widget panel = binder.createAndBindUi(this);
 
-		boolean calculable = true;
+		calculable = true;
 		List<DescriptorColumn> descriptors = table.getAllColumns(DescriptorColumn.class);
 		for(DescriptorColumn descriptor : descriptors){
 			calculable &= descriptor.isCalculable();
@@ -48,6 +49,10 @@ public class CompoundInputPanel extends Composite {
 		calculateButton.setEnabled(false);
 
 		initWidget(panel);
+	}
+
+	public boolean isCalculable() {
+		return calculable;
 	}
 
 	public HandlerRegistration addInputChangeEventHandler(InputChangeEventHandler handler){
