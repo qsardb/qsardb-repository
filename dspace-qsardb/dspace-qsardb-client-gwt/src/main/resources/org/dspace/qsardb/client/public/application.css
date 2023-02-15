@@ -10,6 +10,10 @@
 	margin-left: 2px;
 }
 
+.CompoundDataGrid td:not(:nth-child(2)) {
+	white-space: nowrap;
+}
+
 #compound-distance-panel {
 	border: 2px solid #f0f0d2;
 }

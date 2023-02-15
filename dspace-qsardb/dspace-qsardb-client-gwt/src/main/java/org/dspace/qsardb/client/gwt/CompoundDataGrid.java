@@ -15,6 +15,7 @@ public class CompoundDataGrid extends DataGrid<Compound> implements SeriesDispla
 		super(50);
 
 		Resolver resolver = new Resolver(table);
+		getChildContainer().addClassName("CompoundDataGrid");
 
 		IdColumn id = table.getColumn(IdColumn.class);
 		addColumn(new IdTextColumn(id), "Id");
